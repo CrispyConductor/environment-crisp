@@ -1,0 +1,93 @@
+__TMUX__
+
+New session | tmux new [-s <SessionName>] [-t <ShareSessionName>]
+Kill session | tmux kill-ses -t <SessionName>
+List sessions | tmux ls
+Attach to session | tmux a -t <SessionName>
+
+New session | :new
+Rename session | ^b $
+Detach | ^b d
+List/switch sessions | ^b s
+Previous session | ^b (
+Next session | ^b )
+Most recent/last session | ^b L
+
+New window | ^b c
+Rename window | ^b ,
+List/switch windows | ^b w
+Close window | ^b &
+Previous window | ^b p
+Next window | ^b n
+Go to window number 0-9 | ^b <0-9>
+Go to window number 10+ | ^b ' <Number> <Enter>
+Swap windows | :swap-window [-s <WindowIndex>] -t <OtherWindowIndex>
+Move window to unoccupied position | :move-window -t <WindowIndex>
+
+Split pane vertically | ^b "
+Split pane horizontally | ^b %
+Move to pane | ^b <ArrowKey>
+Iterate to next pane | ^b o
+Most recent/last pane | ^b ;
+Close pane | ^b x
+Display/switch pane numbers | ^b q [PaneNumber]
+
+Move pane "left" | ^b {
+Move pane "right" | ^b }
+Toggle pane zoom/fullscreen | ^b z
+Convert pane to window | ^b !
+Move pane to window | :join-pane -t <WindowIndex> [-h|-v]
+Resize pane | ^b ^<ArrowKey>
+Cycle pane layouts | ^b <Space>
+Synchronize all panes toggle | :setw synchronize-panes
+
+Copy mode
+Enable vi-style navigation | :setw -g mode-keys vi
+Start copy mode | ^b [
+1. Navigate to start  2. <Space>  3. Navigate to end  4. <Enter>
+Paste | ^b ]
+
+
+__VIM__
+
+Home | 0
+End | $
+First non-whitespace char | ^
+Top | gg
+Bottom | G
+Go to line | <Number> G
+Next block | }
+Previous block | {
+
+Center screen on cursor | zz
+Move screen down | ^e
+Move screen up | ^y
+
+Yank into register | " <Register> y
+Yank into system clipboard | " + y
+Paste from register | " <Register> p
+
+Undo | u
+Redo | ^r
+
+Search forward | / <Pattern>
+Search backward | / ?<Pattern>
+Repeat search forward | n
+Repeat search backward | N
+Replace all | :%s/<old>/<new>/g
+Remove highlights | :noh
+
+Move to window | ^w <ArrowKey>
+Close window | ^w q
+Resize window | [Number] ^w +|-|<|>
+
+Add tab level | >
+Remove tab level | <
+Auto-indent | =
+Switch between tabs/spaces | :set tabstop=4 shiftwidth=4 [no]expandtab
+Convert all existing indents | :retab
+
+Search multiple files | :F <Pattern> **/*
+
+
+
