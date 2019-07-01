@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # find directory names
-DOTFILES="$(readlink -e "$(dirname "$0")")"
+DOTFILES="$(realpath "$(dirname "$0")")"
 if [ "$HOME" = "" ] || [ ! -d "$HOME" ]; then echo '$HOME does not exist'; exit 1; fi
 BACKUP="${HOME}/.dotfiles_backup"
 
@@ -29,7 +29,7 @@ function install_dotfile {
 	fi
 	DESTDIR="$(dirname "$DESTABS")"
 	mkdir -p "$DESTDIR"
-	ln -s "$SOURCEABS" "$DESTABS"
+	ln -sf "$SOURCEABS" "$DESTABS"
 }
 
 # install dotfiles

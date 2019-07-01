@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MYDIR="$(readlink -e "$(dirname "$0")")"
+MYDIR="$(realpath "$(dirname "$0")")"
 cd "$MYDIR"
 
 echo "Installing vimplug for neovim ..."
