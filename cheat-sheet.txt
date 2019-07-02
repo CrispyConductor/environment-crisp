@@ -90,4 +90,7 @@ Convert all existing indents | :retab
 Search multiple files | :F <Pattern> **/*
 
 
+__MAC__
+
+Terminal full-screen toggle | Ctrl-Super-f
 
