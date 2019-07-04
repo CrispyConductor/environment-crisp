@@ -13,7 +13,7 @@ tmux new -s "$SESS_NAME" -d -n 'notes'
 tmux setw -g -t "$SESS_NAME" mode-keys vi
 
 # set up notes window
-tmux send-keys -t "${SESS_NAME}:notes.0" 'cd ~/zipscene/notes' Enter 'vim notes.txt' Enter
+tmux send-keys -t "${SESS_NAME}:notes.0" 'cd ~/zipscene/notes' Enter 'nvim notes.txt' Enter
 
 # create window for running processes
 # panes are: zookeeper, kafka, authservice, jobhub, api, worker
