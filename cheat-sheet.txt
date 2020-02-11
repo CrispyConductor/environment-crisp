@@ -81,13 +81,27 @@ Move to window | ^w <ArrowKey>
 Close window | ^w q
 Resize window | [Number] ^w +|-|<|>
 
+Make window full height + left | ^w H
+Make window full height + right | ^w L
+Make window full width + top | ^w K
+Make window full width + botm | ^w J
+:help window-moving
+
 Add tab level | >
 Remove tab level | <
 Auto-indent | =
 Switch between tabs/spaces | :set tabstop=4 shiftwidth=4 [no]expandtab
 Convert all existing indents | :retab
 
+Far:
 Search multiple files | :F <Pattern> **/*
+
+NERDTree:
+Open NERDTree W| :NERDTree
+:help NERDTree
+Open file in hsplit | i
+Open file in vsplit | s
+
 
 
 __MAC__
