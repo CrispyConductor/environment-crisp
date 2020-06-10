@@ -1,0 +1,13 @@
+[alias]
+	branch-name = "!git rev-parse --abbrev-ref HEAD"
+	pfetch = fetch --prune
+	co = checkout
+	br = branch
+	cm = commit
+	st = status
+	publish = "!git push -u origin $(git branch-name)"
+	unstage = reset HEAD --
+
+[user]
+	email = crispy@cluenet.org
+	name = Chris Breneman

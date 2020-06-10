@@ -36,6 +36,7 @@ function install_dotfile {
 install_dotfile tmux.conf .tmux.conf
 install_dotfile nvim .config/nvim
 install_dotfile bashrc-env .bashrc-env
+install_dotfile gitconfig .gitconfig
 
 # append bashrc-env include to bashrc
 if [ ! -f ~/.bashrc ]; then touch ~/.bashrc; fi
