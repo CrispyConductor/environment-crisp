@@ -31,14 +31,14 @@ tmux splitw -t "${SESS_NAME}:procs.0"
 tmux select-layout -t "${SESS_NAME}:procs" tiled
 tmux send-keys -t "${SESS_NAME}:procs.0" 'cd ~/zipscene/kafka_*' Enter clear Enter './bin/zookeeper-server-start.sh config/zookeeper.properties'
 tmux send-keys -t "${SESS_NAME}:procs.1" 'cd ~/zipscene/kafka_*' Enter clear Enter './bin/kafka-server-start.sh config/server.properties'
-tmux send-keys -t "${SESS_NAME}:procs.2" 'cd ~/zipscene/git/zs-auth-service' Enter clear Enter 'NODE_ENV=local node bin/zs-auth-service.js'
-tmux send-keys -t "${SESS_NAME}:procs.3" 'cd ~/zipscene/git/zs-job-hub' Enter clear Enter 'NODE_ENV=local node bin/zs-job-hub.js'
-tmux send-keys -t "${SESS_NAME}:procs.4" 'cd ~/zipscene/git/zs-dmp' Enter clear Enter 'NODE_ENV=local node ./bin/zs-dmp-api.js'
-tmux send-keys -t "${SESS_NAME}:procs.5" 'cd ~/zipscene/git/zs-dmp' Enter clear Enter 'NODE_ENV=local node ./bin/zs-dmp-worker.js'
+tmux send-keys -t "${SESS_NAME}:procs.2" 'cd ~/zipscene/git/analytics-services-auth-service' Enter clear Enter 'NODE_ENV=local node bin/services-auth-service.js'
+tmux send-keys -t "${SESS_NAME}:procs.3" 'cd ~/zipscene/git/analytics-services-job-hub' Enter clear Enter 'NODE_ENV=local node bin/services-job-hub.js'
+tmux send-keys -t "${SESS_NAME}:procs.4" 'cd ~/zipscene/git/analytics-dmp-core' Enter clear Enter 'NODE_ENV=local node ./bin/dmp-core-api.js'
+tmux send-keys -t "${SESS_NAME}:procs.5" 'cd ~/zipscene/git/analytics-dmp-core' Enter clear Enter 'NODE_ENV=local node ./bin/dmp-core-worker.js'
 
 # dmp tests window
 tmux neww -t "$SESS_NAME" -n 'dmptests'
-tmux send-keys -t "${SESS_NAME}:dmptests.0" 'cd ~/zipscene/git/zs-dmp-tests' Enter clear Enter 'npm test'
+tmux send-keys -t "${SESS_NAME}:dmptests.0" 'cd ~/zipscene/git/analytics-dmp-core-tests' Enter clear Enter 'npm test'
 
 # cmd0 window
 tmux neww -t "$SESS_NAME" -n 'cmd0' -c ~
