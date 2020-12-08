@@ -1,4 +1,4 @@
 
 export PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-export EDITOR='/usr/bin/nvim'
+export EDITOR='nvim'
 
