@@ -2,3 +2,5 @@
 export PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 export EDITOR='nvim'
 
+export STEAM_LIBRARY="$HOME/.local/share/Steam/steamapps/"
+export PROTON_BIN_PATH="$STEAM_LIBRARY/common/Proton 5.13/dist/bin/wine"
