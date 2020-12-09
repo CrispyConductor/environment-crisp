@@ -24,8 +24,8 @@ Go to window number 10+ | ^b ' <Number> <Enter>
 Swap windows | :swap-window [-s <WindowIndex>] -t <OtherWindowIndex>
 Move window to unoccupied position | :move-window -t <WindowIndex>
 
-Split pane vertically | ^b "
-Split pane horizontally | ^b %
+Split pane horizontally | ^b "
+Split pane vertically | ^b %
 Move to pane | ^b <ArrowKey>
 Iterate to next pane | ^b o
 Most recent/last pane | ^b ;
@@ -80,6 +80,21 @@ Remove highlights | :noh
 Move to window | ^w <ArrowKey>
 Close window | ^w q
 Resize window | [Number] ^w +|-|<|>
+Split window horiz | :sp
+Split window vert | :vs
+New window horiz | :new
+New window vert | :vne
+
+Window split modifier commands:
+:vert {cmd} | Split vertically
+:lefta vert {cmd} | Open to left of cur window
+:rightb vert {cmd} | Open to right of cur window
+:abo {cmd} | Open above cur window
+:bel {cmd} | Open below cur window
+:to vert {cmd} | Open at left
+:bo vert {cmd} | Open at right
+:to {cmd} | Open at top
+:bo {cmd} | Open at bottom
 
 Make window full height + left | ^w H
 Make window full height + right | ^w L
@@ -97,7 +112,7 @@ Far:
 Search multiple files | :F <Pattern> **/*
 
 NERDTree:
-Open NERDTree W| :NERDTree
+Toggle NERDTree | Alt-N
 :help NERDTree
 Open file in hsplit | i
 Open file in vsplit | s
