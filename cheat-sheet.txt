@@ -1,125 +1,178 @@
-__TMUX__
+tmux
+	Prefix: Ctrl-b
 
-New session | tmux new [-s <SessionName>] [-t <ShareSessionName>]
-Kill session | tmux kill-ses -t <SessionName>
-List sessions | tmux ls
-Attach to session | tmux a -t <SessionName>
+	CLI
+		tmux new [-s <SessionName>] [-t <ShareSessionName>]  -  New session
+		tmux kill-ses -t <SessionName>  -  Kill session
+		tmux ls  -  List sessions
+		tmux a -t <SessionName>  -  Attach to session
 
-New session | :new
-Rename session | ^b $
-Detach | ^b d
-List/switch sessions | ^b s
-Previous session | ^b (
-Next session | ^b )
-Most recent/last session | ^b L
+	Sessions
+		<Prefix> :new  -  New session
+		<Prefix> $  -  Rename session
+		<Prefix> d  -  Detach from session
+		<Prefix> s  -  List/Switch sessions
+		<Prefix> (  -  Prev session
+		<Prefix> )  -  Next session
+		<Prefix> L  -  Last (most recent) session
 
-New window | ^b c
-Rename window | ^b ,
-List/switch windows | ^b w
-Close window | ^b &
-Previous window | ^b p
-Next window | ^b n
-Go to window number 0-9 | ^b <0-9>
-Go to window number 10+ | ^b ' <Number> <Enter>
-Swap windows | :swap-window [-s <WindowIndex>] -t <OtherWindowIndex>
-Move window to unoccupied position | :move-window -t <WindowIndex>
+	Windows
+		<Prefix> c  -  New window
+		<Prefix> ,  -  Rename window
+		<Prefix> w  -  List/Switch windows
+		<Prefix> &  -  Close window
+		<Prefix> p  -  Previous window
+		<Prefix> n  -  Next window
+		<Prefix> <n>  -  Go to window n for n<10
+		<Prefix> ' <n> <Enter>  -  Go to window n
+		<Prefix> :swap-window [-s <Window>] -t <OtherWindow>  -  Swap windows
+		<Prefix> :movew  -  Move window to unoccupied index
 
-Split pane horizontally | ^b "
-Split pane vertically | ^b %
-Move to pane | ^b <ArrowKey>
-Iterate to next pane | ^b o
-Most recent/last pane | ^b ;
-Close pane | ^b x
-Display/switch pane numbers | ^b q [PaneNumber]
+	Pane Navigation
+		<Prefix> <ArrowKey>  -  Navigate panes
+		<Prefix> ;  -  Last (most recent) pane
+		<Prefix> q <n>  -  Display/switch panes
+		<Prefix> z  -  Toggle zoom/fullscreen
 
-Move pane "left" | ^b {
-Move pane "right" | ^b }
-Toggle pane zoom/fullscreen | ^b z
-Convert pane to window | ^b !
-Move pane to window | :join-pane -t <WindowIndex> [-h|-v]
-Resize pane | ^b ^<ArrowKey>
-Cycle pane layouts | ^b <Space>
-Synchronize all panes toggle | :setw synchronize-panes
+	Pane Management
+		<Prefix> "  -  Horizontal split
+		<Prefix> %  -  Vertical split
+		<Prefix> x  -  Close pane
+		<Prefix> {  -  Move pane "left"
+		<Prefix> }  -  Move pane "right"
+		<Prefix> <Space>  -  Cycle pane layouts
+		<Prefix> Ctrl-<ArrowKey>  -  Resize pane
 
-Copy mode
-Enable vi-style navigation | :setw -g mode-keys vi
-Start copy mode | ^b [
-1. Navigate to start  2. <Space>  3. Navigate to end  4. <Enter>
-Paste | ^b ]
+	Pane/Window Conversion
+		<Prefix> !  -  Convert pane to window
+		<Prefix> :join-pane -t <Window> [-h|-v]  -  Move pane to window
 
+	Copy Mode
+		<Prefix> ]  -  Paste
+		<Prefix> [  -  Start copy mode
+		<Space>  -  Begin selection
+		<Enter>  -  Copy selection and exit copy mode
 
-__VIM__
-
-Home | 0
-End | $
-First non-whitespace char | ^
-Top | gg
-Bottom | G
-Go to line | <Number> G
-Next block | }
-Previous block | {
-
-Center screen on cursor | zz
-Move screen down | ^e
-Move screen up | ^y
-
-Yank into register | " <Register> y
-Yank into system clipboard | " + y
-Paste from register | " <Register> p
-
-Undo | u
-Redo | ^r
-
-Search forward | / <Pattern>
-Search backward | / ?<Pattern>
-Repeat search forward | n
-Repeat search backward | N
-Replace all | :%s/<old>/<new>/g
-Remove highlights | :noh
-
-Move to window | ^w <ArrowKey>
-Close window | ^w q
-Resize window | [Number] ^w +|-|<|>
-Split window horiz | :sp
-Split window vert | :vs
-New window horiz | :new
-New window vert | :vne
-
-Window split modifier commands:
-:vert {cmd} | Split vertically
-:lefta vert {cmd} | Open to left of cur window
-:rightb vert {cmd} | Open to right of cur window
-:abo {cmd} | Open above cur window
-:bel {cmd} | Open below cur window
-:to vert {cmd} | Open at left
-:bo vert {cmd} | Open at right
-:to {cmd} | Open at top
-:bo {cmd} | Open at bottom
-
-Make window full height + left | ^w H
-Make window full height + right | ^w L
-Make window full width + top | ^w K
-Make window full width + botm | ^w J
-:help window-moving
-
-Add tab level | >
-Remove tab level | <
-Auto-indent | =
-Switch between tabs/spaces | :set tabstop=4 shiftwidth=4 [no]expandtab
-Convert all existing indents | :retab
-
-Far:
-Search multiple files | :F <Pattern> **/*
-
-NERDTree:
-Toggle NERDTree | Alt-N
-:help NERDTree
-Open file in hsplit | i
-Open file in vsplit | s
+	Misc
+		<Prefix> :setw synchronize-panes  -  Toggle duplicate input to all panes
 
 
+vim
+	Cursor Movement
+		0  -  Home/Beginning of line
+		$  -  End/End of line
+		^  -  Beginning of line, first non-whitespace
+		gg  -  Top
+		G  -  Bottom
+		<n> G  -  Go to line
+		{  -  Prev block
+		}  -  Next block
 
-__MAC__
+	Screen Position
+		zz  -  Center screen on cursor
+		Ctrl-e  -  Move screen down
+		Ctrl-y  -  Move screen up
 
-Terminal full-screen toggle | Ctrl-Super-f
+	Yank/Paste
+		" <n> y  -  Yank into register n
+		" + y  -  Yank into system register (+)
+		+ <n> p  -  Paste from register n
+
+	Undo
+		u  -  Undo
+		Ctrl-r  -  Redo
+
+	Find/Replace
+		/ <Pattern>  -  Search forward
+		/ ?<Pattern>  -  Search backward
+		n  -  Next forward search result
+		N  -  Next backward search result
+		:%s/<Pattern>/<Replacement>/g  -  Replace all
+		:noh  -  Remove highlights
+
+	Windows
+		Ctrl-w <ArrowKey>  -  Move to window
+		Ctrl-w q  -  Close window
+		[n] Ctrl-w -|+|<|>  -  Resize window
+		:sp  -  Split horizontal
+		:vs  -  Split vertical
+		:new  -  New window split horizontal
+		:vne  -  New window split vertical
+		Ctrl-w H  -  Move window to left full-height
+		Ctrl-w J  -  Move window to bottom full-width
+		Ctrl-w K  -  Move window to top full-width
+		Ctrl-w L  -  Move window to right full-height
+		:help window-moving
+
+	Window Split Command Modifiers
+		:vert <cmd>   -  Split vertically
+		:lefta vert <cmd>  -  Open to left of cur window
+		:rightb vert <cmd>  -  Open to right of cur window
+		:abo <cmd>  -  Open above cur window
+		:bel <cmd>  -  Open below cur window
+		:to vert <cmd>  -  Open at left
+		:bo vert <cmd>  -  Open at right
+		:to <cmd>  -  Open at top
+		:bo <cmd>  -  Open at bottom
+
+	Indent
+		>  -  Add indent level
+		<  -  Remove indent level
+		=  -  Auto-indent
+		:set tabstop=4 shiftwidth=4 [no]expandtab  -  Use tabs/spaces
+		:retab  -  Convert existing indents
+
+	Far
+		:F <Pattern> **/*  -  Search multiple files
+
+	NERDTree
+		Alt-n  -  Toggle NERDTree
+		i  -  Open file in horizontal split
+		s  -  Open file in vertical split
+		:help NERDTree
+
+
+PopShell
+	Super-<ArrowKey>  -  Change selected window
+	Super-<Enter>  -  Enter window management mode
+	Super-<Esc>  -  Lock screen
+	Super-q  -  Close window
+	Super-m  -  Toggle maximize
+	Super-t  -  Open terminal
+	Super-o  -  Toggle split horizontal/vertical orientation
+	Super-/  -  Window switch/launch dialog
+	Super-,  -  Hide window (use launcher to reopen)
+	Ctrl-Super-Up/Down  -  Switch workspaces
+	Shift-Super-Up/Down  -  Move window across workspaces
+	Shift-Super-Left/Right  -  Move window across monitors
+	Ctrl-Shift-Super-Up/Down  -  Move window across monitors
+
+	Window Management Mode
+		<Enter>  -  Exit window management mode
+		<Esc>  -  Cancel
+		<ArrowKey>  -  Move window
+		Ctrl-<ArrowKey>  -  Swap windows
+		Shift-<ArrowKey>  -  Resize window
+		o  -  Toggle split horizontal-vertical orientation
+
+	Launcher
+		t:  -  Execute command in terminal
+		:  -  Execute a command in sh
+		=  -  Calculate an equation
+
+
+Chrome
+	Ctrl-n  -  New window
+	Ctrl-t  -  New tab
+	Ctrl-<Tab> or Ctrl-<PgDn>  -  Next tab
+	Ctrl-Shift-<Tab> or Ctrl-<PgUp>  -  Prev tab
+	Ctrl-<n>  -  Go to tab n
+	Ctrl-w  -  Close tab
+	Ctrl-l  -  Select address bar
+
+
+
+Mac
+	Ctrl-Super-f  -  Terminal full-screen
+
 
