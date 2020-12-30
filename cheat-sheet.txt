@@ -55,6 +55,9 @@ tmux
 
 	Misc
 		<Prefix> :setw synchronize-panes  -  Toggle duplicate input to all panes
+		<Prefix> Ctrl-b  -  Send Ctrl-b to nested session
+		<Prefix> Ctrl-n  -  Send Ctrl-b to second nested session
+		<Prefix> Ctrl-m  -  Send Ctrl-b to third nested session
 
 
 vim
