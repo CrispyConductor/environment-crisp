@@ -145,6 +145,8 @@ PopShell
 	Super-o  -  Toggle split horizontal/vertical orientation
 	Super-/  -  Window switch/launch dialog
 	Super-,  -  Hide window (use launcher to reopen)
+	Super-g  -  Toggle floating
+	Super-<F11>  -  Toggle fullscreen
 	Ctrl-Super-Up/Down  -  Switch workspaces
 	Shift-Super-Up/Down  -  Move window across workspaces
 	Shift-Super-Left/Right  -  Move window across monitors
