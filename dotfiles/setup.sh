@@ -44,3 +44,11 @@ if ! `grep bashrc-env ~/.bashrc >/dev/null`; then
 	echo 'source ~/.bashrc-env' >> ~/.bashrc
 fi
 
+# append bashrc-local include to bashrc
+if [ ! -f ~/.bashrc-local ]; then touch ~/.bashrc-local; fi
+if ! `grep bashrc-local ~/.bashrc >/dev/null`; then
+	echo 'source ~/.bashrc-local' >> ~/.bashrc
+fi
+
+
+

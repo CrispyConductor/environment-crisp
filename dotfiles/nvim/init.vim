@@ -11,3 +11,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'airblade/vim-gitgutter'
 call plug#end()
 
+" hooks for clipboard syncing
+source ~/.userenv/clipboard/vimhooks.vim
+
+
