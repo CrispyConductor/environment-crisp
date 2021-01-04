@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 MYDIR="$(realpath "$(dirname "$0")")"
 
@@ -6,7 +6,7 @@ MYDIR="$(realpath "$(dirname "$0")")"
 "$MYDIR/updatevims.sh" &>/dev/null
 
 # Push to connected clipsyncd's
-"$MYDIR/clipsyncd_propagate.sh"
+"$MYDIR/clipsyncd_propagate.sh" &
 
 
 exit 0

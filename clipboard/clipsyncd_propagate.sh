@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # argument is optional: host id to exclude
+# fetches clipboard data from tmux
 
 BASEDIR="$HOME/.clipsync"
 MYDIR="$(realpath "$(dirname "$0")")"
@@ -43,11 +44,15 @@ if [ $? -ne 0 ]; then
 	TEMPFILE="/tmp/_clip_tempcsdp_yssh$USER"
 fi
 
-cat > "$TEMPFILE"
+"$MYDIR/getcopybuffer.sh" 0 > "$TEMPFILE"
+if [ $? -ne 0 ]; then exit 0; fi
 if [ -z "`cat "$TEMPFILE"`" ]; then exit 0; fi
 if [ `cat "$TEMPFILE" | wc -c` -gt $MAXSIZE ]; then exit 0; fi
 
 for h in `listallhosts`; do
 	sendtohost "$h" "$TEMPFILE"
 done
+
+rm -f "$TEMPFILE"
+
 

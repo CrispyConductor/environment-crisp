@@ -25,8 +25,8 @@ handle_buf() {
 	tmux load-buffer "$fn"
 	"$MYDIR/updatevims.sh"
 
-	# propagate clipboard to other connected machines, excluding the source
-	"$MYDIR/clipsyncd_propagate.sh" "$srchost"
+	# propagate tmux clipboard to other connected machines, excluding the source
+	"$MYDIR/clipsyncd_propagate.sh" "$srchost" &
 }
 
 while [ 1 ]; do
