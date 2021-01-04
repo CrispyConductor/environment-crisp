@@ -13,5 +13,6 @@ rm -f "$TEMPFILE"
 MYDIR="$(realpath "$(dirname "$0")")"
 "$MYDIR/updatevims.sh"
 
-
+# Push to connected clipsyncd's
+"$MYDIR/clipsyncd_propagate.sh"
 
