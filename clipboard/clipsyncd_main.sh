@@ -13,7 +13,7 @@ TEMPFILE2="/tmp/_clipsyncd_temp2_yssh$USER"
 
 handle_buf() {
 	fn="$1"
-	isupwards="$2"
+	srchost="$2"
 
 	# make sure new contents do not equal current contents
 	"$MYDIR/getcopybuffer.sh" 0 > "$TEMPFILE"
@@ -26,15 +26,14 @@ handle_buf() {
 	"$MYDIR/updatevims.sh"
 }
 
-# HMMMM the simple upwards flag may not be enough (may want to propagate to other hosts in the network in the other direction); may just need to ensure it is not sent back to where it originated
-
 while [ 1 ]; do
 	rm -f "$BASEDIR/clipsync.sock"
 	nc -l -U "$BASEDIR/clipsync.sock" > "$TEMPFILE" 2>/dev/null
 	if [ $? -eq 0 ]; then
-		isupwards="`head -c1 "$TEMPFILE"`"
-		tail -c +2 "$TEMPFILE" > "$TEMPFILE2"
-		handle_buf "$TEMPFILE2" $isupwards
+		srchost="`head -n1 "$TEMPFILE"`"
+		bskip="`echo "$srchost" | wc -c`"
+		tail -c +`expr $bskip + 1` "$TEMPFILE" > "$TEMPFILE2"
+		handle_buf "$TEMPFILE2" "$srchost"
 	fi
 done
 

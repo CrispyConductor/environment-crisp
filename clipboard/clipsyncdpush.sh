@@ -1,15 +1,17 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]; then
-	echo 'Args: <socket> <isupwards 0|1>'
+if [ $# -ne 1 ]; then
+	echo 'Args: <socket>'
 	exit 1
 fi
+
+localid="`cat ~/.clipsync/hostid`"
 
 NCOPT=""
 if [ `uname` != 'Darwin' ]; then
 	NCOPT='-N'
 fi
 
-(echo -n $2 && cat) | nc -U $NCOPT "$1"
-
+(echo "$localid" && cat) | nc -U $NCOPT "$1"
+exit $?
 

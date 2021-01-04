@@ -16,4 +16,6 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.g
 echo "Setting up dotfiles ..."
 ./dotfiles/setup.sh
 
+echo "Setting up clipboard ..."
+./clipboard/setup.sh
 
