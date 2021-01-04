@@ -29,11 +29,11 @@ handle_buf() {
 # HMMMM the simple upwards flag may not be enough (may want to propagate to other hosts in the network in the other direction); may just need to ensure it is not sent back to where it originated
 
 while [ 1 ]; do
+	rm -f "$BASEDIR/clipsync.sock"
 	nc -l -U "$BASEDIR/clipsync.sock" > "$TEMPFILE" 2>/dev/null
 	if [ $? -eq 0 ]; then
 		isupwards="`head -c1 "$TEMPFILE"`"
 		tail -c +2 "$TEMPFILE" > "$TEMPFILE2"
-		echo Got
 		handle_buf "$TEMPFILE2" $isupwards
 	fi
 done
