@@ -1,7 +1,10 @@
 #!/bin/sh
 
 # Load buffer into tmux
-TEMPFILE="`tempfile`"
+TEMPFILE="`tempfile 2>/dev/null`"
+if [ $? -ne 0 ]; then
+	TEMPFILE="/tmp/_clip_temp_yssh"
+fi
 cat > "$TEMPFILE"
 tmux load-buffer "$TEMPFILE"
 rm -f "$TEMPFILE"
