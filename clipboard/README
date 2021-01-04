@@ -1,7 +1,18 @@
-getcopybuffer.sh - Outputs the tmux copy buffer corresponding to the given numeric argument.  0 is most recent buffer, 1 is second-most-recent, etc.
-tmuxcopypush.sh - Run after a new tmux buffer has been copied.  Sends SIGUSR1 to running vims to trigger them to pull in the latest tmux buffer.
-updatevims.sh - Sends SIGUSR1 to all running vims.
+Scripts run as hooks:
+tmuxcopypush.sh - Run after a new tmux buffer has been copied.
 vimyanksyncpull.sh - Called by vim when notified there might be a new buffer.  Exits with nonzero status if there is no recent tmux buffer.  Otherwise outputs the buffer contents.
 vimyanksyncpush.sh - Called by vim when a yank is executed, and the contents of the yank are piped to stdin.  Loads it into a new tmux copy buffer and updates other vims.
+
+Clipsyncd (syncing clipboard across ssh sessions):
+clipssh.sh - Wrapper around 'ssh' that sets up the socket tunnels needed.
+clipsyncd_main.sh - Main daemon for clipsyncd.  This script itself runs in the foreground.
+clipsyncd_propagate.sh - When called, pushes current tmux clip buffer to all connected sessions.
+clipsyncdpush.sh - Push clipboard data to one (given) clipsyncd socket.
+start_clipsyncd.sh - Starts clipsyncd in background if not already running for this user.
+
+Misc:
+getcopybuffer.sh - Outputs the tmux copy buffer corresponding to the given numeric argument.  0 is most recent buffer, 1 is second-most-recent, etc.
+updatevims.sh - Sends SIGUSR1 to all running vims.
 vimhooks.vim - vimscript components
+setup.sh - One-time setup script.
 
