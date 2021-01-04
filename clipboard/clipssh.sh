@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo 'clipssh: getting remote host info' 1>&2
-remoteinfo="`ssh "$@" 'cat "~/.clipsync/hostid" && echo "$HOME/.clipsync"'`"
+remoteinfo="`ssh "$@" 'cat "$HOME/.clipsync/hostid" && echo "$HOME/.clipsync"'`"
 if [ $? -ne 0 ]; then
 	echo 'clipssh: Initialization error - could not get remote host info' 1>&2
 	exit 1
@@ -19,7 +19,7 @@ remoteid="`echo "$remoteinfo" | head -n1`"
 remotebasedir="`echo "$remoteinfo" | head -n2 | tail -n1`"
 echo "clipssh: remoteid=$remoteid remotebasedir=$remotebasedir" 1>&2
 
-sessid="sess`date +%s`x${RANDOM}"
+sessid="sess`date +%s`x${RANDOM}${RANDOM}"
 
 tun_r="${remotebasedir}/sock_in/${localid}+${sessid}:${localbasedir}/clipsync.sock"
 tun_l="${localbasedir}/sock_out/${remoteid}+${sessid}:${remotebasedir}/clipsync.sock"

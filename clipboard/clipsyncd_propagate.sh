@@ -21,12 +21,15 @@ listallhosts() {
 
 sendtohost() {
 	host="$1"
+	#echo "sendtohost $host"
 	if [ "$host" = "$localid" ]; then return; fi
 	if [ ! -z "$excludeid" ] && [ "$host" = "$excludeid" ]; then return; fi
 	file="$2"
 	for sock in `listallsocks | grep -F "/${host}+" | sort`; do
+		#echo "checking socket $sock"
 		"$MYDIR/clipsyncdpush.sh" "$sock" < "$file" &>/dev/null
 		if [ $? -eq 0 ]; then
+			#echo "success"
 			break
 		else
 			# clean up old sockets we cant connect to
