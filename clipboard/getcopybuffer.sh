@@ -22,5 +22,5 @@ if [ $bsize -gt $MAX_SIZE ]; then exit 1; fi
 
 tmux show-buffer -b "$bname"
 
-
+exit 0
 

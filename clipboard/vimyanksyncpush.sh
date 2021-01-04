@@ -3,7 +3,7 @@
 # Load buffer into tmux
 TEMPFILE="`tempfile 2>/dev/null`"
 if [ $? -ne 0 ]; then
-	TEMPFILE="/tmp/_clip_temp_yssh"
+	TEMPFILE="/tmp/_clip_temp_yssh$USER"
 fi
 cat > "$TEMPFILE"
 tmux load-buffer "$TEMPFILE"
