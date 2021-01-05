@@ -17,6 +17,6 @@ rm -f "$TEMPFILE"
 
 # Notify vims and gui
 "$MYDIR/updatevims.sh"
-"$MYDIR/pushtogui.sh"
+"$MYDIR/pushtogui.sh" &>/dev/null
 
 
