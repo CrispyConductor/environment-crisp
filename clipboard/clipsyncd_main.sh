@@ -17,7 +17,8 @@ handle_buf() {
 
 	# make sure new contents do not equal current contents
 	"$MYDIR/getcopybuffer.sh" 0 > "$TEMPFILE"
-	if [ $? -ne 0 ]; then return; fi
+	S=$?
+	if [ $S -ne 0 ] && [ $S -ne 1 ]; then echo 'getcopybuffer.sh error'; return; fi
 	cmp "$fn" "$TEMPFILE" &>/dev/null
 	if [ $? -ne 1 ]; then return; fi
 

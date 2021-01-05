@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # argument should be a number.  0 gets most recent copy buffer, 1 gets second-most-recent, etc
+# exit status 0=success 1=no_buffer 2=error
 
 if [ $# -ne 1 ]; then
 	N=0
@@ -22,7 +23,7 @@ ctime="`echo "$csv" | cut -d , -f 1`"
 bsize="`echo "$csv" | cut -d , -f 2`"
 bname="`echo "$csv" | cut -d , -f 3-`"
 
-if [ $bsize -gt $MAX_SIZE ]; then exit 1; fi
+if [ $bsize -gt $MAX_SIZE ]; then exit 2; fi
 
 tmux show-buffer -b "$bname"
 
