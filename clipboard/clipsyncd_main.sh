@@ -23,7 +23,8 @@ handle_buf() {
 
 	# load new buffer into tmux and notify vims
 	tmux load-buffer "$fn"
-	"$MYDIR/updatevims.sh"
+
+	"$MYDIR/updatevims.sh" &
 
 	# propagate tmux clipboard to other connected machines, excluding the source
 	"$MYDIR/clipsyncd_propagate.sh" "$srchost" &
@@ -34,12 +35,13 @@ handle_buf() {
 
 while [ 1 ]; do
 	rm -f "$BASEDIR/clipsync.sock"
-	nc -l -U "$BASEDIR/clipsync.sock" > "$TEMPFILE" 2>/dev/null
+	nc -l -U "$BASEDIR/clipsync.sock" > "$TEMPFILE"
 	if [ $? -eq 0 ]; then
 		srchost="`head -n1 "$TEMPFILE"`"
 		bskip="`echo "$srchost" | wc -c`"
 		tail -c +`expr $bskip + 1` "$TEMPFILE" > "$TEMPFILE2"
 		handle_buf "$TEMPFILE2" "$srchost"
 	fi
+	rm -f "$TEMPFILE" "$TEMPFILE2"
 done
 
