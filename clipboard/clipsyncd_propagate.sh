@@ -45,14 +45,14 @@ if [ $? -ne 0 ]; then
 fi
 
 "$MYDIR/getcopybuffer.sh" 0 > "$TEMPFILE"
-if [ $? -ne 0 ]; then exit 0; fi
-if [ -z "`cat "$TEMPFILE"`" ]; then exit 0; fi
-if [ `cat "$TEMPFILE" | wc -c` -gt $MAXSIZE ]; then exit 0; fi
+if [ $? -ne 0 ]; then rm -f "$TEMPFILE"; exit 0; fi
+if [ -z "`cat "$TEMPFILE"`" ]; then rm -f "$TEMPFILE"; exit 0; fi
+if [ `cat "$TEMPFILE" | wc -c` -gt $MAXSIZE ]; then rm -f "$TEMPFILE"; exit 0; fi
 
 for h in `listallhosts`; do
 	sendtohost "$h" "$TEMPFILE"
 done
 
 rm -f "$TEMPFILE"
-
+exit 0
 

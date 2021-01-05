@@ -10,6 +10,9 @@ export MYDIR="$(realpath "$(dirname "$0")")"
 # Push to connected clipsyncd's
 "$MYDIR/clipsyncd_propagate.sh"
 
+# Push to gui
+"$MYDIR/pushtogui.sh" &>/dev/null
+
 ) &
 
 exit 0

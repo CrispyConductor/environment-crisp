@@ -27,6 +27,9 @@ handle_buf() {
 
 	# propagate tmux clipboard to other connected machines, excluding the source
 	"$MYDIR/clipsyncd_propagate.sh" "$srchost" &
+
+	# push to gui
+	"$MYDIR/pushtogui.sh" &>/dev/null &
 }
 
 while [ 1 ]; do

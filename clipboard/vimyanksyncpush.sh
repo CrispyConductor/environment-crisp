@@ -22,5 +22,8 @@ rm -f "$TEMPFILE"
 # Push to connected clipsyncd's
 "$MYDIR/clipsyncd_propagate.sh"
 
+# Push to gui
+"$MYDIR/pushtogui.sh" &>/dev/null
+
 ) &
 
