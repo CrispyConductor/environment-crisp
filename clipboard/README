@@ -1,3 +1,15 @@
+Overview:
+The goal of this clipboard handling stack is as follows:
+- Use tmux buffers as the "master" clipboard storage.
+- Synchronize to and from neovim registers.
+- Synchronize to and from X11 clipboard.
+- Synchronize across SSH sessions.
+
+This synchronization is accomplished with a series of hooks.  Syncing from X11
+is accomplished using a daemon that polls for changes.  Syncing across SSH uses
+a daemon that listens on a UNIX socket for clipboard updates and SSH tunneling
+of said socket.  The tunneling is set up with clipssh.sh
+
 Utilities:
 pushclip.sh - Accepts data on stdin, pushes to clipboards
 getcopybuffer.sh - Outputs the tmux copy buffer corresponding to the given numeric argument.  0 is most recent buffer, 1 is second-most-recent, etc.
