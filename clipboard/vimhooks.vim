@@ -22,6 +22,12 @@ function! YankSyncShiftRegs(newcontents)
 	endif
 endfunction
 
+function! YankSyncPurgeRegs(newcontents)
+	for i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '']
+		call setreg(i, a:newcontents, 'c')
+	endfor
+endfunction
+
 " Returns register contents as list of lines, including trailing blank line if
 " applicable
 function! YankSyncGetRegLines(regname)
@@ -40,9 +46,13 @@ endfunction
 function! YankSyncPull()
 	let newbuf = systemlist(s:ysshpull, '', 1)
 	if v:shell_error == 0
-		let curcontents = YankSyncGetRegLines(0)
-		if curcontents != newbuf
-			call YankSyncShiftRegs(newbuf)
+		if newbuf == ['!!!___PURGED___!!!']
+			call YankSyncPurgeRegs(newbuf)
+		else
+			let curcontents = YankSyncGetRegLines(0)
+			if curcontents != newbuf
+				call YankSyncShiftRegs(newbuf)
+			endif
 		endif
 	endif
 endfunction

@@ -21,16 +21,21 @@ handle_buf() {
 	cmp "$fn" "$TEMPFILE" &>/dev/null
 	if [ $? -ne 1 ]; then return; fi
 
-	# load new buffer into tmux and notify vims
-	tmux load-buffer "$fn"
+	if [ "`cat "$fn"`" = '!!!___PURGED___!!!' ]; then
+		# local purge
+		"$MYDIR/purge_local.sh"
+	else
+		# load new buffer into tmux and notify vims
+		tmux load-buffer "$fn"
+		"$MYDIR/updatevims.sh" &
 
-	"$MYDIR/updatevims.sh" &
+		# push to gui
+		"$MYDIR/pushtogui.sh" &>/dev/null &
+	fi
 
 	# propagate tmux clipboard to other connected machines, excluding the source
 	"$MYDIR/clipsyncd_propagate.sh" "$srchost" &
 
-	# push to gui
-	"$MYDIR/pushtogui.sh" &>/dev/null &
 }
 
 while [ 1 ]; do
