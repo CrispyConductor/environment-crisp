@@ -70,6 +70,7 @@ vim
 		<n> G  -  Go to line
 		{  -  Prev block
 		}  -  Next block
+		b/e - Previous/Next word
 
 	Screen Position
 		zz  -  Center screen on cursor
