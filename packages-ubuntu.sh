@@ -3,6 +3,7 @@ curl
 tmux
 neovim
 git
+command-not-foud
 "
 
 # Old:
