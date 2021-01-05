@@ -79,6 +79,21 @@ source $ZSH/oh-my-zsh.sh
 
 source $HOME/.shellrc-common
 
+# make Esc not take ages to be detected
+KEYTIMEOUT=5
+
+# use Ctrl-v binding in vim cmd mode to edit cmd in editor
+zle -N edit-command-line
+bindkey -M vicmd '^v' edit-command-line
+
+# override copy/paste functions
+function clipcopy() {
+	~/.userenv/clipboard/pushclip.sh
+}
+function clippaste() {
+	~/.userenv/clipboard/getcopybuffer.sh
+}
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
