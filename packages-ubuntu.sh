@@ -1,4 +1,5 @@
 packages="
+zsh
 curl
 tmux
 neovim
