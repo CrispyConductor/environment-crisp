@@ -5,10 +5,18 @@ LOOP_DELAY_BIG=5
 BIG_THRESHOLD=50000
 
 TEMPFILE="/tmp/_clip_xcwatchd1_yssh$USER"
+TEMPFILE2="/tmp/_clip_xcwatchd2_yssh$USER"
 MYDIR="$(realpath "$(dirname "$0")")"
 
 update_clip() {
 	fn="$1"
+
+	# make sure new contents do not equal current contents
+	"$MYDIR/getcopybuffer.sh" 0 > "$TEMPFILE2"
+	cmp "$fn" "$TEMPFILE2" &>/dev/null
+	if [ $? -ne 1 ]; then rm -f "$TEMPFILE2"; return; fi
+	rm -f "$TEMPFILE2"
+
 	# load new buffer into tmux and notify vims
 	tmux load-buffer "$fn"
 	"$MYDIR/updatevims.sh"
