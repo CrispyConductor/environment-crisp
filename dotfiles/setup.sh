@@ -35,7 +35,9 @@ function install_dotfile {
 # install dotfiles
 install_dotfile tmux.conf .tmux.conf
 install_dotfile nvim .config/nvim
+install_dotfile shellrc-common .shellrc-common
 install_dotfile bashrc-env .bashrc-env
+install_dotfile zshrc .zshrc
 install_dotfile gitconfig .gitconfig
 
 # append bashrc-env include to bashrc

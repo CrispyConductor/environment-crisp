@@ -1,0 +1,12 @@
+
+export EDITOR='nvim'
+export USERENVDIR="${HOME}/.userenv"
+
+export STEAM_LIBRARY="$HOME/.local/share/Steam/steamapps/"
+export PROTON_BIN_PATH="$STEAM_LIBRARY/common/Proton 5.13/dist/bin/wine"
+
+alias clipssh=~/.userenv/clipboard/clipssh.sh
+alias clippurge=~/.userenv/clipboard/purge.sh
+alias pushclip=~/.userenv/clipboard/pushclip.sh
+alias getclip=~/.userenv/clipboard/getcopybuffer.sh
+
