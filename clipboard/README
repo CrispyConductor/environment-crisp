@@ -1,3 +1,8 @@
+Utilities:
+pushclip.sh - Accepts data on stdin, pushes to clipboards
+getcopybuffer.sh - Outputs the tmux copy buffer corresponding to the given numeric argument.  0 is most recent buffer, 1 is second-most-recent, etc.
+purge.sh - Purge all clipboard buffers, locally and via clipsync
+
 Scripts run as hooks:
 tmuxcopypush.sh - Run after a new tmux buffer has been copied.
 vimyanksyncpull.sh - Called by vim when notified there might be a new buffer.  Exits with nonzero status if there is no recent tmux buffer.  Otherwise outputs the buffer contents.
@@ -10,9 +15,14 @@ clipsyncd_propagate.sh - When called, pushes current tmux clip buffer to all con
 clipsyncdpush.sh - Push clipboard data to one (given) clipsyncd socket.
 start_clipsyncd.sh - Starts clipsyncd in background if not already running for this user.
 
+xclip (syncing to gui):
+pushtogui.sh - Pushes tmux clipboard to X via xclip.
+xclipwatchd_main.sh - Daemon that periodically checks X clipboard for updates and syncs them with tmux.
+start_xclipwatchd.sh - Starts xclipwatchd in the background.
+
 Misc:
-getcopybuffer.sh - Outputs the tmux copy buffer corresponding to the given numeric argument.  0 is most recent buffer, 1 is second-most-recent, etc.
 updatevims.sh - Sends SIGUSR1 to all running vims.
+purge_local.sh - Purge local clipboard buffers.
 vimhooks.vim - vimscript components
 setup.sh - One-time setup script.
 

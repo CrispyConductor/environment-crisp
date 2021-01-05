@@ -2,7 +2,11 @@
 
 # argument should be a number.  0 gets most recent copy buffer, 1 gets second-most-recent, etc
 
-if [ $# -ne 1 ]; then exit 2; fi
+if [ $# -ne 1 ]; then
+	N=0
+else
+	N=$1
+fi
 
 MAX_SIZE=100000000
 
@@ -10,7 +14,7 @@ MAX_SIZE=100000000
 csv="`tmux list-buffers -F '#{buffer_created},#{buffer_size},#{buffer_name}' | grep ',buffer[0-9]'`"
 if [ $? -ne 0 ]; then exit 1; fi
 
-headcount=`expr $1 + 1`
+headcount=`expr $N + 1`
 csv="`echo "$csv" | head -n$headcount | tail -n1`"
 if [ -z "$csv" ]; then exit 1; fi
 
