@@ -19,10 +19,10 @@ remoteid="`echo "$remoteinfo" | head -n1`"
 remotebasedir="`echo "$remoteinfo" | head -n2 | tail -n1`"
 echo "clipssh: remoteid=$remoteid remotebasedir=$remotebasedir" 1>&2
 
-sessid="sess`date +%s`x${RANDOM}${RANDOM}"
+sessid="`date +%s`${RANDOM}"
 
-tun_r="${remotebasedir}/sock_in/${localid}___${sessid}:${localbasedir}/clipsync.sock"
-tun_l="${localbasedir}/sock_out/${remoteid}___${sessid}:${remotebasedir}/clipsync.sock"
+tun_r="${remotebasedir}/sock_in/${localid}+${sessid}:${localbasedir}/clipsync.sock"
+tun_l="${localbasedir}/sock_out/${remoteid}+${sessid}:${remotebasedir}/clipsync.sock"
 
 echo "clipssh: ssh -R $tun_r -L $tun_l $@" 1>&2
 

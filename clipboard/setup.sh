@@ -15,6 +15,9 @@ rm -f "$OUTBOUND/*"
 
 if [ ! -f "$HOSTFILE" ]; then
 	HOSTID="`hostname -f | sed 's/[^a-zA-Z0-9]/_/g'`_${RANDOM}${RANDOM}"
+	if [[ "`echo -n "$HOSTID" | wc -c`" -gt 8 ]]; then
+		HOSTID="`echo "$HOSTID" | head -c8``echo "$HOSTID" | md5sum | head -c6`"
+	fi
 	echo $HOSTID > "$HOSTFILE"
 fi
 
