@@ -70,7 +70,7 @@ endfunction
 augroup clipmgmt
 	autocmd!
 	autocmd TextYankPost * call YankSyncPush(v:event['regname'])
-	autocmd Signal SIGUSR1 call YankSyncPull()
+	silent! autocmd Signal SIGUSR1 call YankSyncPull()
 	autocmd VimEnter * call YankSyncPullAll()
 augroup END
 
