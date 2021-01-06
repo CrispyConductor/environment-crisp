@@ -26,7 +26,7 @@ tmux splitw -t "${SESS_NAME}:cmd0.0" -c ~ -v
 
 # setup workmac window
 tmux neww -t "${SESS_NAME}" -c ~ -n 'workmac'
-tmux send-keys -t "${SESS_NAME}:workmac.0" 'ssh cb185222@workmac' Enter 'tmux a -t zs' Enter
+tmux send-keys -t "${SESS_NAME}:workmac.0" 'clipssh cb185222@workmac' Enter
 
 # select default window
 tmux select-window -t "${SESS_NAME}:0"
