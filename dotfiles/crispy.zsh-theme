@@ -3,9 +3,9 @@ local prompt_char_def='%(!.#.$) '
 
 function vi_prompt_ch() {
 	if [ "$VI_KEYMAP" = 'vicmd' ]; then
-		print -P '%{$fg[red]%}>>%{$reset_color%}'
+		echo "%{$fg[red]%}>>%{$reset_color%}"
 	else
-		print -P $prompt_char_def
+		echo $prompt_char_def
 	fi
 }
 
