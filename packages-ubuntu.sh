@@ -4,7 +4,7 @@ curl
 tmux
 neovim
 git
-command-not-foud
+command-not-found
 "
 
 # Old:
