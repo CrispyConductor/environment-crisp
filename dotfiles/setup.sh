@@ -53,5 +53,9 @@ if ! `grep bashrc-local ~/.bashrc >/dev/null`; then
 	echo 'source ~/.bashrc-local' >> ~/.bashrc
 fi
 
-
+# Authorized ssh keys - do not overwrite existing
+mkdir -p ~/.ssh
+if [ ! -f ~/.ssh/authorized_keys ]; then
+	cat "$DOTFILES/ssh_authorized_keys" > ~/.ssh/authorized_keys
+fi
 
