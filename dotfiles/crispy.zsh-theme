@@ -9,8 +9,8 @@ function vi_prompt_ch() {
 	fi
 }
 
-local user='%{$fg[magenta]%}%n@%{$fg[magenta]%}%m%{$reset_color%}'
-local pwd='%{$fg[blue]%}%3~%{$reset_color%}'
+local user='%{$fg[magenta]%}%9>…>%n%<<@%{$fg[magenta]%}%9>…>%m%<<%{$reset_color%}'
+local pwd='%{$fg[blue]%}%40<…<%3~%<<%{$reset_color%}'
 local return_code='%(?.%{$fg[green]%}✔.%{$fg[red]%}↵%?)%{$reset_color%}'
 local time_info='%{$FG[240]%}%T%{$reset_color%}'
 local git_branch='%{$reset_color%}$(git_prompt_info)$(git_prompt_status)%{$reset_color%}'
