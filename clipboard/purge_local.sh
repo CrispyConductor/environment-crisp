@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MYDIR="$(realpath "$(dirname "$0")")"
-TEMPFILE="/tmp/_clipsync_purge_sentinal$USER"
+TEMPFILE="/tmp/_clipsync_purge_sentinel$USER"
 
 # Purges clipboard buffers on local system
 
@@ -10,7 +10,7 @@ for bufname in `tmux list-buffers -F '#{buffer_name}' | grep '^buffer[0-9]'`; do
 	tmux delete-buffer -b "$bufname"
 done
 
-# Add a tmux purge sentinal buffer to indicate a purge
+# Add a tmux purge sentinel buffer to indicate a purge
 echo -n '!!!___PURGED___!!!' > "$TEMPFILE"
 tmux load-buffer "$TEMPFILE"
 rm -f "$TEMPFILE"

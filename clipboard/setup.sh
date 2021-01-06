@@ -8,6 +8,7 @@ HOSTFILE="$BASEDIR/hostid"
 mkdir -p "$BASEDIR"
 mkdir -p "$INBOUND"
 mkdir -p "$OUTBOUND"
+chmod 700 "$BASEDIR"
 
 # uncomment to remove old sockets - will disrupt running clipsyncd
 #rm -f "$BASEDIR/clipsync.sock"
