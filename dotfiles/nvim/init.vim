@@ -28,7 +28,7 @@ source ~/.userenv/clipboard/vimhooks.vim
 " Vundle Plugins (and extra options required by Vundle)
 set nocompatible
 filetype off
-set rtp+=~/.local/share/nvim/Vundle.vim
+set rtp+=~/.local/share/nvim/bundle/Vundle.vim
 call vundle#begin('~/.local/share/nvim/bundle')
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'easymotion/vim-easymotion'

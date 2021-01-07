@@ -15,7 +15,8 @@ cat > "$TEMPFILE"
 
 (
 
-tmux load-buffer "$TEMPFILE"
+tmux load-buffer "$TEMPFILE" &>/dev/null
+if [ $? -ne 0 ]; then exit 1; fi
 
 # Trigger running vims to pull in update
 "$MYDIR/updatevims.sh"
