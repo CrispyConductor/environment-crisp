@@ -22,6 +22,10 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.local/share/nvim/bundle
 
 echo "Installing Oh My Zsh ..."
 export RUNZSH=no
+if [ -d ~/.oh-my-zsh ]; then
+	rm -rf ~/.oh-my-zsh-bak
+	mv ~/.oh-my-zsh ~/.oh-my-zsh-bak
+fi
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 echo "Setting up dotfiles ..."
