@@ -16,6 +16,10 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.g
 
 echo "Installing Oh My Zsh ..."
 export RUNZSH=no
+if [ -d ~/.oh-my-zsh ]; then
+	rm -rf ~/.oh-my-zsh-bak
+	mv ~/.oh-my-zsh ~/.oh-my-zsh-bak
+fi
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 echo "Setting up dotfiles ..."
