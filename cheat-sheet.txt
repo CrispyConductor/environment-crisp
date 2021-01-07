@@ -61,6 +61,92 @@ tmux
 
 
 vim
+    <n><operator><motion>
+
+    Operators  -  :help operator
+        c   -  Change (delete and enter insert mode)
+        d   -  Delete
+        y   -  Yank
+        g~  -  Swap case
+        gu  -  To lowercase
+        gU  -  To uppercase
+        !   -  Run through external command
+        =   -  Normalize indentation
+        gq  -  Format as text
+        gw  -  Format as text without moving cursor
+        >   -  Shift indentation right
+        <   -  Shift indentation left
+        zf  -  Define fold
+
+    Left-right Motions  -  :help left-right-motions
+        hl - Basic movement
+        0   -  Beginning of line
+        ^   -  Beginning of line, non-blank
+        g0  -  Beginning of screen line
+        g^  -  Beginning of screen line, non-blank
+        $   -  End of line
+        g$  -  End of screen line
+        gm  -  Middle of screen line
+        g_  -  Down <n-1> lines and to end of line
+        |   -  Go to column <n>
+        f{char} - (find) Go to <n>th occurrence of {char} to the right
+        F{char} - Same, to the left
+        t{char} - (till) Same (to the right) but move cursor 1 less
+        T{char} - Same, to the left
+        ;   - Repeat last f F t or T
+        ,   - Repeat last f F t or T in opposite direction
+
+    Up-down Motions  -  :help up-down-motions
+        j,k  -  Basic movement
+        gj,gk -  Character-wise basic movement (allows operating on single line)
+        +,-  -  Basic movement, and move cursor to first non-blank char
+        G    -  Go to line <n> first non-blank character; default last line
+        gg   -  Same as G but defaults to first line
+        %    -  Go to <n> percent through the file
+        go   -  Go to <n> byte in the file
+
+    Word Motions  -  :help word-motions
+        From vim help: 'words' are separated by whitespace or punctuation other than _, 'WORDS' are separated only by whitespace
+        w   -  Move forward word
+        W   -  Move forward WORD
+        e,E -  Move forward to end of wOrD
+        b   -  Move backward word
+        B   -  Move backward WORD
+        ge,gE - Move backward to end of wOrD
+
+    Block Motions  -  :help object-motions
+        (   -  Sentence backward
+        )   -  Sentence forward
+        {   -  Paragraph backward
+        }   -  Paragraph forward
+
+    Marks  -  :help mark-motions
+        m{a-z} - Set single-file mark at cursor position (not a motion)
+        m{A-Z} - Set across-file mark at cursor position (not a motion)
+        `{mark} - Jump to mark
+        '{mark} - Jump to mark linewise, positioning cursor at beginning of line
+        :marks - List marks
+        :delm {marks} - Delete marks
+        :delm! - Delete all marks in buffer
+        Types of marks:
+            a-z  -  Valid within a buffer - can be set
+            A-Z  -  Valid across buffers - can be set
+            [,]  -  First,Last characters of previously yanked or changed text - can be set
+            <,>  -  First,Last characters of selection in visual mode - can be set
+            ^    -  Position last time insert mode was stopped
+            .    -  Position of last change
+            `    -  Position before jump (use as ``)
+            '    -  Position before jump (use as '')
+
+    Misc Motions
+        g;  -  Previous change
+        g,  -  Next change
+        :changes - Print change list
+        more @ :help various-motions
+
+    Misc
+        .   -  Repeat last
+
     Cursor Movement
         0  -  Home/Beginning of line
         $  -  End/End of line
