@@ -20,6 +20,10 @@ mkdir -p ~/.local/share/nvim/bundle
 rm -rf ~/.local/share/nvim/bundle/Vundle.vim
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.local/share/nvim/bundle/Vundle.vim
 
+echo "Installing tpm for tmux ..."
+mkdir -p ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 echo "Installing Oh My Zsh ..."
 export RUNZSH=no
 if [ -d ~/.oh-my-zsh ]; then

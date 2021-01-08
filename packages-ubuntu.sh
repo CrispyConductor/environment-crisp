@@ -1,6 +1,7 @@
 packages="
 zsh
 curl
+gawk
 tmux
 neovim
 git
