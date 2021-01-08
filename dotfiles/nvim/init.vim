@@ -9,10 +9,13 @@ map <M-n> :NERDTreeToggle<CR>
 " EasyMotion mappings and settings
 let g:EasyMotion_do_mapping = 0 " disable easymotion default mappings
 let g:EasyMotion_smartcase = 1
-nmap s <Plug>(easymotion-overwin-f2)
-vmap s <Plug>(easymotion-f2)
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
+" nmap s <Plug>(easymotion-overwin-f2)
+nmap s <Plug>(easymotion-s)
+vmap s <Plug>(easymotion-s)
+nmap SS <Plug>(easymotion-s2)
+vmap SS <Plug>(easymotion-s2)
+map Sj <Plug>(easymotion-j)
+map Sk <Plug>(easymotion-k)
 
 " VimPlug plugins
 call plug#begin('~/.local/share/nvim/plugged')

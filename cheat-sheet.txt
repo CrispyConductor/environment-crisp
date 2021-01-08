@@ -144,6 +144,12 @@ vim
         :changes - Print change list
         more @ :help various-motions
 
+    EasyMotion
+        s   -  Bidirectional find on single character
+        SS  -  Bidirectional find with 2 characters
+        Sj  -  Find line below
+        Sk  -  Find line above
+
     Misc
         .   -  Repeat last
 
