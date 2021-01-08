@@ -52,6 +52,7 @@ tmux
         <Prefix> [  -  Start copy mode
         <Space>  -  Begin selection
         <Enter>  -  Copy selection and exit copy mode
+        s  -  tmux-easymotion
 
     Misc
         <Prefix> :setw synchronize-panes  -  Toggle duplicate input to all panes
