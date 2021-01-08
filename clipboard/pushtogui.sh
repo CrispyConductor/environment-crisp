@@ -9,6 +9,8 @@ fi
 # make sure $DISPLAY is set
 if [ -z "$DISPLAY" ]; then
 	echo no DISPLAY 1>&2
+	# use backup of storing to temp file and xclipwatchd
+	touch ~/.xclipwatchd_pushbuf
 	exit 0
 fi
 

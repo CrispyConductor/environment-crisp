@@ -48,6 +48,14 @@ rm -f "$TEMPFILE"
 # keep fetching clipboard until a change is found
 # wait longer if last clip was longer
 while [ 1 ]; do
+	# Check if the flag file exists to call pushtogui
+	if [ -f ~/.xclipwatchd_pushbuf ]; then
+		"$MYDIR/pushtogui.sh"
+		rm -f ~/.xclipwatchd_pushbuf
+		sleep $LOOP_DELAY
+		continue
+	fi
+	# Check if X clipboard has changed
 	xclip -o -selection clipboard >"$TEMPFILE" 2>/dev/null
 	if [ $? -ne 0 ]; then
 		rm -f "$TEMPFILE"
