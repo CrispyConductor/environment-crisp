@@ -94,6 +94,9 @@ function clippaste() {
 	~/.userenv/clipboard/getcopybuffer.sh
 }
 
+# Don't set window title to directory
+DISABLE_AUTO_TITLE=true
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment

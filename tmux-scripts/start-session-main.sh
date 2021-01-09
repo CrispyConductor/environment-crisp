@@ -28,6 +28,10 @@ tmux splitw -t "${SESS_NAME}:cmd0.0" -c ~ -v
 tmux neww -t "${SESS_NAME}" -c ~ -n 'workmac'
 tmux send-keys -t "${SESS_NAME}:workmac.0" 'clipssh cb185222@workmac' Enter
 
+# setup hedron window
+tmux neww -t "${SESS_NAME}" -c ~ -n 'hedron'
+tmux send-keys -t "${SESS_NAME}:hedron.0" 'clipssh cbreneman@hedron.landofcrispy.com' Enter
+
 # select default window
 tmux select-window -t "${SESS_NAME}:0"
 
