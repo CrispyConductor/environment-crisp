@@ -10,3 +10,7 @@ alias clippurge=~/.userenv/clipboard/purge.sh
 alias pushclip=~/.userenv/clipboard/pushclip.sh
 alias getclip=~/.userenv/clipboard/getcopybuffer.sh
 
+if [ -f ~/.shellrc-local ]; then
+	source ~/.shellrc-local
+fi
+
