@@ -33,13 +33,20 @@ function install_dotfile {
 }
 
 # install dotfiles
-install_dotfile tmux.conf .tmux.conf
+# note: copy in basic tmux.conf, then setup-tmux.sh will overwrite it with a better version if it can
+install_dotfile tmux-basic.conf .tmux.conf
 install_dotfile nvim .config/nvim
 install_dotfile shellrc-common .shellrc-common
 install_dotfile bashrc-env .bashrc-env
 install_dotfile zshrc .zshrc
 install_dotfile gitconfig .gitconfig
 install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
+
+# Setup the real tmux.conf
+"$DOTFILES/setup-tmux.sh"
+if [ $? -ne 0 ]; then
+	echo 'Error setting up tmux.  Using basic config.'
+fi
 
 # append bashrc-env include to bashrc
 if [ ! -f ~/.bashrc ]; then touch ~/.bashrc; fi
