@@ -85,10 +85,6 @@ def runtmux(args, one=False, lines=False, emptylines=False, sendstdin=None):
 	return dlines if lines else data
 
 def runtmuxmulti(argsets):
-	#for a in argsets:
-	#	runtmux(a)
-	#return
-
 	if len(argsets) < 1: return
 	allargs = []
 	for argset in argsets:
@@ -148,8 +144,13 @@ def create_window_pane_of_size(size):
 	return pane
 
 swap_count = 0
-def swap_hidden_pane():
+def swap_hidden_pane(show_hidden=None):
 	global swap_count
+	if show_hidden == True and swap_count % 2 == 1:
+		return
+	if show_hidden == False and swap_count % 2 == 0:
+		return
+
 	if args.swap_mode == 'pane-swap':
 		# Swap target pane and hidden pane
 		t1 = args.t
@@ -282,111 +283,144 @@ def em_search_lines(datalines, srch, min_match_spacing=2):
 #	print(next(ls))
 #exit(0)
 
-def run_easymotion(stdscr):
-	log('start run easymotion internal')
-	orig_pane = get_pane_info(args.t, capture=True)
-	overlay_pane = get_pane_info(args.hidden_t)
+class ActionCanceled(Exception):
+	def __init__(self):
+		super().__init__('Action Canceled')
 
-	curses.curs_set(False)
-	curses.start_color()
-	curses.use_default_colors()
-	curses.init_pair(1, curses.COLOR_RED, -1) # color for label first char
-	curses.init_pair(2, curses.COLOR_YELLOW, -1) # color for label second+ char
-	stdscr.clear()
-	curses_size = stdscr.getmaxyx() # note: in (y,x) not (x,y)
+class PaneJumpAction:
 
-	# display current contents
-	content_lines = orig_pane['contents'].split('\n')
-	log('\n'.join(content_lines), 'content_lines')
-	match_locations = None
-	cur_label_pos = 0
+	def __init__(self, stdscr):
+		self.stdscr = stdscr
+		log('start run easymotion internal')
 
-	def redraw_lines(start=0, end=None, draw_matches=True):
-		if end == None:
-			end = curses_size[0]
-		line_width = min(curses_size[1], orig_pane['pane_size'][0])
-		for i in range(start, min(curses_size[0], len(content_lines), end)):
-			stdscr.addstr(i, 0, content_lines[i][:line_width].ljust(curses_size[0]))
-		if match_locations and draw_matches:
-			for col, row, label in match_locations:
-				if row < start or (end and row >= end): continue
+		# Fetch information about the panes and capture original contents
+		self.orig_pane = get_pane_info(args.t, capture=True)
+		self.overlay_pane = get_pane_info(args.hidden_t)
+
+		# Initialize curses stuff
+		curses.curs_set(False)
+		curses.start_color()
+		curses.use_default_colors()
+		curses.init_pair(1, curses.COLOR_RED, -1) # color for label first char
+		curses.init_pair(2, curses.COLOR_YELLOW, -1) # color for label second+ char
+		self.stdscr.clear()
+
+		# Track the size as known by curses
+		self.curses_size = stdscr.getmaxyx() # note: in (y,x) not (x,y)
+
+		# Set the contents to display
+		self.display_content_lines = self.orig_pane['contents'].split('\n')
+
+		# Initialize properties for later
+		self.cur_label_pos = 0 # how many label chars have been keyed in
+		self.match_locations = None # the currently valid search results [ (x, y, label) ]
+
+		# display current contents
+		log('\n'.join(self.display_content_lines), 'display_content_lines')
+		self.redraw()
+
+	def _redraw_contents(self):
+		line_width = min(self.curses_size[1], self.orig_pane['pane_size'][0])
+		for i in range(min(self.curses_size[0], len(self.display_content_lines))):
+			self.stdscr.addstr(i, 0, self.display_content_lines[i][:line_width].ljust(self.curses_size[0]))
+
+	def _redraw_labels(self):
+		line_width = min(self.curses_size[1], self.orig_pane['pane_size'][0])
+		if self.match_locations:
+			for col, row, label in self.match_locations:
 				if col + len(label) > line_width:
 					label = label[:line_width - col]
-				stdscr.addstr(row, col, label[cur_label_pos], curses.color_pair(1))
-				if len(label) > cur_label_pos + 1:
-					stdscr.addstr(row, col+1, label[cur_label_pos+1:], curses.color_pair(2))
-		stdscr.refresh()
-	redraw_lines()
+				self.stdscr.addstr(row, col, label[self.cur_label_pos], curses.color_pair(1))
+				if len(label) > self.cur_label_pos + 1:
+					self.stdscr.addstr(row, col+1, label[self.cur_label_pos+1:], curses.color_pair(2))
 
-	# Swap in the hidden pane containing this application
-	swap_hidden_pane()
+	def redraw(self):
+		self._redraw_contents()
+		self._redraw_labels()
+		self.stdscr.refresh()
 
-	# Input search key (cancel on Esc or Ctrl-C; ignore nonprintables and escapes)
-	search_len = 1
-	search_str = ''
-	for schi in range(search_len):
+	def cancel(self):
+		raise ActionCanceled()
+
+	def getkey(self, valid=None):
+		if valid == None:
+			valid = lambda k: len(k) == 1 and k.isprintable()
 		while True:
-			key = stdscr.getkey()
+			key = self.stdscr.getkey()
 			if key in ('^[', '^C', '\n', '\x1b'):
-				return
+				self.cancel()
 			if key == 'KEY_RESIZE':
-				curses_size = stdscr.getmaxyx()
-				redraw_lines()
+				self.curses_size = self.stdscr.getmaxyx()
+				self.redraw()
 				continue
-				#oldsize = curses_size
-				#curses_size = stdscr.getmaxyx()
-				#if curses_size[0] > oldsize[0]:
-				#	redraw_lines(oldsize[0], curses_size[0])
-			if len(key) == 1 and key.isprintable():
-				break
+			if valid(key):
+				return key
 			#key = ' '.join([str(hex(ord(c))) for c in key])
-			#stdscr.addstr(0, 0, key)
-		search_str += key
+			#self.stdscr.addstr(0, 0, key)
 
-	# Find instances of the search str in the pane contents
-	pane_lines = process_pane_capture_lines(orig_pane['contents'], orig_pane['pane_size'][1])
-	log('\n'.join(pane_lines), 'pane_lines')
-	match_locations = em_search_lines(pane_lines, search_str)
 
-	# Assign each match a label
-	label_it = gen_em_labels(len(match_locations))
-	match_locations = [ (ml[0], ml[1], next(label_it) ) for ml in match_locations ]
+	def run(self):
+		pass
 
-	# Draw labels on screen
-	redraw_lines()
 
-	# Wait for label presses
-	keyed_label = ''
-	while True: # loop over each key/char in the label
-		while True: # keypress retry
-			key = stdscr.getkey()
-			if key in ('^[', '^C', '\n', '\x1b'):
-				return
-			if key == 'KEY_RESIZE':
-				curses_size = stdscr.getmaxyx()
-				redraw_lines()
-				continue
-				#oldsize = curses_size
-				#curses_size = stdscr.getmaxyx()
-				#if curses_size[0] > oldsize[0]:
-				#	redraw_lines(oldsize[0], curses_size[0])
-			if len(key) == 1 and key.isprintable():
+class EasyMotionAction(PaneJumpAction):
+
+	def __init__(self, stdscr, search_len=1):
+		super().__init__(stdscr)
+		self.search_len = search_len
+
+	def _em_search_lines(self, datalines, srch, min_match_spacing=2):
+		results = [] # (x, y)
+		for linenum, line in reversed(list(enumerate(datalines))):
+			pos = 0
+			while True:
+				r = line.find(srch, pos)
+				if r == -1: break
+				results.append((r, linenum))
+				pos = r + len(srch) + min_match_spacing
+		return results
+
+
+	def run(self):
+		swap_hidden_pane(True)
+
+		# Input search string
+		search_str = ''
+		for i in range(self.search_len):
+			search_str += self.getkey()
+
+		# Find occurrences of search string in pane contents
+		pane_search_lines = process_pane_capture_lines(self.orig_pane['contents'], self.orig_pane['pane_size'][1])
+		log('\n'.join(pane_search_lines), 'pane_search_lines')
+		match_locations = self._em_search_lines(pane_search_lines, search_str)
+
+		# Assign each match a label
+		label_it = gen_em_labels(len(match_locations))
+		self.match_locations = [ (ml[0], ml[1], next(label_it) ) for ml in match_locations ]
+
+		# Draw labels
+		self.redraw()
+
+		# Wait for label presses
+		keyed_label = ''
+		while True: # loop over each key/char in the label
+			keyed_label += self.getkey()
+			self.cur_label_pos += 1
+			# TODO: case sensitivity stuff
+			self.match_locations = [ m for m in self.match_locations if m[2].startswith(keyed_label) ]
+			if len(self.match_locations) < 2:
 				break
-		keyed_label += key
-		cur_label_pos += 1
-		# TODO: case sensitivity stuff
-		match_locations = [ m for m in match_locations if m[2].startswith(keyed_label) ]
-		if len(match_locations) < 2:
-			break
-		redraw_lines()
+			self.redraw()
+		log('keyed label: ' + keyed_label)
 
-	log('keyed label: ' + keyed_label)
+		# If a location was found, move cursor there in original pane
+		if len(self.match_locations) > 0:
+			log('match location: ' + str(self.match_locations[0]))
+			move_tmux_cursor((self.match_locations[0][0], self.match_locations[0][1]), self.orig_pane['pane_id'])
 
-	# If a location was found, move cursor there in original pane
-	if len(match_locations) > 0:
-		log('match location: ' + str(match_locations[0]))
-		swap_hidden_pane()
-		move_tmux_cursor((match_locations[0][0], match_locations[0][1]), orig_pane['pane_id'])
+def run_easymotion(stdscr):
+	EasyMotionAction(stdscr, 2).run()
+
 
 argp = argparse.ArgumentParser(description='tmux pane utils')
 argp.add_argument('-t', help='target pane')
@@ -419,11 +453,13 @@ try:
 
 	os.environ.setdefault('ESCDELAY', '10') # lower curses pause on escape
 	if args.action == 'easymotion':
-		#swap_hidden_pane()
 		curses.wrapper(run_easymotion)
 	else:
 		print('Invalid action')
 		exit(1)
+
+except ActionCanceled:
+	pass
 
 except Exception as ex:
 	print('Error:')
