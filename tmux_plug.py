@@ -7,9 +7,25 @@ import traceback
 import curses
 import itertools
 import math
+import subprocess
 
-tmux_command = 'tmux'
 python_command = 'python3'
+
+# Find full path to tmux command so it can be invoked without a shell
+def find_command_path(c):
+	cmd = 'command -V ' + c
+	f = os.popen(cmd)
+	result = f.read()
+	estatus = f.close()
+	if estatus:
+		raise Exception('Error finding tmux: ' + cmd)
+	r = ' '.join(result.split('\n')[0].split(' ')[2:])
+	if r[0] != '/':
+		raise Exception('Got unexpected result from tmux path finding: ' + cmd)
+	return r
+
+tmux_command = find_command_path('tmux')
+
 
 # We need to replace the current pane with a pane running the plugin script.
 # Ideally this would be done without messing with any application currently running within the pane.
@@ -18,6 +34,7 @@ python_command = 'python3'
 
 
 def runcmd(command, one=False, lines=False, emptylines=False):
+	# runs command in shell via popen
 	f = os.popen(command)
 	data = f.read()
 	estatus = f.close()
@@ -31,10 +48,36 @@ def runcmd(command, one=False, lines=False, emptylines=False):
 		return dlines[0] if len(dlines) > 0 else ''
 	return dlines if lines else data
 
-def runtmux(args, one=False, lines=False, emptylines=False):
-	if isinstance(args, list):
-		args = ' '.join([ "'" + str(arg).replace("'", "'\\''") + "'" for arg in args ])
-	return runcmd(tmux_command + ' ' + args, one=one, lines=lines, emptylines=emptylines)
+def runtmux(args, one=False, lines=False, emptylines=False, sendstdin=None):
+	args = [ str(a) for a in args ]
+	with subprocess.Popen(
+		[ tmux_command ] + args,
+		shell=False,
+		stdin=subprocess.PIPE if sendstdin != None else subprocess.DEVNULL,
+		stdout=subprocess.PIPE
+	) as proc:
+		if sendstdin != None and isinstance(sendstdin, str):
+			sendstdin = bytearray(sendstdin, 'utf8')
+		recvstdout, _ = proc.communicate(input=sendstdin)
+		if proc.returncode != 0:
+			raise Exception(f'tmux {" ".join(args)} exited with status {proc.returncode}')
+	data = recvstdout.decode('utf8')
+	if one or lines: # return list of lines
+		dlines = data.split('\n')
+		if not one and blanklines:
+			dlines = [ l for l in dlines if len(l) > 0 ]
+	if one: # single-line
+		return dlines[0] if len(dlines) > 0 else ''
+	return dlines if lines else data
+
+def runtmuxmulti(argsets):
+	if len(argsets) < 1: return
+	allargs = []
+	for argset in argsets:
+		if len(allargs) > 0:
+			allargs.append(';')
+		allargs.extend(argset)
+	runtmux(allargs)
 
 def capture_pane_contents(target=None):
 	args = [ 'capture-pane', '-p' ]
@@ -68,17 +111,20 @@ def create_window_pane_of_size(size):
 	pane = get_pane_info(window_id_full)
 	# If the width is greater than the target width, do a vertical split.
 	# Note that splitting reduces width by at least 2 due to the separator
+	tmuxcmds = []
 	resize = False
 	if pane['pane_size'][0] > size[0] + 1:
-		runtmux([ 'split-window', '-t', pane['pane_id_full'], '-hd', '/bin/sh' ])
+		tmuxcmds.append([ 'split-window', '-t', pane['pane_id_full'], '-hd', '/bin/sh' ])
 		resize = True
 	# If too tall, do a horizontal split
 	if pane['pane_size'][1] > size[1] + 1:
-		runtmux([ 'split-window', '-t', pane['pane_id_full'], '-vd', '/bin/sh' ])
+		tmuxcmds.append([ 'split-window', '-t', pane['pane_id_full'], '-vd', '/bin/sh' ])
 		resize = True
 	# Resize the pane to desired size
 	if resize:
-		runtmux([ 'resize-pane', '-t', pane['pane_id_full'], '-x', size[0], '-y', size[1] ])
+		tmuxcmds.append([ 'resize-pane', '-t', pane['pane_id_full'], '-x', size[0], '-y', size[1] ])
+	if len(tmuxcmds) > 0:
+		runtmuxmulti(tmuxcmds)
 	# Return info
 	pane['pane_size'] = size
 	return pane
@@ -101,14 +147,16 @@ def swap_hidden_pane():
 	swap_count += 1
 
 def move_tmux_cursor(pos, target, gotocopy=True): # (x, y)
+	tmuxcmds = []
 	if gotocopy:
-		runtmux([ 'copy-mode', '-t', target ])
-	runtmux([ 'send-keys', '-X', '-t', target, 'top-line' ])
+		tmuxcmds.append([ 'copy-mode', '-t', target ])
+	tmuxcmds.append([ 'send-keys', '-X', '-t', target, 'top-line' ])
 	if pos[1] > 0:
-		runtmux([ 'send-keys', '-X', '-t', target, '-N', str(pos[1]), 'cursor-down' ])
-	runtmux([ 'send-keys', '-X', '-t', target, 'start-of-line' ])
+		tmuxcmds.append([ 'send-keys', '-X', '-t', target, '-N', str(pos[1]), 'cursor-down' ])
+	tmuxcmds.append([ 'send-keys', '-X', '-t', target, 'start-of-line' ])
 	if pos[0] > 0:
-		runtmux([ 'send-keys', '-X', '-t', target, '-N', str(pos[0]), 'cursor-right' ])
+		tmuxcmds.append([ 'send-keys', '-X', '-t', target, '-N', str(pos[0]), 'cursor-right' ])
+	runtmuxmulti(tmuxcmds)
 
 def cleanup_internal_process():
 	if swap_count % 2 == 1:
