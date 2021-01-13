@@ -8,6 +8,9 @@ import curses
 import itertools
 import math
 import subprocess
+import shutil
+
+logdir = '/tmp/tmplog'
 
 python_command = 'python3'
 
@@ -26,6 +29,16 @@ def find_command_path(c):
 
 tmux_command = find_command_path('tmux')
 
+def log_clear():
+	if not logdir: return
+	shutil.rmtree(logdir, ignore_errors=True)
+	os.makedirs(logdir)
+
+def log(message, fn=None):
+	if not logdir: return
+	if fn == None: fn = 'main.log'
+	with open(os.path.join(logdir, fn), 'a') as f:
+		f.write(message + '\n')
 
 # We need to replace the current pane with a pane running the plugin script.
 # Ideally this would be done without messing with any application currently running within the pane.
@@ -50,6 +63,7 @@ def runcmd(command, one=False, lines=False, emptylines=False):
 
 def runtmux(args, one=False, lines=False, emptylines=False, sendstdin=None):
 	args = [ str(a) for a in args ]
+	log('run tmux: ' + ' '.join(args))
 	with subprocess.Popen(
 		[ tmux_command ] + args,
 		shell=False,
@@ -71,6 +85,10 @@ def runtmux(args, one=False, lines=False, emptylines=False, sendstdin=None):
 	return dlines if lines else data
 
 def runtmuxmulti(argsets):
+	#for a in argsets:
+	#	runtmux(a)
+	#return
+
 	if len(argsets) < 1: return
 	allargs = []
 	for argset in argsets:
@@ -147,13 +165,14 @@ def swap_hidden_pane():
 	swap_count += 1
 
 def move_tmux_cursor(pos, target, gotocopy=True): # (x, y)
+	log('move cursor to: ' + str(pos))
 	tmuxcmds = []
 	if gotocopy:
 		tmuxcmds.append([ 'copy-mode', '-t', target ])
 	tmuxcmds.append([ 'send-keys', '-X', '-t', target, 'top-line' ])
 	if pos[1] > 0:
 		tmuxcmds.append([ 'send-keys', '-X', '-t', target, '-N', str(pos[1]), 'cursor-down' ])
-	tmuxcmds.append([ 'send-keys', '-X', '-t', target, 'start-of-line' ])
+	#tmuxcmds.append([ 'send-keys', '-X', '-t', target, 'start-of-line' ]) # Was breaking when on a wrapped line
 	if pos[0] > 0:
 		tmuxcmds.append([ 'send-keys', '-X', '-t', target, '-N', str(pos[0]), 'cursor-right' ])
 	runtmuxmulti(tmuxcmds)
@@ -264,6 +283,7 @@ def em_search_lines(datalines, srch, min_match_spacing=2):
 #exit(0)
 
 def run_easymotion(stdscr):
+	log('start run easymotion internal')
 	orig_pane = get_pane_info(args.t, capture=True)
 	overlay_pane = get_pane_info(args.hidden_t)
 
@@ -277,6 +297,7 @@ def run_easymotion(stdscr):
 
 	# display current contents
 	content_lines = orig_pane['contents'].split('\n')
+	log('\n'.join(content_lines), 'content_lines')
 	match_locations = None
 	cur_label_pos = 0
 
@@ -324,6 +345,7 @@ def run_easymotion(stdscr):
 
 	# Find instances of the search str in the pane contents
 	pane_lines = process_pane_capture_lines(orig_pane['contents'], orig_pane['pane_size'][1])
+	log('\n'.join(pane_lines), 'pane_lines')
 	match_locations = em_search_lines(pane_lines, search_str)
 
 	# Assign each match a label
@@ -358,8 +380,12 @@ def run_easymotion(stdscr):
 			break
 		redraw_lines()
 
+	log('keyed label: ' + keyed_label)
+
 	# If a location was found, move cursor there in original pane
 	if len(match_locations) > 0:
+		log('match location: ' + str(match_locations[0]))
+		swap_hidden_pane()
 		move_tmux_cursor((match_locations[0][0], match_locations[0][1]), orig_pane['pane_id'])
 
 argp = argparse.ArgumentParser(description='tmux pane utils')
@@ -376,6 +402,7 @@ argp.add_argument('action')
 args = argp.parse_args()
 
 if not args.run_internal:
+	log_clear()
 	run_wrapper(args.action, args)
 	exit(0)
 
