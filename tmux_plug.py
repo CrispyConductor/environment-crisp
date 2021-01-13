@@ -5,6 +5,8 @@ import re
 import argparse
 import traceback
 import curses
+import itertools
+import math
 
 tmux_command = 'tmux'
 python_command = 'python3'
@@ -98,6 +100,16 @@ def swap_hidden_pane():
 		runtmux([ 'select-window', '-t', selectwin ])
 	swap_count += 1
 
+def move_tmux_cursor(pos, target, gotocopy=True): # (x, y)
+	if gotocopy:
+		runtmux([ 'copy-mode', '-t', target ])
+	runtmux([ 'send-keys', '-X', '-t', target, 'top-line' ])
+	if pos[1] > 0:
+		runtmux([ 'send-keys', '-X', '-t', target, '-N', str(pos[1]), 'cursor-down' ])
+	runtmux([ 'send-keys', '-X', '-t', target, 'start-of-line' ])
+	if pos[0] > 0:
+		runtmux([ 'send-keys', '-X', '-t', target, '-N', str(pos[0]), 'cursor-right' ])
+
 def cleanup_internal_process():
 	if swap_count % 2 == 1:
 		swap_hidden_pane()
@@ -139,6 +151,70 @@ def run_wrapper(main_action, args):
 	runtmux([ 'respawn-pane', '-k', '-t', hidden_pane['pane_id_full'], cmd ])
 
 
+def gen_em_labels(n, min_nchars=1, max_nchars=None):
+	# Generates easy-motion letter abbreviation sequences
+	all_chars = 'asdghklqwertyuiopzxcvbnmfj;'
+	# Determine how many chars per label are needed
+	need_label_len = max(math.ceil(math.log(n, len(all_chars))), 1)
+	if min_nchars > need_label_len:
+		need_label_len = min_nchars
+	if max_nchars and need_label_len > max_nchars:
+		need_label_len = max_nchars
+	# Determine how many letters are actually needed at such a length
+	at_len_need_chars = math.ceil(n ** (1 / need_label_len))
+	# If there are free letters, then there are some available lower on the stack.  Evenly divide the
+	# remaininder among the lower tiers.
+	n_remaining_chars = len(all_chars) - at_len_need_chars
+	nchars_per_tier = [ at_len_need_chars ]
+	for i in range(need_label_len - 1):
+		nc = n_remaining_chars // (need_label_len - 1 - i)
+		if i+1 < min_nchars:
+			nc = 0
+		nchars_per_tier.append(nc)
+		n_remaining_chars -= nc
+	nchars_per_tier.reverse()
+
+	# Construct the labels
+	remaining_chars = all_chars
+	for tier in range(need_label_len):
+		tierchars = remaining_chars[:nchars_per_tier[tier]]
+		remaining_chars = remaining_chars[nchars_per_tier[tier]:]
+		for label in itertools.product(*[tierchars for i in range(tier + 1)]):
+			yield ''.join(label)
+
+def process_pane_capture_lines(data, nlines=None):
+	# processes pane capture data into an array of lines
+	# also handles nonprintables
+	lines = [
+		''.join([
+			'        ' if c == '\t' else (
+				c if c.isprintable() else ''
+			)
+			for c in line
+		])
+		for line in data.split('\n')
+	]
+	if nlines != None:
+		lines = lines[:nlines]
+	return lines
+
+def em_search_lines(datalines, srch, min_match_spacing=2):
+	results = [] # (x, y)
+	for linenum, line in reversed(list(enumerate(datalines))):
+		pos = 0
+		while True:
+			r = line.find(srch, pos)
+			if r == -1: break
+			results.append((r, linenum))
+			pos = r + len(srch) + min_match_spacing
+	return results
+
+#n = 10000
+#ls = gen_em_labels(n, 1, 2)
+#for i in range(n):
+#	print(next(ls))
+#exit(0)
+
 def run_easymotion(stdscr):
 	orig_pane = get_pane_info(args.t, capture=True)
 	overlay_pane = get_pane_info(args.hidden_t)
@@ -146,31 +222,97 @@ def run_easymotion(stdscr):
 	curses.curs_set(False)
 	curses.start_color()
 	curses.use_default_colors()
-	curses.init_pair(1, curses.COLOR_RED, -1)
+	curses.init_pair(1, curses.COLOR_RED, -1) # color for label first char
+	curses.init_pair(2, curses.COLOR_YELLOW, -1) # color for label second+ char
 	stdscr.clear()
 	curses_size = stdscr.getmaxyx() # note: in (y,x) not (x,y)
 
 	# display current contents
 	content_lines = orig_pane['contents'].split('\n')
-	line_width = min(curses_size[1], orig_pane['pane_size'][0])
-	for i in range(min(curses_size[0], len(content_lines))):
-		stdscr.addstr(i, 0, content_lines[i][:line_width])
-	#n = 0
-	#stdscr.addstr(n, 0, 'Test')
-	#n += 1
-	#stdscr.addstr(n, 0, str(stdscr.getmaxyx()))
-	#n += 1
-	stdscr.refresh()
-	swap_hidden_pane()
-	k = ''
-	while k != 'q':
-		#stdscr.addstr(n, 0, str(stdscr.getmaxyx()))
-		#n += 1
-		k = stdscr.getkey()
-		stdscr.addstr(0, 0, str(k))
-	with open('/tmp/k', 'w') as f:
-		f.write(k)
+	match_locations = None
+	cur_label_pos = 0
 
+	def redraw_lines(start=0, end=None, draw_matches=True):
+		if end == None:
+			end = curses_size[0]
+		line_width = min(curses_size[1], orig_pane['pane_size'][0])
+		for i in range(start, min(curses_size[0], len(content_lines), end)):
+			stdscr.addstr(i, 0, content_lines[i][:line_width].ljust(curses_size[0]))
+		if match_locations and draw_matches:
+			for col, row, label in match_locations:
+				if row < start or (end and row >= end): continue
+				if col + len(label) > line_width:
+					label = label[:line_width - col]
+				stdscr.addstr(row, col, label[cur_label_pos], curses.color_pair(1))
+				if len(label) > cur_label_pos + 1:
+					stdscr.addstr(row, col+1, label[cur_label_pos+1:], curses.color_pair(2))
+		stdscr.refresh()
+	redraw_lines()
+
+	# Swap in the hidden pane containing this application
+	swap_hidden_pane()
+
+	# Input search key (cancel on Esc or Ctrl-C; ignore nonprintables and escapes)
+	search_len = 1
+	search_str = ''
+	for schi in range(search_len):
+		while True:
+			key = stdscr.getkey()
+			if key in ('^[', '^C', '\n', '\x1b'):
+				return
+			if key == 'KEY_RESIZE':
+				curses_size = stdscr.getmaxyx()
+				redraw_lines()
+				continue
+				#oldsize = curses_size
+				#curses_size = stdscr.getmaxyx()
+				#if curses_size[0] > oldsize[0]:
+				#	redraw_lines(oldsize[0], curses_size[0])
+			if len(key) == 1 and key.isprintable():
+				break
+			#key = ' '.join([str(hex(ord(c))) for c in key])
+			#stdscr.addstr(0, 0, key)
+		search_str += key
+
+	# Find instances of the search str in the pane contents
+	pane_lines = process_pane_capture_lines(orig_pane['contents'], orig_pane['pane_size'][1])
+	match_locations = em_search_lines(pane_lines, search_str)
+
+	# Assign each match a label
+	label_it = gen_em_labels(len(match_locations))
+	match_locations = [ (ml[0], ml[1], next(label_it) ) for ml in match_locations ]
+
+	# Draw labels on screen
+	redraw_lines()
+
+	# Wait for label presses
+	keyed_label = ''
+	while True: # loop over each key/char in the label
+		while True: # keypress retry
+			key = stdscr.getkey()
+			if key in ('^[', '^C', '\n', '\x1b'):
+				return
+			if key == 'KEY_RESIZE':
+				curses_size = stdscr.getmaxyx()
+				redraw_lines()
+				continue
+				#oldsize = curses_size
+				#curses_size = stdscr.getmaxyx()
+				#if curses_size[0] > oldsize[0]:
+				#	redraw_lines(oldsize[0], curses_size[0])
+			if len(key) == 1 and key.isprintable():
+				break
+		keyed_label += key
+		cur_label_pos += 1
+		# TODO: case sensitivity stuff
+		match_locations = [ m for m in match_locations if m[2].startswith(keyed_label) ]
+		if len(match_locations) < 2:
+			break
+		redraw_lines()
+
+	# If a location was found, move cursor there in original pane
+	if len(match_locations) > 0:
+		move_tmux_cursor((match_locations[0][0], match_locations[0][1]), orig_pane['pane_id'])
 
 argp = argparse.ArgumentParser(description='tmux pane utils')
 argp.add_argument('-t', help='target pane')
