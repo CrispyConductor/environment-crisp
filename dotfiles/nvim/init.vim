@@ -3,6 +3,14 @@ set background=dark
 set updatetime=100
 set guicursor=
 
+" Folding (fold on indent, unfolded by default)
+set foldmethod=indent
+" Don't ignore comments for folding
+set foldignore=
+augroup foldstuff
+	autocmd BufWinEnter * normal zR
+augroup END
+
 " Mappings
 map <M-n> :NERDTreeToggle<CR>
 
@@ -17,6 +25,10 @@ vmap SS <Plug>(easymotion-s2)
 map Sj <Plug>(easymotion-j)
 map Sk <Plug>(easymotion-k)
 
+" hooks for clipboard syncing
+source ~/.userenv/clipboard/vimhooks.vim
+
+
 " VimPlug plugins
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'brooth/far.vim'
@@ -25,8 +37,6 @@ Plug 'tpope/vim-sleuth'
 Plug 'airblade/vim-gitgutter'
 call plug#end()
 
-" hooks for clipboard syncing
-source ~/.userenv/clipboard/vimhooks.vim
 
 " Vundle Plugins (and extra options required by Vundle)
 set nocompatible
