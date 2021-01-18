@@ -82,6 +82,13 @@ source $HOME/.shellrc-common
 # make Esc not take ages to be detected (100ths of a second)
 KEYTIMEOUT=5
 
+# don't share history between terminals
+# history can still be manually loaded into an individual session with: fc -RI
+unsetopt append_history
+unsetopt inc_append_history_time
+unsetopt share_history
+setopt inc_append_history
+
 # use Ctrl-v binding in vim cmd mode to edit cmd in editor
 zle -N edit-command-line
 bindkey -M vicmd '^v' edit-command-line
