@@ -52,7 +52,13 @@ tmux
         <Prefix> [  -  Start copy mode
         <Space>  -  Begin selection
         <Enter>  -  Copy selection and exit copy mode
-        s  -  tmux-easymotion
+        s  -  easymotion search
+        S n  -  easymotion lines
+
+    Copytk
+        <Prefix> S  -  easycopy (2 easymotion-style actions)
+        <Prefix> Q  -  quickcopy (copy based on patterns; use n to iterate batches)
+        <Prefix> P  -  quickopen
 
     Misc
         <Prefix> :setw synchronize-panes  -  Toggle duplicate input to all panes
@@ -219,6 +225,16 @@ vim
         =  -  Auto-indent
         :set tabstop=4 shiftwidth=4 [no]expandtab  -  Use tabs/spaces
         :retab  -  Convert existing indents
+
+    Folds
+        zo  -  Open fold
+        zO  -  Open folds recursively
+        zc  -  Close fold
+        zC  -  Close folds recursively
+        za  -  Toggle fold
+        zA  -  Toggle fold recursively
+        zR  -  Open all folds
+        zM  -  Close all folds
 
     Far
         :F <Pattern> **/*  -  Search multiple files
