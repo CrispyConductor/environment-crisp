@@ -8,6 +8,25 @@ TEMPFILE="/tmp/_clip_xcwatchd1_yssh$USER"
 TEMPFILE2="/tmp/_clip_xcwatchd2_yssh$USER"
 MYDIR="$(realpath "$(dirname "$0")")"
 
+if command -v xclip &>/dev/null; then
+	PASTECOMMAND="xclip -o -selection clipboard"
+	NEEDENV=1
+elif command -v pbcopy &>/dev/null; then
+	PASTECOMMAND="pbpaste"
+	NEEDENV=0
+else
+	echo no copy utility 1>&2
+	exit 0
+fi
+
+# make sure $DISPLAY is set
+if [ -z "$DISPLAY" ] && [ $NEEDENV = '1' ]; then
+	echo no DISPLAY 1>&2
+	# use backup of storing to temp file and xclipwatchd
+	touch ~/.xclipwatchd_pushbuf
+	exit 0
+fi
+
 update_clip() {
 	fn="$1"
 
@@ -25,19 +44,13 @@ update_clip() {
 	"$MYDIR/clipsyncd_propagate.sh" &>/dev/null
 }
 
-# make sure xclip exists
-if ! command -v xclip &>/dev/null; then
-	echo no xclip 1>&2
-	exit 0
-fi
-
 # make sure $DISPLAY is set
 if [ -z "$DISPLAY" ]; then
 	echo no DISPLAY 1>&2
 	exit 0
 fi
 
-xclip -o -selection clipboard >"$TEMPFILE" 2>/dev/null
+$PASTECOMMAND >"$TEMPFILE" 2>/dev/null
 if [ $? -ne 0 ]; then
 	echo -n '' > "$TEMPFILE"
 fi
@@ -56,7 +69,7 @@ while [ 1 ]; do
 		continue
 	fi
 	# Check if X clipboard has changed
-	xclip -o -selection clipboard >"$TEMPFILE" 2>/dev/null
+	$PASTECOMMAND >"$TEMPFILE" 2>/dev/null
 	if [ $? -ne 0 ]; then
 		rm -f "$TEMPFILE"
 		sleep $LOOP_DELAY_BIG

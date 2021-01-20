@@ -100,6 +100,9 @@ function clipcopy() {
 function clippaste() {
 	~/.userenv/clipboard/getcopybuffer.sh
 }
+function clippurge() {
+	~/.userenv/clipboard/purge.sh
+}
 
 # Don't set window title to directory
 DISABLE_AUTO_TITLE=true
