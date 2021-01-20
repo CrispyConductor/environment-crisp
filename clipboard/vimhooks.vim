@@ -59,7 +59,8 @@ endfunction
 
 " Synchronizes all numbered registers to external buffers
 function! YankSyncPullAll()
-	for i in [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+	"for i in [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+	for i in [0] " just load one to speed up startup
 		let newbuf = systemlist(s:ysshgetbuf . ' ' . string(i), '', 1)
 		if v:shell_error == 0
 			call YankSyncShiftRegs(newbuf)
