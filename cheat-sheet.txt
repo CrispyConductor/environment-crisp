@@ -60,6 +60,11 @@ tmux
         <Prefix> Q  -  quickcopy (copy based on patterns; use n to iterate batches)
         <Prefix> P  -  quickopen
 
+    Nesting auto-keybinds (will send keys if ssh or another tmux)
+        Alt-<Arrow>  -  Switch panes
+        Alt-q - Alt-t  -  Switch panes 0-4
+        Alt-0 - Alt-9  -  Switch windows
+
     Misc
         <Prefix> :setw synchronize-panes  -  Toggle duplicate input to all panes
         <Prefix> Ctrl-b  -  Send Ctrl-b to nested session
