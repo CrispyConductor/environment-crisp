@@ -31,8 +31,9 @@ update_clip() {
 	fn="$1"
 
 	# make sure new contents do not equal current contents
-	"$MYDIR/getcopybuffer.sh" 0 > "$TEMPFILE2"
-	cmp "$fn" "$TEMPFILE2" &>/dev/null
+	# ignore whitespace for comparison, some clipboards break it
+	"$MYDIR/getcopybuffer.sh" 0 | tr -d "\t\n\r " > "$TEMPFILE2"
+	cat "$fn" | tr -d "\t\n\r " | cmp - "$TEMPFILE2" &>/dev/null
 	if [ $? -ne 1 ]; then rm -f "$TEMPFILE2"; return; fi
 	rm -f "$TEMPFILE2"
 
