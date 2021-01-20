@@ -44,12 +44,6 @@ update_clip() {
 	"$MYDIR/clipsyncd_propagate.sh" &>/dev/null
 }
 
-# make sure $DISPLAY is set
-if [ -z "$DISPLAY" ]; then
-	echo no DISPLAY 1>&2
-	exit 0
-fi
-
 $PASTECOMMAND >"$TEMPFILE" 2>/dev/null
 if [ $? -ne 0 ]; then
 	echo -n '' > "$TEMPFILE"
