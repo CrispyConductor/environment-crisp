@@ -242,7 +242,18 @@ vim
         zM  -  Close all folds
 
     Far
-        :F <Pattern> **/*  -  Search multiple files
+        :F <Pattern> **/* {params}  -  Find multiple files
+        :Far <Pattern> <Replacement> **/* {params}  -  Find and replace multiple files
+        :Fardo  -  Execute replacement
+        :Fjs <Pattern>  -  Find *.js exclude node_nodules
+        :Farjs <Pattern> <Replacement>
+        :Fpy :Farpy
+        Far buffer keys:
+        x  -  Exclude instance or file
+        i  -  Include instance or file
+        X  -  Exclude all
+        I  -  Include all
+        <Enter>  -  Open to location
 
     NERDTree
         Alt-n  -  Toggle NERDTree

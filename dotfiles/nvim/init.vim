@@ -3,6 +3,10 @@ set background=dark
 set updatetime=100
 set guicursor=
 
+" Execute .nvimrc in working directory
+set exrc
+set secure
+
 " Folding (fold on indent, unfolded by default)
 set foldmethod=indent
 " Don't ignore comments for folding
@@ -16,6 +20,12 @@ map <M-n> :NERDTreeToggle<CR>
 
 " Far configuration
 let g:far#source = 'ag'
+
+" Far aliases
+command! -nargs=1 Fjs F <args> **/*.js --ignore node_modules
+command! -nargs=* Farjs Far <args> **/*.js --ignore node_modules
+command! -nargs=1 Fpy F <args> **/*.py
+command! -nargs=* Farpy Far <args> **/*.py
 
 " EasyMotion mappings and settings
 let g:EasyMotion_do_mapping = 0 " disable easymotion default mappings
@@ -51,10 +61,10 @@ map <silent> <M-w>U :call PaneNavTmuxTry('U')<CR>
 map <silent> <M-w>D :call PaneNavTmuxTry('D')<CR>
 map <silent> <M-w>L :call PaneNavTmuxTry('L')<CR>
 map <silent> <M-w>R :call PaneNavTmuxTry('R')<CR>
-imap <silent> <M-w>U :call PaneNavTmuxTry('U')<CR>
-imap <silent> <M-w>D :call PaneNavTmuxTry('D')<CR>
-imap <silent> <M-w>L :call PaneNavTmuxTry('L')<CR>
-imap <silent> <M-w>R :call PaneNavTmuxTry('R')<CR>
+imap <silent> <M-w>U <Esc>:call PaneNavTmuxTry('U')<CR>
+imap <silent> <M-w>D <Esc>:call PaneNavTmuxTry('D')<CR>
+imap <silent> <M-w>L <Esc>:call PaneNavTmuxTry('L')<CR>
+imap <silent> <M-w>R <Esc>:call PaneNavTmuxTry('R')<CR>
 
 " VimPlug plugins
 call plug#begin('~/.local/share/nvim/plugged')
