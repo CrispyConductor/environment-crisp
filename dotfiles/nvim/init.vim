@@ -28,6 +28,30 @@ map Sk <Plug>(easymotion-k)
 " hooks for clipboard syncing
 source ~/.userenv/clipboard/vimhooks.vim
 
+" pane navigation integration
+function! PaneNavTmuxTry(d)
+	let wid = win_getid()
+	if a:d == 'D'
+		wincmd j
+	elseif a:d == 'U'
+		wincmd k
+	elseif a:d == 'L'
+		wincmd h
+	elseif a:d == 'R'
+		wincmd l
+	endif
+	if win_getid() == wid
+		call system('tmux select-pane -' . a:d)
+	endif
+endfunction
+map <silent> <M-w>U :call PaneNavTmuxTry('U')<CR>
+map <silent> <M-w>D :call PaneNavTmuxTry('D')<CR>
+map <silent> <M-w>L :call PaneNavTmuxTry('L')<CR>
+map <silent> <M-w>R :call PaneNavTmuxTry('R')<CR>
+imap <silent> <M-w>U :call PaneNavTmuxTry('U')<CR>
+imap <silent> <M-w>D :call PaneNavTmuxTry('D')<CR>
+imap <silent> <M-w>L :call PaneNavTmuxTry('L')<CR>
+imap <silent> <M-w>R :call PaneNavTmuxTry('R')<CR>
 
 " VimPlug plugins
 call plug#begin('~/.local/share/nvim/plugged')
