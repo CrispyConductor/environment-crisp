@@ -6,7 +6,7 @@ tmux
 neovim
 git
 command-not-found
-silversearcher-ag
+ripgrep
 "
 
 # Old:

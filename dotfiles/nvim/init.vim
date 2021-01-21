@@ -19,7 +19,8 @@ augroup END
 map <M-n> :NERDTreeToggle<CR>
 
 " Far configuration
-let g:far#source = 'ag'
+let g:far#source = 'rg'
+" let g:far#debug = 1
 
 " Far aliases
 command! -nargs=1 Fjs F <args> **/*.js --ignore node_modules
