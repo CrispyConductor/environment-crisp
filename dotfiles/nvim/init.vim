@@ -14,6 +14,9 @@ augroup END
 " Mappings
 map <M-n> :NERDTreeToggle<CR>
 
+" Far configuration
+let g:far#source = 'ag'
+
 " EasyMotion mappings and settings
 let g:EasyMotion_do_mapping = 0 " disable easymotion default mappings
 let g:EasyMotion_smartcase = 1
