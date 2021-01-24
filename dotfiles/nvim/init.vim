@@ -20,13 +20,14 @@ map <M-n> :NERDTreeToggle<CR>
 
 " Far configuration
 let g:far#source = 'rg'
-" let g:far#debug = 1
+let g:far#debug = 1
+let g:far#glob_mode = 'native'
 
 " Far aliases
-command! -nargs=1 Fjs F <args> **/*.js --ignore node_modules
-command! -nargs=* Farjs Far <args> **/*.js --ignore node_modules
-command! -nargs=1 Fpy F <args> **/*.py
-command! -nargs=* Farpy Far <args> **/*.py
+" command! -nargs=1 Fjs F <args> **/*.js --ignore node_modules
+" command! -nargs=* Farjs Far <args> **/*.js --ignore node_modules
+" command! -nargs=1 Fpy F <args> **/*.py
+" command! -nargs=* Farpy Far <args> **/*.py
 
 " EasyMotion mappings and settings
 let g:EasyMotion_do_mapping = 0 " disable easymotion default mappings
