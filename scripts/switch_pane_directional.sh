@@ -16,7 +16,7 @@ VIMPREFIX='M-w'
 TTY="`tmux list-panes -F "#{pane_active} #{pane_tty}" | grep -E "^1" | cut -d " " -f 2- | cut -d / -f 3-`"
 if [ -z $TTY ]; then exit 1; fi
 
-PROCS="`ps -ao tty,comm | grep -E "^$TTY" | awk '{print $2}'`"
+PROCS="`ps -ao tty,comm | grep -E "^${TTY}\\s" | awk '{print $2}'`"
 
 if echo "$PROCS" | grep -E "ssh|tmux" &>/dev/null; then
 	# pane running ssh or tmux
