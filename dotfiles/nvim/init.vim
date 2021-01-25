@@ -22,6 +22,9 @@ map <M-n> :NERDTreeToggle<CR>
 let g:far#source = 'rg'
 let g:far#debug = 1
 let g:far#glob_mode = 'native'
+let g:far#auto_preview = 0
+let g:far#auto_preview_on_start = 0
+
 
 " Far aliases
 " command! -nargs=1 Fjs F <args> **/*.js --ignore node_modules
