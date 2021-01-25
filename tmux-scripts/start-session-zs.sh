@@ -9,11 +9,26 @@ if [ $? -eq 0 ]; then echo 'Session already exists.'; exit 1; fi
 # create session with initial window (notes)
 tmux new -s "$SESS_NAME" -d -n 'notes'
 
-# global options
-tmux setw -g -t "$SESS_NAME" mode-keys vi
-
-# set up notes window
+# setup notes window
 tmux send-keys -t "${SESS_NAME}:notes.0" 'cd ~/zipscene/notes' Enter 'nvim notes.txt' Enter
+
+# setup cmd window
+tmux neww -t "${SESS_NAME}" -c ~ -n 'cmd'
+tmux splitw -t "${SESS_NAME}:cmd.0" -c ~ -v
+
+# setup editor window
+tmux neww -t "${SESS_NAME}" -c ~ -n 'edit'
+tmux splitw -t "${SESS_NAME}:edit.0" -c ~ -v -l '10%'
+
+# Set up cmdB
+tmux neww -t "${SESS_NAME}" -c ~ -n 'cmdB'
+
+# Set up editB
+tmux neww -t "${SESS_NAME}" -c ~ -n 'editB'
+tmux splitw -t "${SESS_NAME}:editB.0" -c ~ -v -l '10%'
+
+# Set up window for ssh
+tmux neww -t "${SESS_NAME}" -c ~ -n 'ssh'
 
 # create window for running processes
 # panes are: zookeeper, kafka, authservice, jobhub, api, worker
@@ -36,12 +51,8 @@ tmux send-keys -t "${SESS_NAME}:procs.3" 'cd ~/zipscene/git/analytics-services-j
 tmux send-keys -t "${SESS_NAME}:procs.4" 'cd ~/zipscene/git/analytics-dmp-core' Enter clear Enter 'NODE_ENV=local node ./bin/dmp-core-api.js'
 tmux send-keys -t "${SESS_NAME}:procs.5" 'cd ~/zipscene/git/analytics-dmp-core' Enter clear Enter 'NODE_ENV=local node ./bin/dmp-core-worker.js'
 
-# dmp tests window
-tmux neww -t "$SESS_NAME" -n 'dmptests'
-tmux send-keys -t "${SESS_NAME}:dmptests.0" 'cd ~/zipscene/git/analytics-dmp-core-tests' Enter clear Enter 'npm test'
-
-# cmd0 window
-tmux neww -t "$SESS_NAME" -n 'cmd0' -c ~
+# Create alternate session
+tmux new-session -s "${SESS_NAME}B" -t "$SESS_NAME" -d
 
 # switch to default notes window
 tmux select-window -t "${SESS_NAME}:0"
