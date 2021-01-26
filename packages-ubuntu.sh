@@ -4,6 +4,7 @@ curl
 gawk
 tmux
 neovim
+python3-pip
 git
 command-not-found
 ripgrep

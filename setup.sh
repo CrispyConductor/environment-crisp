@@ -44,11 +44,13 @@ echo "Setting up clipboard ..."
 
 echo "Switching out personal forks ..."
 cd ~/.oh-my-zsh
-git remote add crispy git@github.com:crispy1989/ohmyzsh.git
+#git remote add crispy git@github.com:crispy1989/ohmyzsh.git
+git remote add crispy https://github.com/crispy1989/ohmyzsh.git
 git fetch crispy
 git checkout crispy/master
 cd ~/.local/share/nvim/plugged/far.vim
-git remote add crispy git@github.com:crispy1989/far.vim.git
+#git remote add crispy git@github.com:crispy1989/far.vim.git
+git remote add crispy https://github.com/crispy1989/far.vim.git
 git fetch crispy
 git checkout crispy/master
 cd "$MYDIR"
