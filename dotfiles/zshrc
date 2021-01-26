@@ -117,6 +117,7 @@ fi
 SSH_ENV_FILE="$HOME/.ssh/agent_env"
 function startsshagent() {
 	echo 'Starting SSH agent.  "ssh-add" to enter password.'
+	mkdir -p ~/.ssh
 	ssh-agent -s | grep -Ev '^echo' > "$SSH_ENV_FILE"
 	chmod 600 "$SSH_ENV_FILE"
 	source "$SSH_ENV_FILE"
