@@ -104,6 +104,40 @@ function clippurge() {
 	~/.userenv/clipboard/purge.sh
 }
 
+# Refresh stored X environment, or source it
+X_ENV_FILE="$HOME/.user_env_x"
+if [[ ! -z "$DISPLAY" ]] && [[ -z "$ZSHRC_SET_X_ENV" ]]; then
+	env | grep -E '^(X|DISPLAY)' > "$X_ENV_FILE"
+	chmod 600 "$X_ENV_FILE"
+elif [[ -f "$X_ENV_FILE" ]] && [[ -z "$DISPLAY" ]]; then
+	source "$X_ENV_FILE"
+fi
+
+# Start ssh-agent if not started, or source its env
+SSH_ENV_FILE="$HOME/.ssh/agent_env"
+function startsshagent() {
+	echo 'Starting SSH agent.  "ssh-add" to enter password.'
+	ssh-agent -s | grep -Ev '^echo' > "$SSH_ENV_FILE"
+	chmod 600 "$SSH_ENV_FILE"
+	source "$SSH_ENV_FILE"
+}
+if command -V ssh-agent &>/dev/null; then
+	if [[ -f "$SSH_ENV_FILE" ]] && [[ -z "$SSH_AGENT_PID" ]]; then
+		source "$SSH_ENV_FILE"
+		if [[ -z "$SSH_AGENT_PID" ]]; then
+			startsshagent
+		else
+			ps -p "$SSH_AGENT_PID" | grep "$USER" | grep -E '^ssh-agent' >/dev/null
+			if [ $? -ne 0 ]; then
+				startsshagent
+			fi
+		fi
+	elif [[ -z "$SSH_AGENT_PID" ]]; then
+		startsshagent
+	fi
+fi
+
+
 # Don't set window title to directory
 DISABLE_AUTO_TITLE=true
 
