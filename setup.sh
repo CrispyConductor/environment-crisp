@@ -5,6 +5,10 @@ ENVDIR="${HOME}/.userenv"
 MYDIR="$(realpath "$(dirname "$0")")"
 cd "$MYDIR"
 
+echo "Installing python packages ..."
+python3 -m pip install pynvim
+if [ $? -ne 0 ]; then exit 1; fi
+
 echo "Linking environment dir ..."
 rm -f "$ENVDIR"
 ln -sf "$MYDIR" "$ENVDIR"
@@ -37,4 +41,16 @@ echo "Setting up dotfiles ..."
 
 echo "Setting up clipboard ..."
 ./clipboard/setup.sh
+
+echo "Switching out personal forks ..."
+cd ~/.oh-my-zsh
+git remote add crispy git@github.com:crispy1989/ohmyzsh.git
+git fetch crispy
+git checkout crispy/master
+cd ~/.local/share/nvim/plugged/far.vim
+git remote add crispy git@github.com:crispy1989/far.vim.git
+git fetch crispy
+git checkout crispy/master
+cd "$MYDIR"
+
 
