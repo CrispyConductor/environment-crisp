@@ -1,3 +1,17 @@
+# Logging for the zshrc
+#ZRCLOG="$HOME/zshrc_log"
+ZRCLOG=''
+function zrclog() {
+	if [[ ! -z "$ZRCLOG" ]]; then
+		d="`date +'%H:%M:%S.%N'`"
+		echo "$d -- $1" >> "$ZRCLOG"
+	fi
+}
+if [[ ! -z "$ZRCLOG" ]]; then
+	echo -n '' > "$ZRCLOG"
+fi
+zrclog 'zshrc start'
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -73,7 +87,9 @@ HYPHEN_INSENSITIVE="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git command-not-found vi-mode jump)
 
+zrclog 'Sourcing oh-my-zsh'
 source $ZSH/oh-my-zsh.sh
+zrclog 'Finished sourcing oh-my-zsh'
 
 # User configuration
 
@@ -104,6 +120,7 @@ function clippurge() {
 	~/.userenv/clipboard/purge.sh
 }
 
+zrclog 'Checking user envs'
 # Refresh stored X environment, or source it
 X_ENV_FILE="$HOME/.user_env_x"
 if [[ ! -z "$DISPLAY" ]] && [[ -z "$ZSHRC_SET_X_ENV" ]]; then
@@ -137,6 +154,7 @@ if command -V ssh-agent &>/dev/null; then
 		startsshagent
 	fi
 fi
+zrclog 'Done checking user envs'
 
 
 # Don't set window title to directory
@@ -165,3 +183,6 @@ DISABLE_AUTO_TITLE=true
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+zrclog 'zshrc loaded'
+
