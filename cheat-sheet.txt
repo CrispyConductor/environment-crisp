@@ -260,11 +260,16 @@ vim
         s  -  Open file in vertical split
         :help NERDTree
 
+    fzf
+        :FZF  -  fzf file opener
+
 
 zsh
-    Ctrl-t  -  fzf filename search
-    Ctrl-r  -  fzf history search
-    Alt-c  -  fzf cd
+    fzf
+        Ctrl-t  -  fzf filename search
+        Ctrl-r  -  fzf history search
+        Alt-c  -  fzf cd
+        **<Tab>  -  fzf completion
 
 
 PopShell

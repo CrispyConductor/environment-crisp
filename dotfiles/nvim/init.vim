@@ -77,6 +77,7 @@ Plug 'brooth/far.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-sleuth'
 Plug 'airblade/vim-gitgutter'
+Plug '~/.fzf'
 call plug#end()
 
 
