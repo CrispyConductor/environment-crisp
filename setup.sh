@@ -42,15 +42,20 @@ echo "Setting up dotfiles ..."
 echo "Setting up clipboard ..."
 ./clipboard/setup.sh
 
+echo "Installing fzf ..."
+rm -rf ~/.fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --key-bindings --completion --no-update-rc
+
 echo "Switching out personal forks ..."
 cd ~/.oh-my-zsh
 #git remote add crispy git@github.com:crispy1989/ohmyzsh.git
-git remote add crispy https://github.com/crispy1989/ohmyzsh.git
+git remote add crispy https://github.com/crispy1989/ohmyzsh.git &>/dev/null
 git fetch crispy
 git checkout crispy/master
 cd ~/.local/share/nvim/plugged/far.vim
 #git remote add crispy git@github.com:crispy1989/far.vim.git
-git remote add crispy https://github.com/crispy1989/far.vim.git
+git remote add crispy https://github.com/crispy1989/far.vim.git &>/dev/null
 git fetch crispy
 git checkout crispy/master
 cd "$MYDIR"

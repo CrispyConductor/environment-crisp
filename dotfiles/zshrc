@@ -120,6 +120,10 @@ function clippurge() {
 	~/.userenv/clipboard/purge.sh
 }
 
+# fzf
+zrclog 'Initializing fzf'
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 zrclog 'Checking user envs'
 # Refresh stored X environment, or source it
 X_ENV_FILE="$HOME/.user_env_x"
@@ -185,4 +189,6 @@ DISABLE_AUTO_TITLE=true
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 zrclog 'zshrc loaded'
+
+
 

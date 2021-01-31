@@ -261,6 +261,12 @@ vim
         :help NERDTree
 
 
+zsh
+    Ctrl-t  -  fzf filename search
+    Ctrl-r  -  fzf history search
+    Alt-c  -  fzf cd
+
+
 PopShell
     Super-<ArrowKey>  -  Change selected window
     Super-<Enter>  -  Enter window management mode
