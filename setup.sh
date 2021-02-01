@@ -1,6 +1,7 @@
 #!/bin/bash
 
 force=0
+if [[ "$1" = "force" ]]; then force=1; fi
 
 ENVDIR="${HOME}/.userenv"
 
@@ -32,9 +33,11 @@ switch_git_fork() {
 	if ! git remote | grep -F "$remotename" >/dev/null; then
 		echo "Switching out fork for $2 ..."
 		git remote add "$remotename" "$repourl"
-		git fetch "$remotename"
-		git checkout "$remotename"/"$branchname"
+	else
+		echo "Updating fork for $2 ..."
 	fi
+	git fetch "$remotename"
+	git checkout "$remotename"/"$branchname"
 	cd "$cwd"
 }
 

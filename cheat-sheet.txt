@@ -278,6 +278,8 @@ vim
 
 
 zsh
+    <Esc> Ctrl-v  -  Edit command in editor
+
     fzf
         Ctrl-t  -  fzf filename search
         Ctrl-r  -  fzf history search
