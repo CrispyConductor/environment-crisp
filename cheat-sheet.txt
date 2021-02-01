@@ -251,6 +251,7 @@ vim
         :tags  -  List tag stack
         :pop  -  Pop tag stack
         Ctrl-t  -  Pop tag stack
+        To regenerate tags: $ ctags -R
 
     Far
         :F <Pattern> **/* {params}  -  Find multiple files
