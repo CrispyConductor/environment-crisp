@@ -273,6 +273,7 @@ vim
 
     fzf
         :FZF  -  fzf file opener
+        Alf-f  -  fzf file opener
 
 
 zsh

@@ -17,6 +17,7 @@ augroup END
 
 " Mappings
 map <M-n> :NERDTreeToggle<CR>
+map <M-f> :FZF<CR>
 
 " Far configuration
 let g:far#source = 'rg'
