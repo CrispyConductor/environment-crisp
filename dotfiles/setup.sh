@@ -40,6 +40,7 @@ install_dotfile shellrc-common .shellrc-common
 install_dotfile bashrc-env .bashrc-env
 install_dotfile zshrc .zshrc
 install_dotfile gitconfig .gitconfig
+install_dotfile gitignore .config/git/ignore
 install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 
 # Setup the real tmux.conf

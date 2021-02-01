@@ -241,6 +241,17 @@ vim
         zR  -  Open all folds
         zM  -  Close all folds
 
+    Tags
+        :tag <name>  -  Go to first matching tag
+        Ctrl-]  -  Go to first matching tag under cursor
+        :tselect <name>  -  List matching tags
+        g ]  -  List matching tags under cursor
+        :tjump <name>  -  List matching tags if multiple
+        g Ctrl-]  -  List matching tags if multiple, under cursor
+        :tags  -  List tag stack
+        :pop  -  Pop tag stack
+        Ctrl-t  -  Pop tag stack
+
     Far
         :F <Pattern> **/* {params}  -  Find multiple files
         :Far <Pattern> <Replacement> **/* {params}  -  Find and replace multiple files
