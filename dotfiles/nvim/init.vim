@@ -2,6 +2,7 @@
 set background=dark
 set updatetime=100
 set guicursor=
+set nomodeline
 
 " Execute .nvimrc in working directory
 set exrc
