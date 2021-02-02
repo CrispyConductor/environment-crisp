@@ -1,12 +1,11 @@
+To open cheatsheet fold in vim  -  zo
 tmux
     Prefix: Ctrl-b
-
     CLI
         tmux new [-s <SessionName>] [-t <ShareSessionName>]  -  New session
         tmux kill-ses -t <SessionName>  -  Kill session
         tmux ls  -  List sessions
         tmux a -t <SessionName>  -  Attach to session
-
     Sessions
         <Prefix> :new  -  New session
         <Prefix> $  -  Rename session
@@ -15,7 +14,6 @@ tmux
         <Prefix> (  -  Prev session
         <Prefix> )  -  Next session
         <Prefix> L  -  Last (most recent) session
-
     Windows
         <Prefix> c  -  New window
         <Prefix> ,  -  Rename window
@@ -27,13 +25,11 @@ tmux
         <Prefix> ' <n> <Enter>  -  Go to window n
         <Prefix> :swap-window [-s <Window>] -t <OtherWindow>  -  Swap windows
         <Prefix> :movew  -  Move window to unoccupied index
-
     Pane Navigation
         <Prefix> <ArrowKey>  -  Navigate panes
         <Prefix> ;  -  Last (most recent) pane
         <Prefix> q <n>  -  Display/switch panes
         <Prefix> z  -  Toggle zoom/fullscreen
-
     Pane Management
         <Prefix> "  -  Horizontal split
         <Prefix> %  -  Vertical split
@@ -42,11 +38,9 @@ tmux
         <Prefix> }  -  Move pane "right"
         <Prefix> <Space>  -  Cycle pane layouts
         <Prefix> Ctrl-<ArrowKey>  -  Resize pane
-
     Pane/Window Conversion
         <Prefix> !  -  Convert pane to window
         <Prefix> :join-pane -t <Window> [-h|-v]  -  Move pane to window
-
     Copy Mode
         <Prefix> ]  -  Paste
         <Prefix> [  -  Start copy mode
@@ -54,28 +48,22 @@ tmux
         <Enter>  -  Copy selection and exit copy mode
         s  -  easymotion search
         S n  -  easymotion lines
-
     Copytk
         <Prefix> S  -  easycopy (2 easymotion-style actions)
         <Prefix> Q  -  quickcopy (copy based on patterns; use n to iterate batches)
         <Prefix> P  -  quickopen
-
     Nesting auto-keybinds (will send keys if ssh or another tmux)
         Alt-<Arrow>  -  Switch panes
         Alt-q - Alt-t  -  Switch panes 0-4
         Alt-0 - Alt-9  -  Switch windows
-
     Misc
         <Prefix> :setw synchronize-panes  -  Toggle duplicate input to all panes
         <Prefix> Ctrl-b  -  Send Ctrl-b to nested session
         <Prefix> Ctrl-n  -  Send Ctrl-b to second nested session
         <Prefix> Ctrl-m  -  Send Ctrl-b to third nested session
         <Prefix> F  -  tmux-fingers
-
-
 vim
     <n><operator><motion>
-
     Operators  -  :help operator
         c   -  Change (delete and enter insert mode)
         d   -  Delete
@@ -90,7 +78,6 @@ vim
         >   -  Shift indentation right
         <   -  Shift indentation left
         zf  -  Define fold
-
     Left-right Motions  -  :help left-right-motions
         hl - Basic movement
         0   -  Beginning of line
@@ -108,7 +95,6 @@ vim
         T{char} - Same, to the left
         ;   - Repeat last f F t or T
         ,   - Repeat last f F t or T in opposite direction
-
     Up-down Motions  -  :help up-down-motions
         j,k  -  Basic movement
         gj,gk -  Character-wise basic movement (allows operating on single line)
@@ -117,7 +103,6 @@ vim
         gg   -  Same as G but defaults to first line
         %    -  Go to <n> percent through the file
         go   -  Go to <n> byte in the file
-
     Word Motions  -  :help word-motions
         From vim help: 'words' are separated by whitespace or punctuation other than _, 'WORDS' are separated only by whitespace
         w   -  Move forward word
@@ -126,13 +111,11 @@ vim
         b   -  Move backward word
         B   -  Move backward WORD
         ge,gE - Move backward to end of wOrD
-
     Block Motions  -  :help object-motions
         (   -  Sentence backward
         )   -  Sentence forward
         {   -  Paragraph backward
         }   -  Paragraph forward
-
     Marks  -  :help mark-motions
         m{a-z} - Set single-file mark at cursor position (not a motion)
         m{A-Z} - Set across-file mark at cursor position (not a motion)
@@ -150,22 +133,18 @@ vim
             .    -  Position of last change
             `    -  Position before jump (use as ``)
             '    -  Position before jump (use as '')
-
     Misc Motions
         g;  -  Previous change
         g,  -  Next change
         :changes - Print change list
         more @ :help various-motions
-
     EasyMotion
         s   -  Bidirectional find on single character
         SS  -  Bidirectional find with 2 characters
         Sj  -  Find line below
         Sk  -  Find line above
-
     Misc
         .   -  Repeat last
-
     Cursor Movement
         0  -  Home/Beginning of line
         $  -  End/End of line
@@ -176,21 +155,17 @@ vim
         {  -  Prev block
         }  -  Next block
         b/e - Previous/Next word
-
     Screen Position
         zz  -  Center screen on cursor
         Ctrl-e  -  Move screen down
         Ctrl-y  -  Move screen up
-
     Yank/Paste
         " <n> y  -  Yank into register n
         " + y  -  Yank into system register (+)
         + <n> p  -  Paste from register n
-
     Undo
         u  -  Undo
         Ctrl-r  -  Redo
-
     Find/Replace
         / <Pattern>  -  Search forward
         / ?<Pattern>  -  Search backward
@@ -198,7 +173,6 @@ vim
         N  -  Next backward search result
         :%s/<Pattern>/<Replacement>/g  -  Replace all
         :noh  -  Remove highlights
-
     Windows
         Ctrl-w <ArrowKey>  -  Move to window
         Ctrl-w q  -  Close window
@@ -212,7 +186,6 @@ vim
         Ctrl-w K  -  Move window to top full-width
         Ctrl-w L  -  Move window to right full-height
         :help window-moving
-
     Window Split Command Modifiers
         :vert <cmd>   -  Split vertically
         :lefta vert <cmd>  -  Open to left of cur window
@@ -223,14 +196,12 @@ vim
         :bo vert <cmd>  -  Open at right
         :to <cmd>  -  Open at top
         :bo <cmd>  -  Open at bottom
-
     Indent
         >  -  Add indent level
         <  -  Remove indent level
         =  -  Auto-indent
         :set tabstop=4 shiftwidth=4 [no]expandtab  -  Use tabs/spaces
         :retab  -  Convert existing indents
-
     Folds
         zo  -  Open fold
         zO  -  Open folds recursively
@@ -240,7 +211,6 @@ vim
         zA  -  Toggle fold recursively
         zR  -  Open all folds
         zM  -  Close all folds
-
     Tags
         :tag <name>  -  Go to first matching tag
         Ctrl-]  -  Go to first matching tag under cursor
@@ -252,7 +222,6 @@ vim
         :pop  -  Pop tag stack
         Ctrl-t  -  Pop tag stack
         To regenerate tags: $ ctags -R
-
     Far
         :F <Pattern> **/* {params}  -  Find multiple files
         :Far <Pattern> <Replacement> **/* {params}  -  Find and replace multiple files
@@ -265,28 +234,21 @@ vim
         p  -  Open preview at location
         P  -  Close preview
         <Enter>  -  Open to location
-
     NERDTree
         Alt-n  -  Toggle NERDTree
         i  -  Open file in horizontal split
         s  -  Open file in vertical split
         :help NERDTree
-
     fzf
         :FZF  -  fzf file opener
         Alf-f  -  fzf file opener
-
-
 zsh
     <Esc> Ctrl-v  -  Edit command in editor
-
     fzf
         Ctrl-t  -  fzf filename search
         Ctrl-r  -  fzf history search
         Alt-c  -  fzf cd
         **<Tab>  -  fzf completion
-
-
 PopShell
     Super-<ArrowKey>  -  Change selected window
     Super-<Enter>  -  Enter window management mode
@@ -303,7 +265,6 @@ PopShell
     Shift-Super-Up/Down  -  Move window across workspaces
     Shift-Super-Left/Right  -  Move window across monitors
     Ctrl-Shift-Super-Up/Down  -  Move window across monitors
-
     Window Management Mode
         <Enter>  -  Exit window management mode
         <Esc>  -  Cancel
@@ -311,13 +272,10 @@ PopShell
         Ctrl-<ArrowKey>  -  Swap windows
         Shift-<ArrowKey>  -  Resize window
         o  -  Toggle split horizontal-vertical orientation
-
     Launcher
         t:  -  Execute command in terminal
         :  -  Execute a command in sh
         =  -  Calculate an equation
-
-
 Chrome
     Ctrl-n  -  New window
     Ctrl-t  -  New tab
@@ -326,10 +284,5 @@ Chrome
     Ctrl-<n>  -  Go to tab n
     Ctrl-w  -  Close tab
     Ctrl-l  -  Select address bar
-
-
-
 Mac
     Ctrl-Super-f  -  Terminal full-screen
-
-
