@@ -173,18 +173,38 @@ vim
         N  -  Next backward search result
         :%s/<Pattern>/<Replacement>/g  -  Replace all
         :noh  -  Remove highlights
+    Buffers
+        :b <n>  -  Open buffer n (by name, name fragment, or id)
+        :b <Tab>  -  Tab through list of buffers
+        :ls  -  List buffers
+        :bd [n]  -  Delete/unload buffer n, ! to force
+        :unh[ide]  -  Open a window for each buffer
+        :e  -  Re-edit (reload) current file
+        :e!  -  Discard changes to current buffer and reload
+        :e <file>  -  Edit file in new buffer
+    Tab Pages
+        :tabnew [file]  -  Open new tab page and optionally edit file
+        Ctrl-PgUp  -  Previous tab page
+        Ctrl-PgDn  -  Next tab page
+        :tabs  -  List tab pages and contents
+        :tab <cmd>  -  Execute window command to new tab page
+        :tabm <n>  -  Move tab page to n
     Windows
         Ctrl-w <ArrowKey>  -  Move to window
-        Ctrl-w q  -  Close window
+        Ctrl-w q  -  Close window (same as :q)
+        :qa[!]  -  Quit all buffers, windows, tab pages
         [n] Ctrl-w -|+|<|>  -  Resize window
-        :sp  -  Split horizontal
-        :vs  -  Split vertical
+        Ctrl-w s  -  Split horizontal
+        Ctrl-w v  -  Split vertical
         :new  -  New window split horizontal
         :vne  -  New window split vertical
         Ctrl-w H  -  Move window to left full-height
         Ctrl-w J  -  Move window to bottom full-width
         Ctrl-w K  -  Move window to top full-width
         Ctrl-w L  -  Move window to right full-height
+        Ctrl-w r  -  Rotate windows right/down
+        Ctrl-w R  -  Rotate windows left/up
+        [n] Ctrl-w x  -  Swap (eXchange) window with window n
         :help window-moving
     Window Split Command Modifiers
         :vert <cmd>   -  Split vertically
