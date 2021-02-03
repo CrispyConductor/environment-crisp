@@ -202,6 +202,7 @@ vim
         Ctrl-w J  -  Move window to bottom full-width
         Ctrl-w K  -  Move window to top full-width
         Ctrl-w L  -  Move window to right full-height
+        Ctrl-w T  -  Move window to new tab page
         Ctrl-w r  -  Rotate windows right/down
         Ctrl-w R  -  Rotate windows left/up
         [n] Ctrl-w x  -  Swap (eXchange) window with window n
