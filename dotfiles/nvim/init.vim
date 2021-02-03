@@ -26,6 +26,7 @@ let g:far#debug = 1
 let g:far#glob_mode = 'native'
 let g:far#auto_preview = 0
 let g:far#auto_preview_on_start = 0
+let g:far#open_in_parent_window = 1
 
 
 " Far aliases
