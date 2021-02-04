@@ -29,16 +29,18 @@ switch_git_fork() {
 	if [[ -z "$remotename" ]]; then
 		remotename=crispy
 	fi
-	cd "$gitdir"
-	if ! git remote | grep -F "$remotename" >/dev/null; then
-		echo "Switching out fork for $2 ..."
-		git remote add "$remotename" "$repourl"
-	else
-		echo "Updating fork for $2 ..."
+	if [[ -d "$gitdir" ]]; then
+		cd "$gitdir"
+		if ! git remote | grep -F "$remotename" >/dev/null; then
+			echo "Switching out fork for $2 ..."
+			git remote add "$remotename" "$repourl"
+		else
+			echo "Updating fork for $2 ..."
+		fi
+		git fetch "$remotename"
+		git checkout "$remotename"/"$branchname"
+		cd "$cwd"
 	fi
-	git fetch "$remotename"
-	git checkout "$remotename"/"$branchname"
-	cd "$cwd"
 }
 
 if [[ ! -e ~/.local/share/nvim/site/autoload/plug.vim ]] || [[ $force -eq 1 ]]; then
@@ -86,6 +88,7 @@ fi
 
 echo "Switching out personal forks ..."
 switch_git_fork ~/.oh-my-zsh ohmyzsh master
+# note: the far repo will not exist until vim plugins are installed
 switch_git_fork ~/.local/share/nvim/plugged/far.vim far.vim master
 
 
