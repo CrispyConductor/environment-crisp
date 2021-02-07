@@ -43,6 +43,13 @@ install_dotfile gitconfig .gitconfig
 install_dotfile gitignore .config/git/ignore
 install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 
+install_dotfile fish/config.fish .config/fish/config.fish
+install_dotfile fish/fish_variables .config/fish/fish_variables
+for fn in `ls $DOTFILES/fish/functions`; do
+	install_dotfile fish/functions/$fn .config/fish/functions/$fn
+done
+ln -sf $HOME/.fzf/shell/key-bindings.fish $HOME/.config/fish/functions/fzf_key_bindings.fish
+
 # Setup the real tmux.conf
 "$DOTFILES/setup-tmux.sh"
 if [ $? -ne 0 ]; then
