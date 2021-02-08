@@ -1,4 +1,5 @@
 packages="
+fish
 zsh
 curl
 gawk
