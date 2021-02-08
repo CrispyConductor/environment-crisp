@@ -4,8 +4,5 @@
 
 1. Install system packages (packages-ubuntu.txt)
 2. `./setup.sh`
-3. Install nvim plugins: `:PlugInstall` and `:PluginInstall` (for VimPlug and Vundle, respectively)
-4. Install tmux plugins: Ctrl-b I (TPM)
-
-
+3. Install tmux plugins: (inside tmux) Ctrl-b I
 

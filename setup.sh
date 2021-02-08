@@ -87,6 +87,9 @@ if [[ ! -e ~/.fzf ]] || [[ $force -eq 1 ]]; then
 	~/.fzf/install --key-bindings --completion --no-update-rc
 fi
 
+echo "Installing nvim plugins ..."
+nvim -c ':PlugInstall' -c ':sleep 1' -c ':PluginInstall' -c ':sleep 1' -c ':qa!'
+
 echo "Switching out personal forks ..."
 switch_git_fork ~/.oh-my-zsh ohmyzsh master
 # note: the far repo will not exist until vim plugins are installed
