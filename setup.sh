@@ -66,6 +66,7 @@ fi
 if [[ ! -e ~/.oh-my-zsh ]] || [[ $force -eq 1 ]]; then
 	echo "Installing Oh My Zsh ..."
 	export RUNZSH=no
+	export CHSH=no
 	if [ -d ~/.oh-my-zsh ]; then
 		rm -rf ~/.oh-my-zsh-bak
 		mv ~/.oh-my-zsh ~/.oh-my-zsh-bak
@@ -90,5 +91,20 @@ echo "Switching out personal forks ..."
 switch_git_fork ~/.oh-my-zsh ohmyzsh master
 # note: the far repo will not exist until vim plugins are installed
 switch_git_fork ~/.local/share/nvim/plugged/far.vim far.vim master
+
+echo $SHELL | grep fish >/dev/null
+if [[ $? -eq 0 ]]; then
+	ALREADYFISH=1
+else
+	ALREADYFISH=0
+fi
+if command -V fish >/dev/null && [[ $ALREADYFISH -eq 0 ]]; then
+	fishpath=`which fish`
+	if [[ ! -z "$fishpath" ]]; then
+		echo "Changing shell to fish ..."
+		chsh -s $fishpath
+	fi
+fi
+
 
 
