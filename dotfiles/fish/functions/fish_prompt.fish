@@ -41,7 +41,13 @@ function fish_prompt --description 'Write out the prompt'
 		end
 	end
 
-	echo -n -s (set_color $color_host) "$USER" @ (prompt_hostname) (set_color normal) ' ' (set_color $color_cwd) (prompt_pwd) (set_color $attr_suffix $color_suffix) "$suffix" (set_color normal)
+	set -l host_max_len 9
+	set -l host_prompt_str (prompt_hostname)
+	if test (string length $host_prompt_str) -gt $host_max_len
+		set host_prompt_str (string sub -l (math $host_max_len - 1) $host_prompt_str)'…'
+	end
+
+	echo -n -s (set_color $color_host) "$USER" @ $host_prompt_str (set_color normal) ' ' (set_color $color_cwd) (prompt_pwd) (set_color $attr_suffix $color_suffix) "$suffix" (set_color normal)
 
 end
 
