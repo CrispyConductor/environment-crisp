@@ -5,6 +5,7 @@ function fish_prompt --description 'Write out the prompt'
 	set -l color_suffix normal
 	set -l attr_suffix
 	set -l color_host "$fish_color_host"
+	set -l color_user "$fish_color_user"
 
 	switch "$USER"
 		case root toor
@@ -47,8 +48,24 @@ function fish_prompt --description 'Write out the prompt'
 		set host_prompt_str (string sub -l (math $host_max_len - 1) $host_prompt_str)'…'
 	end
 
-	echo -n -s (set_color $color_host) "$USER" @ $host_prompt_str (set_color normal) ' ' (set_color $color_cwd) (prompt_pwd) (set_color $attr_suffix $color_suffix) "$suffix" (set_color normal)
+	echo -n -s (set_color $color_user) "$USER" @ (set_color $color_host) $host_prompt_str (set_color normal) ' ' (set_color $color_cwd) (prompt_pwd) (set_color $attr_suffix $color_suffix) "$suffix" (set_color normal)
 
+end
+
+# Determine hostname color
+if test -n "$hostname"
+	set -l fishdir (dirname (status filename))/..
+	set -l hostnamere '^'(echo $hostname | sed 's/\./\\\\./g')' '
+	set -l hcline (grep -i $hostnamere $fishdir/hostname_colors)
+	if test $status -eq 0
+		# hostname found in hostname_colors file
+		set -g fish_color_host (echo $hcline | head -n1 | cut -d ' ' -f 2-)
+	else
+		# hostname not in colors file, used random file based on cksum
+		set -l rcolors (cat $fishdir/hostname_colors_random | grep .)
+		set -l ncolor (math (echo $hostname | cksum | cut -d ' ' -f 1) \% (count rcolors) + 1)
+		set -g fish_color_host $rcolors[$ncolor]
+	end
 end
 
 function record_cmd_exit_status_for_prompt -e fish_postexec

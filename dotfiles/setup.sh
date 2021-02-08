@@ -45,6 +45,8 @@ install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 
 install_dotfile fish/config.fish .config/fish/config.fish
 install_dotfile fish/fish_variables .config/fish/fish_variables
+install_dotfile fish/hostname_colors .config/fish/hostname_colors
+install_dotfile fish/hostname_colors_random .config/fish/hostname_colors_random
 for fn in `ls $DOTFILES/fish/functions`; do
 	install_dotfile fish/functions/$fn .config/fish/functions/$fn
 done
