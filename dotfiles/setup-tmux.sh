@@ -32,6 +32,7 @@ echo "tmux version: $TMUX_VERSION"
 "$PYTHON" - "$INPUT_TMUX_CONF" "$TMUX_VERSION" >"$TEMP_TMUX_CONF" <<'PYEOF'
 import sys
 import re
+import subprocess
 tmux_version = sys.argv[-1]
 tmux_conf = sys.argv[-2]
 
@@ -79,6 +80,16 @@ def check_tmux_version(op, vers):
 def eval_conditional(cond):
 	return eval(cond)
 
+def make_substitutions(line):
+	def subexec(match):
+		cmd = match.group(1)
+		r = subprocess.run(cmd, capture_output=True, shell=True, executable='/bin/bash', encoding='utf8')
+		if r.returncode != 0:
+			raise Exception('Error running command: ' + cmd)
+		return r.stdout.strip()
+	line = re.sub(r'\{\{(.*)\}\}', subexec, line)
+	return line
+
 condstack = [ True ]
 with open(tmux_conf, 'r') as f:
 	for line in f:
@@ -95,7 +106,10 @@ with open(tmux_conf, 'r') as f:
 				condstack.pop()
 		else:
 			if condstack[-1]:
-				print(line.lstrip(), end='')
+				line = line.lstrip()
+				if line.startswith('#$'):
+					line = make_substitutions(line[2:].lstrip())
+				print(line, end='')
 	if len(condstack) != 1:
 		raise Exception('Invalid tmux.conf conditional syntax - unclosed block')
 PYEOF
