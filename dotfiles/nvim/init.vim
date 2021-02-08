@@ -82,6 +82,9 @@ Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-sleuth'
 Plug 'airblade/vim-gitgutter'
 Plug '~/.fzf'
+if has('nvim-0.5.0')
+Plug 'neovim/nvim-lspconfig'
+endif
 call plug#end()
 
 
@@ -98,4 +101,36 @@ filetype plugin indent on
 "filetype plugin on
 
 
+" LSP
+if has('nvim-0.5.0')
+
+lua << EOF
+custom_lsp_attach = function(client)
+	-- See `:help nvim_buf_set_keymap()` for more information
+	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', 'g<c-]>', '<cmd>lua vim.lsp.buf.references()<CR>', {noremap = true})
+
+	-- Use LSP as the handler for omnifunc.
+	--    See `:help omnifunc` and `:help ins-completion` for more information.
+	vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+	-- For plugins with an `on_attach` callback, call them here. For example:
+	-- require('completion').on_attach()
+end
+EOF
+
+if executable('typescript-language-server')
+lua << EOF
+require('lspconfig').tsserver.setup({on_attach = custom_lsp_attach})
+EOF
+endif
+
+if executable('pyls')
+lua << EOF
+require('lspconfig').pyls.setup({on_attach = custom_lsp_attach})
+EOF
+endif
+
+endif
 
