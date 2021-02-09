@@ -10,6 +10,7 @@ cd "$MYDIR"
 
 echo "Installing python packages ..."
 python3 -m pip install pynvim
+#python3 -m pip install python-language-server
 if [ $? -ne 0 ]; then exit 1; fi
 
 echo "Linking environment dir ..."
