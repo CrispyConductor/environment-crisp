@@ -105,11 +105,31 @@ filetype plugin indent on
 if has('nvim-0.5.0')
 
 lua << EOF
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+	vim.lsp.diagnostic.on_publish_diagnostics,
+	{
+		-- Disable signs (indicators on left)
+		signs = false,
+		-- Diagnostic text option
+		virtual_text = {
+			spacing = 1
+		}
+	}
+)
+
 custom_lsp_attach = function(client)
+	-- Keybinds
 	-- See `:help nvim_buf_set_keymap()` for more information
 	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', 'g<c-]>', '<cmd>lua vim.lsp.buf.references()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<M-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<M-l>]', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<M-l><M-]>', '<cmd>lua vim.lsp.buf.references()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<M-l>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', {noremap = true })
+	vim.api.nvim_buf_set_keymap(0, 'v', '<M-l>f', '<cmd>lua vim.lsp.buf.range_formatting()<CR>', {noremap = true })
+	vim.api.nvim_buf_set_keymap(0, 'n', '<M-l>t', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap = true })
+	vim.api.nvim_buf_set_keymap(0, 'n', '<M-l>r', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true })
+	vim.api.nvim_buf_set_keymap(0, 'n', '<M-l>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {noremap = true })
 
 	-- Use LSP as the handler for omnifunc.
 	--    See `:help omnifunc` and `:help ins-completion` for more information.

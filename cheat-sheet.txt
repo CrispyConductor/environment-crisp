@@ -244,10 +244,17 @@ vim
         Ctrl-t  -  Pop tag stack
         To regenerate tags: $ ctags -R
     LSP (Language Server)
-        Ctrl-]  -  Go to definition of term under cursor
-        g Ctrl-]  -  List references to term under cursor
+        Ctrl-]  -  Go to definition of term under cursor (also Alt-] and Alt-l ])
+        Alt-l Alt-]  - List references to term under cursor
+        Alt-l f  -  Apply formatting (whole buf in normal, selection in visual)
+        Alt-l t  -  Go to type of term under cursor
+        Alt-l r  -  Rename term under cursor
+        Alt-l d  -  Display line diagnostic info
         K  -  Hover text
         Ctrl-x Ctrl-o  -  Insert-mode completion (omnifunc)
+        Ctrl-t  -  Pop tag stack
+        :pop  -  Pop tag stack
+        :tags  -  List tag stack
     Far
         :F <Pattern> **/* {params}  -  Find multiple files
         :Far <Pattern> <Replacement> **/* {params}  -  Find and replace multiple files
