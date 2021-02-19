@@ -11,3 +11,5 @@
 [user]
 	email = crispy@cluenet.org
 	name = Chris Breneman
+[pull]
+	rebase = false
