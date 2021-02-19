@@ -44,6 +44,12 @@ switch_git_fork() {
 	fi
 }
 
+# Remove old vim plugins
+if [[ $force -eq 1 ]]; then
+	rm -rf ~/.local/share/nvim/plugged/*
+	rm -rf ~/.local/share/nvim/bundle/*
+fi
+
 if [[ ! -e ~/.local/share/nvim/site/autoload/plug.vim ]] || [[ $force -eq 1 ]]; then
 	echo "Installing vimplug for neovim ..."
 	mkdir -p ~/.local/share/nvim
@@ -92,9 +98,8 @@ echo "Installing nvim plugins ..."
 nvim -c ':PlugInstall' -c ':sleep 1' -c ':PluginInstall' -c ':sleep 1' -c ':qa!'
 
 echo "Switching out personal forks ..."
-switch_git_fork ~/.oh-my-zsh ohmyzsh master
-# note: the far repo will not exist until vim plugins are installed
-switch_git_fork ~/.local/share/nvim/plugged/far.vim far.vim master
+#switch_git_fork ~/.oh-my-zsh ohmyzsh master
+#switch_git_fork ~/.local/share/nvim/plugged/far.vim far.vim master
 
 echo $SHELL | grep fish >/dev/null
 if [[ $? -eq 0 ]]; then
