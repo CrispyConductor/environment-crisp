@@ -2,7 +2,7 @@
 
 function __ssh_agent_is_started -d "check if ssh agent is already started"
    set -l canconnect
-   if begin ssh-add -l 2>/dev/null | grep 'has no ident' &>/dev/null; or ssh-add -l &>/dev/null; end
+   if begin ssh-add -l 2>/dev/null &| grep 'has no ident' &>/dev/null; or ssh-add -l &>/dev/null; end
       set canconnect 1
    else
       set canconnect 0
