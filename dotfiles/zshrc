@@ -41,7 +41,7 @@ ZSH_THEME="crispy"
 HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to automatically update without prompting.
 # DISABLE_UPDATE_PROMPT="true"
@@ -143,7 +143,8 @@ function startsshagent() {
 	chmod 600 "$SSH_ENV_FILE"
 	source "$SSH_ENV_FILE"
 }
-if command -V ssh-agent &>/dev/null; then
+ENABLE_SSH_AGENT=0
+if test $ENABLE_SSH_AGENT -eq 1 && command -V ssh-agent &>/dev/null; then
 	if [[ -f "$SSH_ENV_FILE" ]] && [[ -z "$SSH_AGENT_PID" ]]; then
 		source "$SSH_ENV_FILE"
 		if [[ -z "$SSH_AGENT_PID" ]]; then
