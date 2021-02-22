@@ -1,7 +1,14 @@
-# From https://github.com/ivakyb/fish_ssh_agent
+# From https://github.com/ivakyb/fish_ssh_agent and modified
 
 function __ssh_agent_is_started -d "check if ssh agent is already started"
-   if begin; test -f $SSH_ENV; and test -z "$SSH_AGENT_PID"; end
+   set -l canconnect
+   if begin ssh-add -l 2>/dev/null | grep 'has no ident' &>/dev/null; or ssh-add -l &>/dev/null; end
+      set canconnect 1
+   else
+      set canconnect 0
+   end
+
+   if begin; test -f $SSH_ENV; and test $canconnect -eq 0; end
       source $SSH_ENV > /dev/null
    end
 
@@ -16,6 +23,7 @@ end
 
 
 function __ssh_agent_start -d "start a new ssh agent"
+   echo Starting SSH agent.
    ssh-agent -c | sed 's/^echo/#echo/' > $SSH_ENV
    chmod 600 $SSH_ENV
    source $SSH_ENV > /dev/null
