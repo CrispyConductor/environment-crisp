@@ -35,7 +35,21 @@ function getclip
 	$USERENVDIR/clipboard/getcopybuffer.sh $argv
 end
 function clipcopy
-	$USERENVDIR/clipboard/pushclip.sh
+	set -l temp
+	if type -q mktemp
+		set temp (mktemp)
+	else if test -d /tmp
+		set temp /tmp/fish_clipcopy_$USER
+	else
+		set temp $HOME/fish_clipcopy
+	end
+	cat >$temp
+	if test (cat $temp | wc -l) -le 1
+		echo -n (cat $temp) | $USERENVDIR/clipboard/pushclip.sh
+	else
+		cat $temp | $USERENVDIR/clipboard/pushclip.sh
+	end
+	rm -f $temp
 end
 function clippaste
 	$USERENVDIR/clipboard/getcopybuffer.sh
