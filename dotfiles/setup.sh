@@ -42,6 +42,7 @@ install_dotfile zshrc .zshrc
 install_dotfile gitconfig .gitconfig
 install_dotfile gitignore .config/git/ignore
 install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
+install_dotfile taskrc .taskrc
 
 install_dotfile fish/config.fish .config/fish/config.fish
 install_dotfile fish/fish_variables .config/fish/fish_variables
