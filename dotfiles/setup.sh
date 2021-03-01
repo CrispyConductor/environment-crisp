@@ -45,6 +45,7 @@ install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 install_dotfile taskrc .taskrc
 
 install_dotfile regolith/picom/config .config/regolith/picom/config
+install_dotfile regolith/Xresources .config/regolith/Xresources
 
 install_dotfile fish/config.fish .config/fish/config.fish
 install_dotfile fish/fish_variables .config/fish/fish_variables

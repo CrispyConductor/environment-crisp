@@ -1,0 +1,11 @@
+i3-wm.bar.position: bottom
+
+i3-wm.bar.workspace.focused.background.color: #0000ff
+
+i3-wm.window.border.size: 1
+i3-wm.hide.edge.borders: none
+
+i3-wm.client.focused.color.child_border: #ffff00
+i3-wm.client.unfocused.color.child_border: #202020
+i3-wm.client.focused_inactive.color.child_border: #808080
+i3-wm.client.urgent.color.child_border: #ff0000
