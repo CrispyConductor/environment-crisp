@@ -3,4 +3,4 @@
 # Displays notifications.
 [rofication]
 command=rofication-status
-interval=10
+interval=2
