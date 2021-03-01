@@ -44,6 +44,8 @@ install_dotfile gitignore .config/git/ignore
 install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 install_dotfile taskrc .taskrc
 
+install_dotfile regolith/picom/config .config/regolith/picom/config
+
 install_dotfile fish/config.fish .config/fish/config.fish
 install_dotfile fish/fish_variables .config/fish/fish_variables
 install_dotfile fish/hostname_colors .config/fish/hostname_colors
