@@ -29,18 +29,6 @@ tmux send-keys -t "${SESS_NAME}:workmac.0" 'clipssh cb185222@workmac' Enter
 tmux neww -t "${SESS_NAME}" -c ~ -n 'hedron'
 tmux send-keys -t "${SESS_NAME}:hedron.0" 'clipssh cbreneman@hedron.landofcrispy.com' Enter
 
-# Set up cmdB
-tmux neww -t "${SESS_NAME}" -c ~ -n 'cmdB'
-#tmux splitw -t "${SESS_NAME}:cmdB.0" -c ~ -v
-
-# Set up editB
-tmux neww -t "${SESS_NAME}" -c ~ -n 'editB'
-tmux splitw -t "${SESS_NAME}:editB.0" -c ~ -v -l '10%'
-
-# Set up workmacB
-tmux neww -t "${SESS_NAME}" -c ~ -n 'workmacB'
-tmux send-keys -t "${SESS_NAME}:workmacB.0" 'ssh cb185222@workmac' Enter
-
 # select default window
 tmux select-window -t "${SESS_NAME}:0"
 

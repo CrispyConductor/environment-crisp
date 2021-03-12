@@ -20,13 +20,6 @@ tmux splitw -t "${SESS_NAME}:cmd.0" -c ~ -v
 tmux neww -t "${SESS_NAME}" -c ~ -n 'edit'
 tmux splitw -t "${SESS_NAME}:edit.0" -c ~ -v -l '10%'
 
-# Set up cmdB
-tmux neww -t "${SESS_NAME}" -c ~ -n 'cmdB'
-
-# Set up editB
-tmux neww -t "${SESS_NAME}" -c ~ -n 'editB'
-tmux splitw -t "${SESS_NAME}:editB.0" -c ~ -v -l '10%'
-
 # Set up window for ssh
 tmux neww -t "${SESS_NAME}" -c ~ -n 'ssh'
 
