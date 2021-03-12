@@ -1,5 +1,17 @@
 # From https://github.com/ivakyb/fish_ssh_agent and modified
 
+function __ssh_agent_acquire_lock
+   set -l lockdir $HOME/.fish_ssh_agent_lock
+   if mkdir $lockdir &>/dev/null
+      return
+   end
+   sleep 1
+end
+
+function __ssh_agent_release_lock
+   rm -rf $HOME/.fish_ssh_agent_lock
+end
+
 function __ssh_agent_can_connect -d "check if ssh-agent is running by trying to connect"
    if begin ssh-add -l 2>/dev/null &| grep 'has no ident' &>/dev/null; or ssh-add -l &>/dev/null; end
       return 0
@@ -22,7 +34,7 @@ function __ssh_agent_is_started -d "check if ssh agent is already started"
    end
 
    if test -f $SSH_ENV
-      source $SSH_ENV > /dev/null
+      fish_ssh_agent_load
       if __ssh_agent_can_connect
          return 0
       end
@@ -47,10 +59,17 @@ function __ssh_agent_start -d "start a new ssh agent"
    echo Starting SSH agent.
    ssh-agent -c | sed 's/^echo/#echo/' > $SSH_ENV
    chmod 600 $SSH_ENV
-   source $SSH_ENV > /dev/null
-   true  # suppress errors from setenv, i.e. set -gx
 end
 
+function fish_ssh_agent_load
+   if test -z "$SSH_ENV"
+      set -xg SSH_ENV $HOME/.ssh/environment
+   end
+   if test -f "$SSH_ENV"
+      source $SSH_ENV > /dev/null
+   end
+   true  # suppress errors from setenv, i.e. set -gx
+end
 
 function fish_ssh_agent --description "Start ssh-agent if not started yet, or uses already started ssh-agent."
    if test -z "$SSH_ENV"
@@ -59,8 +78,11 @@ function fish_ssh_agent --description "Start ssh-agent if not started yet, or us
 
    # don't do full connect check for every new shell for performance reasons
    if begin not status --is-login; and test -n "$SSH_AUTH_SOCK"; and __ssh_env_matches; end
+      fish_ssh_agent_load
       return
    end
+
+   __ssh_agent_acquire_lock
 
    if __ssh_agent_is_started
       if not __ssh_env_matches
@@ -69,5 +91,9 @@ function fish_ssh_agent --description "Start ssh-agent if not started yet, or us
       end
    else
       __ssh_agent_start
+      fish_ssh_agent_load
    end
+
+   __ssh_agent_release_lock
 end
+
