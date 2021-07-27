@@ -20,7 +20,8 @@ for opt in --color=auto -G --color -F
 end
 
 # PATH
-set -g fish_user_paths $HOME/.local/bin $HOME/bin $HOME/.fzf/bin fish_user_paths
+# todo: at some future point when fish versions have consistently caught up, maybe use fish_add_path
+set -g fish_user_paths $HOME/.local/bin $HOME/bin $HOME/.fzf/bin $fish_user_paths
 
 function clipssh
 	$USERENVDIR/clipboard/clipssh.sh $argv
