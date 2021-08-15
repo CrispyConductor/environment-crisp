@@ -43,6 +43,7 @@ install_dotfile gitconfig .gitconfig
 install_dotfile gitignore .config/git/ignore
 install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 install_dotfile taskrc .taskrc
+install_dotfile keepassxc.ini .config/keepassxc/keepassxc.ini
 
 install_dotfile regolith/picom/config .config/regolith/picom/config
 install_dotfile regolith/Xresources .config/regolith/Xresources
