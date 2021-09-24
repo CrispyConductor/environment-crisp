@@ -1,12 +1,16 @@
 # This utility acts as a sync between the external (tmux-based) clipboard
 # scripts and the X11 (or whatever) GUI clipboard.  It polls both for changes
 # and sync changes across.
+# This is written as a Tkinter app primarily so it holds a persistent clipboard
+# for X on Linux.  On mac tkinter shouldn't really be necessary but is still
+# used for the main loop.
 
 import tkinter
 import subprocess
 import os
 import re
 import signal
+import platform
 
 # Polling interval
 check_interval = 1000
@@ -19,13 +23,21 @@ interval_div_exttoui = 10
 mydir = os.path.dirname(os.path.abspath(__file__))
 tkmain = tkinter.Tk()
 
+mac_workaround = os.name == 'mac' or platform.system() == 'Darwin'
+
 def get_ui_clipboard():
+    if mac_workaround:
+        r = subprocess.run([ 'pbpaste' ], stdout=subprocess.PIPE)
+        return r.stdout.decode('utf-8')
     try:
         return tkmain.clipboard_get()
     except tkinter.TclError:
         return ''
 
 def set_ui_clipboard(text):
+    if mac_workaround:
+        subprocess.run([ 'pbcopy' ], input=text.encode('utf-8'))
+        return
     tkmain.clipboard_clear()
     tkmain.clipboard_append(text)
 
