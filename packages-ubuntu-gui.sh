@@ -19,6 +19,7 @@ nextcloud-desktop
 signal-desktop
 gdebi-core
 xclip
+python3-tk
 "
 
 
