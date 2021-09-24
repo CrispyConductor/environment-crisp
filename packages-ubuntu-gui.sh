@@ -18,6 +18,7 @@ keepassxc
 nextcloud-desktop
 signal-desktop
 gdebi-core
+xclip
 "
 
 
