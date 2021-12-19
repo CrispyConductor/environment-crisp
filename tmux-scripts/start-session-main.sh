@@ -33,7 +33,7 @@ tmux send-keys -t "${SESS_NAME}:hedron.0" 'clipssh cbreneman@hedron.landofcrispy
 tmux select-window -t "${SESS_NAME}:0"
 
 # Create alternate session
-tmux new-session -s "${SESS_NAME}B" -t "$SESS_NAME" -d
+#tmux new-session -s "${SESS_NAME}_B" -t "$SESS_NAME" -d
 
 # attach to session
 tmux a -t "$SESS_NAME"
