@@ -1,0 +1,4 @@
+#!/bin/bash
+
+enscript -1 -f Courier@7 -B --printer-options=-oDuplex=DuplexNoTumble "$@"
+

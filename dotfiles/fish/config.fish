@@ -21,7 +21,7 @@ end
 
 # PATH
 # todo: at some future point when fish versions have consistently caught up, maybe use fish_add_path
-set -g fish_user_paths $HOME/.local/bin $HOME/bin $HOME/.fzf/bin $fish_user_paths
+set -g fish_user_paths $HOME/.local/bin $HOME/bin $HOME/.fzf/bin $HOME/.userenv/path_scripts $fish_user_paths
 
 function clipssh
 	$USERENVDIR/clipboard/clipssh.sh $argv
