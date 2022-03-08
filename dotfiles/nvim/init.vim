@@ -146,9 +146,9 @@ require('lspconfig').tsserver.setup({on_attach = custom_lsp_attach})
 EOF
 endif
 
-if executable('pyls')
+if executable('pyright')
 lua << EOF
-require('lspconfig').pyls.setup({on_attach = custom_lsp_attach})
+require('lspconfig').pyright.setup({on_attach = custom_lsp_attach})
 EOF
 endif
 
