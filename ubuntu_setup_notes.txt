@@ -1,0 +1,36 @@
+- Install base system, make sure everything's updated and drivers are good.
+- Install git, checkout this repo.
+- Run packages-ubuntu-gui.sh and packages-ubuntu.sh
+- Run setup.sh
+- Open Nextcloud app and login to Nextcloud with creds in password manager.
+- Configure syncing at least for keepass.
+- Open keepassxc, open database in nextcloud.
+- Install firefox from apt to replace the version installed from snap (doesn't work with keepassxc plugin)
+- Connect web browser account
+- Install and set up keepassxc browser plugin
+- Reboot, open regolith session.
+
+- apt install openssh-server
+- Install node
+	https://github.com/nodesource/distributions/blob/master/README.md
+	Follow install instructions
+	npm set prefix $HOME/.local
+- Install latest neovim from source
+	https://github.com/neovim/neovim/releases
+	https://github.com/neovim/neovim/wiki/Building-Neovim
+	sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
+	make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local"
+	make install
+- Install latest tmux from source (min. v3.3 or git)
+	sudo apt install libevent-dev libncurses-dev bison
+	sh autogen.sh # if from git
+	./configure --prefix=/home/cbreneman/.local/
+- Python LSP
+	npm install -g pyright
+- JS LSP
+	- npm install -g typescript typescript-language-server
+
+
+
+
+
