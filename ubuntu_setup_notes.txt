@@ -5,6 +5,7 @@
 - Open Nextcloud app and login to Nextcloud with creds in password manager.
 - Configure syncing at least for keepass.
 - Open keepassxc, open database in nextcloud.
+- In this git repo, update the remote to use ssh: git remote set-url origin git@github.com:CrispyConductor/environment-crisp.git
 - Install firefox from apt to replace the version installed from snap (doesn't work with keepassxc plugin)
 - Connect web browser account
 - Install and set up keepassxc browser plugin
