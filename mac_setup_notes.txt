@@ -1,0 +1,34 @@
+Password change:
+$ passwd
+$ security set-keychain-password
+
+Enable SSH server: System Preferences -> Sharing: Enable Remote Login, All users, Disk access
+
+Hostname: System Preferences -> Sharing: Change Computer Name
+
+Reboot
+
+Install Chrome
+
+Synergy: Install dmg from symless.com; grant accessibility permissions when prompted.  Run it, enter license key, configure as needed.
+
+NextCloud: Install dmg from nextcloud.com.  Log in and set up sync for keepass only.
+
+KeePassXC: Install dmg from keepassxc.org.  Keep closed until dotfiles installed.
+
+HomeBrew: Install from command on web site.
+
+Brew packages: brew install fish gawk git tmux neovim ripgrep coreutils node
+
+Dotfiles: git clone https://github.com/CrispyConductor/environment-crisp.git; Run setup.sh; Install tmux plugins with Ctrl-b I
+
+Check default shell: If the mac rejected using fish, make sure default shell doesn't get set to bash and set it back to zsh: chsh -s /bin/zsh
+
+KeePassXC Browser Plugin: Restart keepassxc after dotfiles.  Enable browser integration in settings.  Install chrome keepassxc plugin.  Click extensions icon, connect to keepassxc.
+
+Configure node: npm set prefix $HOME/.local
+
+Install LSP servers: npm install -g pyright typescript typescript-language-server
+
+Reboot
+

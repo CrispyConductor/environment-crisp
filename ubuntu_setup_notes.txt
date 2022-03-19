@@ -1,7 +1,7 @@
 - Install base system, make sure everything's updated and drivers are good.
 - Install git, checkout this repo.
 - Run packages-ubuntu-gui.sh and packages-ubuntu.sh
-- Run setup.sh
+- Run setup.sh (note: if installing latest tmux, do that first)
 - Open Nextcloud app and login to Nextcloud with creds in password manager.
 - Configure syncing at least for keepass.
 - Open keepassxc, open database in nextcloud.
@@ -9,6 +9,7 @@
 - Install firefox from apt to replace the version installed from snap (doesn't work with keepassxc plugin)
 - Connect web browser account
 - Install and set up keepassxc browser plugin
+- In tmux, install plugins: Ctrl-b I
 - Reboot, open regolith session.
 
 - apt install openssh-server
