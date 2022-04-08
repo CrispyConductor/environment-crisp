@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SSHCMD="ssh -i ~/.ssh/id_ed25519_infotrust_github.pub -F /dev/null"
+
+GIT_SSH_COMMAND="$SSHCMD" git clone "$1"
+if [ $? -ne 0 ]; then exit 1; fi
+
+REPO_DIR="$(basename "$1" .git)"
+cd "$REPO_DIR"
+if [ $? -ne 0 ]; then exit 1; fi
+
+git config core.sshCommand "$SSHCMD"
+
+

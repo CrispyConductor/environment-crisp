@@ -83,7 +83,9 @@ mkdir -p ~/.ssh
 if [ ! -f ~/.ssh/authorized_keys ]; then
 	cat "$DOTFILES/ssh_authorized_keys" > ~/.ssh/authorized_keys
 fi
-#if [ ! -f ~/.ssh/config ]; then
-#	cat "$DOTFILES/ssh_config" > ~/.ssh/config
-#fi
+if [ ! -f ~/.ssh/config ]; then
+	cat "$DOTFILES/ssh_config" > ~/.ssh/config
+	chmod 600 ~/.ssh/config
+fi
+cp $DOTFILES/ssh_pubkeys/* ~/.ssh/
 
