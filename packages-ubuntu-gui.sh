@@ -6,10 +6,13 @@ cat signal-desktop-keyring.gpg | sudo tee -a /usr/share/keyrings/signal-desktop-
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' | sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
 
 # regolith ppa
-sudo add-apt-repository ppa:regolith-linux/release
+wget -qO - https://regolith-desktop.org/regolith.key | gpg --dearmor | sudo tee /usr/share/keyrings/regolith-archive-keyring.gpg > /dev/null
+echo deb "[arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://regolith-desktop.org/release-ubuntu-jammy-amd64 jammy main" |sudo tee /etc/apt/sources.list.d/regolith.list
+
+sudo apt update
 
 packages="
-regolith-desktop-standard
+regolith-desktop
 i3xrocks-weather
 i3xrocks-memory
 i3xrocks-volume

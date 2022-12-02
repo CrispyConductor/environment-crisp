@@ -45,10 +45,10 @@ install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 install_dotfile taskrc .taskrc
 install_dotfile keepassxc.ini .config/keepassxc/keepassxc.ini
 
-install_dotfile regolith/picom/config .config/regolith/picom/config
-install_dotfile regolith/Xresources .config/regolith/Xresources
+install_dotfile regolith/picom/config .config/regolith2/regolith/picom/config
+install_dotfile regolith/Xresources .config/regolith2/regolith/Xresources
 for fn in `ls $DOTFILES/regolith/i3xrocks/conf.d`; do
-	install_dotfile regolith/i3xrocks/conf.d/$fn .config/regolith/i3xrocks/conf.d/$fn
+	install_dotfile regolith/i3xrocks/conf.d/$fn .config/regolith2/regolith/i3xrocks/conf.d/$fn
 done
 
 install_dotfile fish/config.fish .config/fish/config.fish
