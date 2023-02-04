@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then echo 'Supply repo url'; exit 1; fi
+
+SSHCMD="ssh -i ~/.ssh/id_ed25519_infotrust_github.pub -F /dev/null"
+
+git config core.sshCommand "$SSHCMD"
+git remote add origin "$1"
+
+
+
