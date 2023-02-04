@@ -58,6 +58,10 @@ install_dotfile fish/hostname_colors_random .config/fish/hostname_colors_random
 for fn in `ls $DOTFILES/fish/functions`; do
 	install_dotfile fish/functions/$fn .config/fish/functions/$fn
 done
+for fn in `ls $DOTFILES/fish/completions`; do
+	install_dotfile fish/completions/$fn .config/fish/completions/$fn
+done
+
 ln -sf $HOME/.fzf/shell/key-bindings.fish $HOME/.config/fish/functions/fzf_key_bindings.fish
 
 # Setup the real tmux.conf
