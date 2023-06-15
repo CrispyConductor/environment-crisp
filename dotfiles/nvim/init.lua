@@ -26,6 +26,9 @@ vim.o.foldignore = ''
 
 vim.o.mouse = ''
 
+-- Codeium config
+vim.g.codeium_manual = true
+
 -- Unfold everything when opening a window
 vim.api.nvim_exec([[
 	augroup foldstuff
@@ -106,6 +109,10 @@ require('packer').startup(function(use)
 				require'hop'.setup({})
 			end
 		}
+	end
+	-- CodeiumAI
+	if vim.fn.has('nvim-0.6.0') then
+		use 'Exafunction/codeium.vim'
 	end
 end)
 
