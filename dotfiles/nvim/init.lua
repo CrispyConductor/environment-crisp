@@ -146,6 +146,19 @@ if vim.fn.has('nvim-0.8.0') then
 	vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 	vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
+	-- Diagnostics options
+	vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+		vim.lsp.diagnostic.on_publish_diagnostics, {
+		-- Enable/Disable signs (indicators on left)
+		signs = true,
+		-- Gray diagnostic text options
+		virtual_text = {
+			spacing = 2
+		},
+		-- Severe diagnostics first
+		severity_sort = true
+	})
+
 	-- Use LspAttach autocommand to only map the following keys
 	-- after the language server attaches to the current buffer
 	vim.api.nvim_create_autocmd('LspAttach', {
