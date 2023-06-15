@@ -50,6 +50,13 @@ if [[ $force -eq 1 ]]; then
 	rm -rf ~/.local/share/nvim/bundle/*
 fi
 
+# Install neovim packer
+if [[ ! -e ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]] || [[ $force -eq 1 ]]; then
+	echo "Installing packer for neovim ..."
+	git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+fi
+
+# Install vim package managers
 if [[ ! -e ~/.local/share/nvim/site/autoload/plug.vim ]] || [[ $force -eq 1 ]]; then
 	echo "Installing vimplug for neovim ..."
 	mkdir -p ~/.local/share/nvim
@@ -95,7 +102,8 @@ if [[ ! -e ~/.fzf ]] || [[ $force -eq 1 ]]; then
 fi
 
 echo "Installing nvim plugins ..."
-nvim -c ':PlugInstall' -c ':sleep 1' -c ':PluginInstall' -c ':sleep 1' -c ':qa!'
+#nvim -c ':PlugInstall' -c ':sleep 1' -c ':PluginInstall' -c ':sleep 1' -c ':qa!'
+nvim -c ':PackerSync' -c ':sleep 5' -c ':qa!'
 
 echo "Switching out personal forks ..."
 #switch_git_fork ~/.oh-my-zsh ohmyzsh master

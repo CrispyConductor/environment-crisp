@@ -139,11 +139,9 @@ vim
         g,  -  Next change
         :changes - Print change list
         more @ :help various-motions
-    EasyMotion
+    Hop (EasyMotion)
         s   -  Bidirectional find on single character
         SS  -  Bidirectional find with 2 characters
-        Sj  -  Find line below
-        Sk  -  Find line above
     Misc
         .   -  Repeat last
     Cursor Movement
@@ -245,37 +243,29 @@ vim
         Ctrl-t  -  Pop tag stack
         To regenerate tags: $ ctags -R
     LSP (Language Server)
-        Ctrl-]  -  Go to definition of term under cursor (also Alt-] and Alt-l ])
-        Alt-l Alt-]  - List references to term under cursor
-        Alt-l f  -  Apply formatting (whole buf in normal, selection in visual)
-        Alt-l t  -  Go to type of term under cursor
-        Alt-l r  -  Rename term under cursor
-        Alt-l d  -  Display line diagnostic info
-        K  -  Hover text
-        Ctrl-x Ctrl-o  -  Insert-mode completion (omnifunc)
+        Space e  -  Show dialog with diagnostic messages for line
+        [ d  -  Go to prev diagnostic
+        ] d  -  Go to next diagnostic
+        Ctrl-x Ctrl-o  -  Autocomplete popup
+        g d  -  Jump to definition of term under cursor
+        Space D - Jump to type definition of term under cursor
+        g r  -  List references to the term under cursor
+        g D  -  Jump to declaration of term under cursor
+        K  -  Show info about term under cursor (twice jumps into window)
+        Space r n  -  Rename term under cursor
+        Ctrl-k  -  Show info on function signature for function under cursor (twice also works)
         Ctrl-t  -  Pop tag stack
         :pop  -  Pop tag stack
         :tags  -  List tag stack
-    Far
-        :F <Pattern> **/* {params}  -  Find multiple files
-        :Far <Pattern> <Replacement> **/* {params}  -  Find and replace multiple files
-        :Fardo  -  Execute replacement
-        Far buffer keys:
-        x  -  Exclude instance or file
-        i  -  Include instance or file
-        X  -  Exclude all
-        I  -  Include all
-        p  -  Open preview at location
-        P  -  Close preview
-        <Enter>  -  Open to location
-    NERDTree
-        Alt-n  -  Toggle NERDTree
-        i  -  Open file in horizontal split
-        s  -  Open file in vertical split
-        :help NERDTree
-    fzf
-        :FZF  -  fzf file opener
-        Alf-f  -  fzf file opener
+    nvimTree
+        Alt-n  -  Toggle tree
+        g ?  -  Show bindings in tree
+    Telescope (Fuzzy find)
+        \ f f  -  Fuzzy find files
+        \ f g  -  Live grep
+        \ f b  -  List buffers
+        \ f h  -  Search vim help tags
+        Alf-f  -  Alias for fuzzy find files
 zsh
     <Esc> Ctrl-v  -  Edit command in editor
     fzf

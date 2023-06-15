@@ -3,7 +3,7 @@
 # If a new tmux buffer has been created recently, return the contents
 
 # buffer must have been created within this number of seconds
-MAX_TIME_DIFF=3
+MAX_TIME_DIFF=36000
 # don't output if buffer too large
 MAX_SIZE=100000000
 
