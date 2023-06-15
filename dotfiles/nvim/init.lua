@@ -26,8 +26,15 @@ vim.o.foldignore = ''
 
 vim.o.mouse = ''
 
+-- Code AI config
+-- copilot, codeium, none
+local codingAIEngine = 'copilot'
+
 -- Codeium config
-vim.g.codeium_manual = true
+if codingAIEngine == 'codeium' then
+	vim.g.codeium_enabled = true
+	vim.g.codeium_manual = false
+end
 
 -- Unfold everything when opening a window
 vim.api.nvim_exec([[
@@ -111,9 +118,14 @@ require('packer').startup(function(use)
 		}
 	end
 	-- CodeiumAI
-	if vim.fn.has('nvim-0.6.0') then
+	if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'codeium' then
 		use 'Exafunction/codeium.vim'
 	end
+	-- CoPilot
+	if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'copilot' then
+		use 'github/copilot.vim'
+	end
+
 end)
 
 

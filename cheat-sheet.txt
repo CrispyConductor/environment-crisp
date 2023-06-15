@@ -266,11 +266,12 @@ vim
         \ f b  -  List buffers
         \ f h  -  Search vim help tags
         Alf-f  -  Alias for fuzzy find files
-    Codeium
+    Codeium/Copilot
         Alt-\  -  Show completion
         Tab  -  Accept completion
         Alt-[  -  Prev completion
         Alt-]  -  Next completion
+        :Copilot  -  Show all completions in popup
 zsh
     <Esc> Ctrl-v  -  Edit command in editor
     fzf
