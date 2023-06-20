@@ -272,6 +272,17 @@ vim
         Alt-[  -  Prev completion
         Alt-]  -  Next completion
         :Copilot  -  Show all completions in popup
+    ChatGPT
+        Alt-g  -  Toggle ChatGPT dialog
+        Ctrl-Enter  -  Send message (Alt-Enter in insert mode)
+        Ctrl-n  -  New session
+        Ctrl-o  -  Settings and sessions
+        Tab  -  Switch window panes
+        Ctrl-y  -  Yank last answer
+        Ctrl-k  -  Yank code from last answer
+        Ctrl-s  -  Edit system prompt
+        Ctrl-d  -  Add "draft" message to prompt without sending to server
+        Ctrl-r  -  Toggle role of message sent
 zsh
     <Esc> Ctrl-v  -  Edit command in editor
     fzf

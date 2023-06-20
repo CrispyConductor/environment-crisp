@@ -13,6 +13,8 @@ vim.o.guicursor = ''
 vim.o.modeline = false
 -- When unloading a buffer, hide it and preserve history
 vim.o.hidden = true
+-- Don't fold by default
+vim.o.foldenable = false
 
 -- Execute .nvimrc in working directory
 vim.o.exrc = true
@@ -30,6 +32,10 @@ vim.o.mouse = ''
 -- copilot, codeium, none
 local codingAIEngine = 'copilot'
 
+-- Define config file for OpenAI key and check if it exists
+openaiKeyFile = vim.fn.expand('$HOME/.openai-api-key')
+local enableChatGPT = vim.fn.filereadable(openaiKeyFile) == 1
+
 -- Codeium config
 if codingAIEngine == 'codeium' then
 	vim.g.codeium_enabled = true
@@ -37,14 +43,19 @@ if codingAIEngine == 'codeium' then
 end
 
 -- Unfold everything when opening a window
-vim.api.nvim_exec([[
-	augroup foldstuff
-		autocmd BufWinEnter * normal zR
-	augroup END
-]], false)
+--vim.api.nvim_exec([[
+--	augroup foldstuff
+--		autocmd BufWinEnter * normal zR
+--	augroup END
+--]], false)
 
 -- Nvim tree mapping
 vim.api.nvim_set_keymap('', '<M-n>', ':NvimTreeToggle<CR>', {})
+
+-- ChatGPT mapping
+if enableChatGPT then
+	vim.api.nvim_set_keymap('n', '<M-g>', ':ChatGPT<CR>', {})
+end
 
 -- hooks for clipboard syncing
 vim.api.nvim_command('source ~/.userenv/clipboard/vimhooks.vim')
@@ -125,7 +136,22 @@ require('packer').startup(function(use)
 	if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'copilot' then
 		use 'github/copilot.vim'
 	end
-
+	-- GPT
+	if enableChatGPT then
+		use({
+			"jackMort/ChatGPT.nvim",
+			config = function()
+				require("chatgpt").setup({
+					api_key_cmd = "cat " .. openaiKeyFile
+				})
+			end,
+			requires = {
+				"MunifTanjim/nui.nvim",
+				"nvim-lua/plenary.nvim",
+				"nvim-telescope/telescope.nvim"
+			}
+		})
+	end
 end)
 
 
@@ -194,7 +220,14 @@ end
 
 -- nvim-tree
 if vim.fn.has('nvim-0.8.0') then
-	require('nvim-tree').setup({})
+	require('nvim-tree').setup({
+		view = {
+			width = {
+				min = 8,
+				max = 50
+			}
+		}
+	})
 end
 
 
