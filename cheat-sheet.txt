@@ -327,3 +327,62 @@ Chrome
     Ctrl-l  -  Select address bar
 Mac
     Ctrl-Super-f  -  Terminal full-screen
+taskwarrior
+    Adding Tasks
+        task add Example task due:tomorrow  -  Add a task due tomorrow.
+        task add Example task project:Work  -  Add a task to the 'Work' project.
+        task add Example task +urgent  -  Add a task with an 'urgent' tag.
+        task add Example task pri:H  -  Add a high-priority task (priorities are H,M,L).
+    Viewing Tasks
+        task list
+        task all
+        task list project:Home  -  List all tasks in the 'Home' project.
+        task list +urgent  -  List all tasks with the 'urgent' tag.
+        task status:pending list  -  List only pending tasks.
+        task due.before:tomorrow list  -  List tasks due before tomorrow.
+        task 12 info  -  Show details of task 12.
+    Removing Tasks
+        task 2 delete  -  Delete task with ID 2.
+    Task Statuses
+        task 2 done  -  Mark task 2 as completed.
+        task 2 start  -  Mark task 2 as started.
+        task 2 stop  -  Mark task 2 as back to pending.
+        All statuses: pending, completed, deleted, waiting, recurring
+    Modifying Tasks
+        task 2 modify due:eom  -  Change due date of task 2 to end of the month.
+        task 2 modify -urgent  -  Remove the 'urgent' tag from task 2.
+        task 2 modify project:Work  -  Move task 2 to the 'Work' project.
+    Date Formats
+        due:tomorrow  -  Due the next day.
+        due:friday  -  Due on the next occurrence of Friday.
+        due:2024-02-14  -  Due on a specific date.
+        due:eom  -  Due at the end of the current month.
+        due:eow  -  Due at the end of the current week.
+    Reports
+        task burndown.daily  -  Show daily burndown chart.
+        task summary  -  Show a summary of tasks.
+    Recurring Tasks
+        task add Pay bills recur:monthly due:1st  -  Add a monthly recurring task due on the first of each month.
+        task add Check emails recur:daily due:9am  -  Add a daily recurring task due at 9 AM every day.
+        task add Write report recur:weekly due:Friday  -  Add a weekly recurring task due every Friday.
+        task add Visit gym recur:biweekly due:Monday  -  Add a biweekly recurring task due every other Monday.
+        task add Take medication recur:yearly due:2024-01-01  -  Add a yearly recurring task due on January 1st, 2024.
+        task add Backup data recur:quarterly  -  Add a quarterly recurring task without a specific due date.
+        task 10 modify recur:monthly due:15th  -  Change an existing recurring task to occur monthly, due on the 15th.
+        task 10 modify recur:  -  Remove the recurring attribute from a task, making it a one-time task.
+        task recurring  -  List all recurring tasks.
+        task 10 done  -  Mark a single instance of a recurring task as completed. Taskwarrior automatically generates the next occurrence.
+        task add Pay bills recur:monthly due:15th wait:due-7days  -  Add a monthly recurring task due on the 15th of each month, but only become active 7 days before the due date.
+        task add Check monthly budget recur:monthly wait:3rd  -  Add a monthly recurring task that becomes active on the 3rd of each month.
+        task add "Annual checkup" recur:yearly wait:september  -  Add a yearly recurring task that becomes active in September.
+        task add recur:weekly +tech wait:friday due:wait+5d Backup octagon  -  Add a weekly recurring task that becomes active on Fridays, due 5 days after becoming active, with the 'tech' tag.
+    Wait Date
+        task add Example task wait:2024-01-05  -  Add a task that becomes active on a specific date.
+    Annotations
+        task 12 annotate Checked with client about requirements  -  Add an annotation.
+        task 12 denotate 1  -  Delete annotation 1.
+        task 12 denotate all  -  Delete all annotations.
+        task 12 modify /Checked/Confirmed/  -  Replace text in the annotations.
+        task list /client requirements/  -  Search for text in annotations.
+
+
