@@ -99,7 +99,7 @@ function fish_clipboard_paste
 	end
 end
 
-fzf_key_bindings
+#fzf_key_bindings
 
 if status --is-login; or test -z "$X_ENV_FILE"
 	set -g X_ENV_FILE $HOME/.user_env_x.fish
@@ -117,3 +117,7 @@ if test -f ~/.config/fish/config-local.fish
 	source ~/.config/fish/config-local.fish
 end
 
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH

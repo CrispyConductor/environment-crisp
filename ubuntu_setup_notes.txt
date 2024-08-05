@@ -32,6 +32,9 @@
 - JS LSP
 	- npm install -g typescript typescript-language-server
 
+NVM for fish:
+	curl -L https://get.oh-my.fish | fish
+	omf install nvm
 
 
 

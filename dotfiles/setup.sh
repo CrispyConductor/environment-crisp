@@ -62,7 +62,7 @@ for fn in `ls $DOTFILES/fish/completions`; do
 	install_dotfile fish/completions/$fn .config/fish/completions/$fn
 done
 
-ln -sf $HOME/.fzf/shell/key-bindings.fish $HOME/.config/fish/functions/fzf_key_bindings.fish
+#ln -sf $HOME/.fzf/shell/key-bindings.fish $HOME/.config/fish/functions/fzf_key_bindings.fish
 
 # Setup the real tmux.conf
 "$DOTFILES/setup-tmux.sh"
