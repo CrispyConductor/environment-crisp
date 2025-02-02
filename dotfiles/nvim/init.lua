@@ -164,6 +164,9 @@ if vim.fn.has('nvim-0.8.0') then
 	if vim.fn.executable('pyright') then
 		lspconfig.pyright.setup({})
 	end
+	if vim.fn.executable('rust-analyzer') then
+		lspconfig.rust_analyzer.setup({})
+	end
 
 	-- Global mappings.
 	-- See `:help vim.diagnostic.*` for documentation on any of the below functions
