@@ -6,6 +6,7 @@ gawk
 tmux
 neovim
 python3-pip
+python3-pynvim
 git
 command-not-found
 ripgrep

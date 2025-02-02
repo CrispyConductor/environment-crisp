@@ -1,19 +1,19 @@
-i3-wm.bar.position: bottom
+wm.bar.position: bottom
 
-i3-wm.bar.workspace.focused.background.color: #ffa759
-i3-wm.bar.workspace.focused.text.color: #1f2430
-i3-wm.bar.workspace.active.background.color: #bfbab0
-i3-wm.bar.workspace.active.text.color: #292b30
-i3-wm.bar.workspace.inactive.background.color: #7f7c78
-i3-wm.bar.workspace.inactive.text.color: #292b30
+wm.bar.workspace.focused.background.color: #ffa759
+wm.bar.workspace.focused.text.color: #1f2430
+wm.bar.workspace.active.background.color: #bfbab0
+wm.bar.workspace.active.text.color: #292b30
+wm.bar.workspace.inactive.background.color: #7f7c78
+wm.bar.workspace.inactive.text.color: #292b30
 
-i3-wm.window.border.size: 1
-i3-wm.hide.edge.borders: none
+wm.window.border.size: 1
+wm.hide.edge.borders: none
 
-i3-wm.client.focused.color.child_border: #ffff00
-i3-wm.client.unfocused.color.child_border: #202020
-i3-wm.client.focused_inactive.color.child_border: #808080
-i3-wm.client.urgent.color.child_border: #ff0000
+wm.client.focused.color.child_border: #ffff00
+wm.client.unfocused.color.child_border: #202020
+wm.client.focused_inactive.color.child_border: #808080
+wm.client.urgent.color.child_border: #ff0000
 
 i3xrocks.weather.location: Cincinnati
 
