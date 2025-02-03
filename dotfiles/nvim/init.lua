@@ -159,7 +159,7 @@ end)
 if vim.fn.has('nvim-0.8.0') then
 	local lspconfig = require('lspconfig')
 	if vim.fn.executable('typescript-language-server') then
-		lspconfig.tsserver.setup({})
+		require'lspconfig'.ts_ls.setup{}
 	end
 	if vim.fn.executable('pyright') then
 		lspconfig.pyright.setup({})
