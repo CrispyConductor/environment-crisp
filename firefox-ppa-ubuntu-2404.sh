@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 sudo add-apt-repository ppa:mozillateam/ppa
 if [ $? -ne 0 ]; then exit 1; fi
 
-cat | sudo tee /etc/apt/preferences.d/mozilla <<EOF
+sudo tee /etc/apt/preferences.d/mozilla <<EOF
 Package: firefox*
 Pin: release o=LP-PPA-mozillateam
 Pin-Priority: 1001
