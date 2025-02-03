@@ -31,6 +31,8 @@
 	npm install -g pyright
 - JS LSP
 	- npm install -g typescript typescript-language-server
+	- note: @vue/language-server and @vue/typescript-plugin must be same version
+	- npm install -g @vue/language-server @vue/typescript-plugin
 
 NVM for fish:
 	curl -L https://get.oh-my.fish | fish

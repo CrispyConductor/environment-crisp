@@ -158,8 +158,36 @@ end)
 -- LSP
 if vim.fn.has('nvim-0.8.0') then
 	local lspconfig = require('lspconfig')
+
+	if vim.fn.executable('vue-language-server') then
+		lspconfig.volar.setup{}
+	end
 	if vim.fn.executable('typescript-language-server') then
-		require'lspconfig'.ts_ls.setup{}
+		-- String filename ~/.local/lib/node_modules/@vue/typescript-plugin
+		local ts_plugin = vim.fn.glob('~/.local/lib/node_modules/@vue/typescript-plugin')
+		-- If the directory exists ...
+		if ts_plugin ~= '' then
+			-- Initialize ts_ls with vue support
+			lspconfig.ts_ls.setup{
+				init_options = {
+					plugins = {
+						{
+							name = "@vue/typescript-plugin",
+							location = ts_plugin,
+							languages = {"javascript", "typescript", "vue"},
+						},
+					},
+				},
+				filetypes = {
+					"javascript",
+					"typescript",
+					"vue",
+				},
+			}
+		else
+			-- Initialize ts_ls without vue support
+			lspconfig.ts_ls.setup{}
+		end
 	end
 	if vim.fn.executable('pyright') then
 		lspconfig.pyright.setup({})
