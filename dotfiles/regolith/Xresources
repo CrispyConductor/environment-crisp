@@ -16,4 +16,4 @@ wm.client.focused_inactive.color.child_border: #808080
 wm.client.urgent.color.child_border: #ff0000
 
 i3xrocks.weather.location: Cincinnati
-
+i3xrocks.volume.mixer: default
