@@ -19,9 +19,9 @@
 	npm set prefix $HOME/.local
 - Install latest neovim from source
 	https://github.com/neovim/neovim/releases
-	https://github.com/neovim/neovim/wiki/Building-Neovim
-	sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
-	make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local"
+	https://github.com/neovim/neovim/blob/master/INSTALL.md#install-from-source
+	sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen build-essential
+	make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local"
 	make install
 - Install latest tmux from source (min. v3.3 or git)
 	sudo apt install libevent-dev libncurses-dev bison
@@ -33,6 +33,12 @@
 	- npm install -g typescript typescript-language-server
 	- note: @vue/language-server and @vue/typescript-plugin must be same version
 	- npm install -g @vue/language-server @vue/typescript-plugin
+- Aider
+	sudo apt-get install pipx
+	pipx install aider-install
+	aider-install
+	Create/edit ~/.config/fish/config-local.fish:
+		set -gx ANTHROPIC_API_KEY '...'
 
 NVM for fish:
 	curl -L https://get.oh-my.fish | fish

@@ -44,6 +44,7 @@ install_dotfile gitignore .config/git/ignore
 install_dotfile crispy.zsh-theme .oh-my-zsh/themes/crispy.zsh-theme
 install_dotfile taskrc .taskrc
 install_dotfile keepassxc.ini .config/keepassxc/keepassxc.ini
+install_dotfile aider.conf.yml .aider.conf.yml
 
 install_dotfile regolith/Xresources .config/regolith3/Xresources
 #for fn in `ls $DOTFILES/regolith/i3xrocks/conf.d`; do

@@ -106,7 +106,8 @@ fi
 
 echo "Installing nvim plugins ..."
 #nvim -c ':PlugInstall' -c ':sleep 1' -c ':PluginInstall' -c ':sleep 1' -c ':qa!'
-nvim -c ':PackerSync' -c ':sleep 5' -c ':qa!'
+#nvim -c ':PackerSync' -c ':sleep 5' -c ':qa!'
+nvim --headless "+Lazy! sync" +qa
 
 echo "Switching out personal forks ..."
 #switch_git_fork ~/.oh-my-zsh ohmyzsh master

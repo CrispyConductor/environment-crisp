@@ -1,0 +1,14 @@
+model: anthropic/claude-3-7-sonnet-latest
+thinking-tokens: 32k
+cache-prompts: true
+cache-keepalive-pings: 8
+dark-mode: true
+git: true
+gitignore: true
+auto-commits: false
+dirty-commits: false
+attribute-author: false
+attribute-committer: false
+attribute-commit-message-author: false
+attribute-commit-message-committer: false
+

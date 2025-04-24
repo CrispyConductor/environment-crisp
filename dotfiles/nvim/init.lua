@@ -88,75 +88,91 @@ vim.api.nvim_set_keymap('i', '<M-w>D', '<Esc>:call PaneNavTmuxTry("D")<CR>', {si
 vim.api.nvim_set_keymap('i', '<M-w>L', '<Esc>:call PaneNavTmuxTry("L")<CR>', {silent = true})
 vim.api.nvim_set_keymap('i', '<M-w>R', '<Esc>:call PaneNavTmuxTry("R")<CR>', {silent = true})
 
--- Plugin setup
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
 
-require('packer').startup(function(use)
-	-- Package manager
-	use 'wbthomason/packer.nvim'
-	-- Language server
-	if vim.fn.has('nvim-0.8.0') then
-		use 'neovim/nvim-lspconfig'
-	end
-	-- File tree
-	if vim.fn.has('nvim-0.8.0') then
-		use 'nvim-tree/nvim-tree.lua'
-	end
-	-- Indentation detection
-	use {
-		'nmac427/guess-indent.nvim',
-		config = function() require('guess-indent').setup {} end,
-	}
-	-- Git signs
-	if vim.fn.has('nvim-0.8.0') then
-		use 'lewis6991/gitsigns.nvim'
-	end
-	-- Telescope (Fuzzy find)
-	if vim.fn.has('nvim-0.9.0') then
-		use {
-			'nvim-telescope/telescope.nvim',
-			tag = '0.1.2',
-			requires = { {'nvim-lua/plenary.nvim'} }
-		}
-	end
-	-- Hop (easymotion)
-	if vim.fn.has('nvim-0.5.0') then
-		use {
-			'phaazon/hop.nvim',
-			branch = 'v2',
-			config = function()
-				require'hop'.setup({})
-			end
-		}
-	end
-	-- CodeiumAI
-	if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'codeium' then
-		use 'Exafunction/codeium.vim'
-	end
-	-- CoPilot
-	if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'copilot' then
-		use 'github/copilot.vim'
-	end
-	-- GPT
-	if enableChatGPT then
-		use({
-			"jackMort/ChatGPT.nvim",
-			config = function()
-				require("chatgpt").setup({
-					api_key_cmd = "cat " .. openaiKeyFile
-				})
-			end,
-			requires = {
-				"MunifTanjim/nui.nvim",
-				"nvim-lua/plenary.nvim",
-				"nvim-telescope/telescope.nvim"
+-- Assemble the list of plugins to be installed
+local pluginspec = {}
+-- Dependencies
+if vim.fn.has('nvim-0.5.0') then
+	table.insert(pluginspec, { 'nvim-lua/plenary.nvim' })
+	table.insert(pluginspec, { 'MunifTanjim/nui.nvim' })
+end
+-- Language server
+if vim.fn.has('nvim-0.10.0') then
+	table.insert(pluginspec, { 'neovim/nvim-lspconfig', tag = 'v2.0.0' })
+end
+-- File tree
+if vim.fn.has('nvim-0.8.0') then
+	table.insert(pluginspec, {
+		'nvim-tree/nvim-tree.lua',
+		opts = {
+			view = {
+				width = {
+					min = 8,
+					max = 50
+				}
 			}
-		})
-	end
-end)
+		}
+	})
+end
+-- Indentation detection
+table.insert(pluginspec, { 'nmac427/guess-indent.nvim', opts = {} })
+-- Git signs
+if vim.fn.has('nvim-0.8.0') then
+	table.insert(pluginspec, { 'lewis6991/gitsigns.nvim', opts = {} })
+end
+-- Telescope (Fuzzy find)
+if vim.fn.has('nvim-0.9.0') then
+	table.insert(pluginspec, { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } })
+end
+-- Hop (easymotion)
+if vim.fn.has('nvim-0.5.0') then
+	table.insert(pluginspec, { 'smoka7/hop.nvim', opts = {} })
+end
+-- CodeiumAI
+if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'codeium' then
+	table.insert(pluginspec, { 'Exafunction/codeium.vim' })
+end
+-- CoPilot
+if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'copilot' then
+	table.insert(pluginspec, { 'github/copilot.vim' })
+end
+-- GPT
+if enableChatGPT then
+	table.insert(pluginspec, {
+		'jackMort/ChatGPT.nvim',
+		opts = { api_key_cmd = "cat " .. openaiKeyFile },
+		dependencies = {
+			'MunifTanjim/nui.nvim',
+			'nvim-lua/plenary.nvim',
+			'nvim-telescope/telescope.nvim'
+		}
+	})
+end
 
+-- Initialize plugins via lazy.nvim
+require("lazy").setup({
+	spec = pluginspec,
+	checker = { enabled = true }
+})
 
 -- LSP
-if vim.fn.has('nvim-0.8.0') then
+if vim.fn.has('nvim-0.10.0') then
 	local lspconfig = require('lspconfig')
 
 	if vim.fn.executable('vue-language-server') then
@@ -249,25 +265,6 @@ if vim.fn.has('nvim-0.8.0') then
 end
 
 
--- nvim-tree
-if vim.fn.has('nvim-0.8.0') then
-	require('nvim-tree').setup({
-		view = {
-			width = {
-				min = 8,
-				max = 50
-			}
-		}
-	})
-end
-
-
--- Git signs
-if vim.fn.has('nvim-0.8.0') then
-	require('gitsigns').setup({})
-end
-
-
 -- Fuzzy find/Telescope
 if vim.fn.has('nvim-0.9.0') then
 	local telescopebuiltin = require('telescope.builtin')
@@ -288,34 +285,5 @@ if vim.fn.has('nvim-0.5.0') then
 end
 
 
-
--- LSP
---if vim.fn.has('nvim-0.5.0') then
---	vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
---		vim.lsp.diagnostic.on_publish_diagnostics, {
---		-- Disable signs (indicators on left)
---		signs = false,
---		-- Diagnostic text option
---		virtual_text = {
---			spacing = 1
---		}
---	})
---
---	custom_lsp_attach = function(client)
---		-- Keybinds
---		-- See `:help nvim_buf_set_keymap()` for more information
---		vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
---		vim.api.nvim_buf_set_keymap(0, 'n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
---		-- Truncated for brevity...
---	end
---
---	if vim.fn.executable('typescript-language-server') then
---		require('lspconfig').tsserver.setup({on_attach = custom_lsp_attach})
---	end
---
---	if vim.fn.executable('pyright') then
---		require('lspconfig').pyright.setup({on_attach = custom_lsp_attach})
---	end
---end
 
 
