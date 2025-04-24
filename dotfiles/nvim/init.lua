@@ -3,6 +3,8 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- General options
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '\\'
 -- Color group
 vim.o.background = 'dark'
 -- Delay for writing swap file to disk
@@ -57,6 +59,10 @@ if enableChatGPT then
 	vim.api.nvim_set_keymap('n', '<M-g>', ':ChatGPT<CR>', {})
 end
 
+-- Aider mapping
+vim.api.nvim_set_keymap('', '<M-a>', ':Aider toggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('t', '<M-a>', [[<C-\><C-n>:Aider toggle<CR>]], { noremap = true, silent = true })
+
 -- hooks for clipboard syncing
 vim.api.nvim_command('source ~/.userenv/clipboard/vimhooks.vim')
 
@@ -107,10 +113,18 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Assemble the list of plugins to be installed
 local pluginspec = {}
+
 -- Dependencies
 if vim.fn.has('nvim-0.5.0') then
-	table.insert(pluginspec, { 'nvim-lua/plenary.nvim' })
-	table.insert(pluginspec, { 'MunifTanjim/nui.nvim' })
+	table.insert(pluginspec, { 'nvim-lua/plenary.nvim', lazy = true })
+	table.insert(pluginspec, { 'MunifTanjim/nui.nvim', lazy = true })
+end
+if vim.fn.has('nvim-0.9.4') then
+	table.insert(pluginspec, { 'folke/snacks.nvim', lazy = true })
+end
+-- Theme
+if vim.fn.has('nvim-0.8.0') then
+	table.insert(pluginspec, { "catppuccin/nvim", name = "catppuccin", priority = 1000 })
 end
 -- Language server
 if vim.fn.has('nvim-0.10.0') then
@@ -164,12 +178,45 @@ if enableChatGPT then
 		}
 	})
 end
+-- Aider
+if vim.fn.has('nvim-0.9.4') then
+	table.insert(pluginspec, {
+		"GeorgesAlkhouri/nvim-aider",
+		cmd = "Aider",
+		keys = {
+			{ "<M-a>", "<cmd>Aider toggle<cr>", desc = "Toggle Aider" },
+			{ "<leader>a/", "<cmd>Aider toggle<cr>", desc = "Toggle Aider" },
+			{ "<leader>as", "<cmd>Aider send<cr>", desc = "Send to Aider", mode = { "n", "v" } },
+			{ "<leader>ac", "<cmd>Aider command<cr>", desc = "Aider Commands" },
+			{ "<leader>ab", "<cmd>Aider buffer<cr>", desc = "Send Buffer" },
+			{ "<leader>a+", "<cmd>Aider add<cr>", desc = "Add File" },
+			{ "<leader>a-", "<cmd>Aider drop<cr>", desc = "Drop File" },
+			{ "<leader>ar", "<cmd>Aider add readonly<cr>", desc = "Add Read-Only" },
+			-- nvim-tree.lua integration
+			{ "<leader>a+", "<cmd>AiderTreeAddFile<cr>", desc = "Add File from Tree to Aider", ft = "NvimTree" },
+			{ "<leader>a-", "<cmd>AiderTreeDropFile<cr>", desc = "Drop File from Tree from Aider", ft = "NvimTree" },
+		},
+		dependencies = {
+			"folke/snacks.nvim",
+			--- The below dependencies are optional
+			"catppuccin/nvim",
+			"nvim-tree/nvim-tree.lua"
+		},
+		opts = {}
+	})
+end
+
 
 -- Initialize plugins via lazy.nvim
 require("lazy").setup({
 	spec = pluginspec,
 	checker = { enabled = true }
 })
+
+-- Color scheme
+if vim.fn.has('nvim-0.8.0') then
+	vim.cmd.colorscheme "catppuccin"
+end
 
 -- LSP
 if vim.fn.has('nvim-0.10.0') then

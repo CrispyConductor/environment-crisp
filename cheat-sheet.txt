@@ -261,10 +261,10 @@ vim
         Alt-n  -  Toggle tree
         g ?  -  Show bindings in tree
     Telescope (Fuzzy find)
-        \ f f  -  Fuzzy find files
-        \ f g  -  Live grep
-        \ f b  -  List buffers
-        \ f h  -  Search vim help tags
+        Space f f  -  Fuzzy find files
+        Space f g  -  Live grep
+        Space f b  -  List buffers
+        Space f h  -  Search vim help tags
         Alf-f  -  Alias for fuzzy find files
     Codeium/Copilot
         Alt-\  -  Show completion
@@ -283,6 +283,14 @@ vim
         Ctrl-s  -  Edit system prompt
         Ctrl-d  -  Add "draft" message to prompt without sending to server
         Ctrl-r  -  Toggle role of message sent
+    Aider
+        Alt-a  -  Toggle Aider terminal window
+        Space a s  -  Send selection to Aider
+        Space a b  -  Send buffer to Aider
+        Space a c  -  Aider command
+        Space a +  -  Add current file to Aider
+        Space a -  -  Drop current file from Aider
+        Space a r  -  Add current file to Aider read-only
 zsh
     <Esc> Ctrl-v  -  Edit command in editor
     fzf
