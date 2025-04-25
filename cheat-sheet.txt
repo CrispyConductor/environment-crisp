@@ -197,6 +197,7 @@ vim
         Ctrl-w v  -  Split vertical
         :new  -  New window split horizontal
         :vne  -  New window split vertical
+        Alt-z  -  Zoom/maximize current window
         Ctrl-w H  -  Move window to left full-height
         Ctrl-w J  -  Move window to bottom full-width
         Ctrl-w K  -  Move window to top full-width

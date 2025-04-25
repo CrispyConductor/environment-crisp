@@ -52,7 +52,10 @@ end
 --]], false)
 
 -- Nvim tree mapping
-vim.api.nvim_set_keymap('', '<M-n>', ':NvimTreeToggle<CR>', {})
+vim.api.nvim_set_keymap('', '<M-n>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+
+-- Window maximize mapping
+vim.api.nvim_set_keymap('', '<M-z>', ':Maximize<CR>', { noremap = true, silent = true })
 
 -- ChatGPT mapping
 if enableChatGPT then
@@ -157,6 +160,10 @@ end
 -- Hop (easymotion)
 if vim.fn.has('nvim-0.5.0') then
 	table.insert(pluginspec, { 'smoka7/hop.nvim', opts = {} })
+end
+-- Maximize window
+if vim.fn.has('nvim-0.8.0') then
+	table.insert(pluginspec, { 'declancm/maximize.nvim', opts = {} })
 end
 -- CodeiumAI
 if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'codeium' then

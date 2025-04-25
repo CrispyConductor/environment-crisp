@@ -44,6 +44,10 @@ NVM for fish:
 	curl -L https://get.oh-my.fish | fish
 	omf install nvm
 
+LLM CLI:
+	pipx install llm
+	llm keys set openai
+
 
 
 

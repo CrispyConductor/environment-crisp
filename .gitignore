@@ -1,3 +1,4 @@
 dotfiles/nvim/plugin
 dotfiles/nvim/lazy-lock.json
 
+.aider*
