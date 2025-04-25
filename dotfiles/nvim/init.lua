@@ -55,7 +55,9 @@ end
 vim.api.nvim_set_keymap('', '<M-n>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 
 -- Window maximize mapping
-vim.api.nvim_set_keymap('', '<M-z>', ':Maximize<CR>', { noremap = true, silent = true })
+--vim.api.nvim_set_keymap('', '<M-z>', ':Maximize<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('', '<M-z>', ':ZenMode<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('t', '<M-z>', [[<C-\><C-n>:ZenMode<CR>]], { noremap = true, silent = true })
 
 -- ChatGPT mapping
 if enableChatGPT then
@@ -96,6 +98,10 @@ vim.api.nvim_set_keymap('i', '<M-w>U', '<Esc>:call PaneNavTmuxTry("U")<CR>', {si
 vim.api.nvim_set_keymap('i', '<M-w>D', '<Esc>:call PaneNavTmuxTry("D")<CR>', {silent = true})
 vim.api.nvim_set_keymap('i', '<M-w>L', '<Esc>:call PaneNavTmuxTry("L")<CR>', {silent = true})
 vim.api.nvim_set_keymap('i', '<M-w>R', '<Esc>:call PaneNavTmuxTry("R")<CR>', {silent = true})
+vim.api.nvim_set_keymap('t', '<M-w>U', [[<C-\><C-n>:call PaneNavTmuxTry("U")<CR>]], {silent = true})
+vim.api.nvim_set_keymap('t', '<M-w>D', [[<C-\><C-n>:call PaneNavTmuxTry("D")<CR>]], {silent = true})
+vim.api.nvim_set_keymap('t', '<M-w>L', [[<C-\><C-n>:call PaneNavTmuxTry("L")<CR>]], {silent = true})
+vim.api.nvim_set_keymap('t', '<M-w>R', [[<C-\><C-n>:call PaneNavTmuxTry("R")<CR>]], {silent = true})
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -164,6 +170,19 @@ end
 -- Maximize window
 if vim.fn.has('nvim-0.8.0') then
 	table.insert(pluginspec, { 'declancm/maximize.nvim', opts = {} })
+end
+-- Zen mode
+if vim.fn.has('nvim-0.5.0') then
+	table.insert(pluginspec, {
+		'folke/zen-mode.nvim',
+		opts = {
+			window = {
+				backdrop = 1,
+				width = 0.95,
+				height = 1
+			}
+		}
+	})
 end
 -- CodeiumAI
 if vim.fn.has('nvim-0.6.0') and codingAIEngine == 'codeium' then
