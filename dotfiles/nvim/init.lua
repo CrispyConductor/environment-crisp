@@ -358,3 +358,29 @@ if vim.fn.has('nvim-0.5.0') then
 end
 
 
+-- Additional events to check for a modified file to reload
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "CursorHold", "WinEnter" }, {
+	pattern = "*",
+	command = "checktime"
+})
+
+-- Check for modified files every 10 seconds as long as there is user activity
+vim.g.last_checktime = os.time()
+vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "TextChanged", "TextChangedI", "InsertEnter", "InsertLeave" }, {
+	pattern = "*",
+	callback = function()
+		local current_time = os.time()
+		if current_time - vim.g.last_checktime >= 10 then
+			vim.cmd("checktime")
+			vim.g.last_checktime = current_time
+		end
+	end
+})
+
+
+
+
+
+
+
+
