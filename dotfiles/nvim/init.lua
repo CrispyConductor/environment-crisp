@@ -228,7 +228,14 @@ if vim.fn.has('nvim-0.9.4') then
 			"catppuccin/nvim",
 			"nvim-tree/nvim-tree.lua"
 		},
-		opts = {}
+		opts = {
+			args = {
+				'--no-auto-commits',
+				'--pretty',
+				'--stream',
+				'--watch-files'
+			}
+		}
 	})
 end
 
