@@ -131,6 +131,23 @@ end
 if vim.fn.has('nvim-0.9.4') then
 	table.insert(pluginspec, { 'folke/snacks.nvim', lazy = true })
 end
+if vim.fn.has('nvim-0.8.0') then
+	table.insert(pluginspec, {
+		'stevearc/dressing.nvim',
+		lazy = true,
+		opts = {
+			input = {
+				enabled = true
+			},
+			select = {
+				enabled = true
+			}
+		}
+	})
+end
+if vim.fn.has('nvim-0.10.1') then
+	table.insert(pluginspec, { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate', opts = {} })
+end
 -- Theme
 if vim.fn.has('nvim-0.8.0') then
 	table.insert(pluginspec, { "catppuccin/nvim", name = "catppuccin", priority = 1000 })
@@ -234,6 +251,87 @@ if vim.fn.has('nvim-0.9.4') then
 				'--pretty',
 				'--stream',
 				'--watch-files'
+			}
+		}
+	})
+end
+-- Avante
+if vim.fn.has('nvim-0.10.1') then
+	table.insert(pluginspec, {
+		'yetone/avante.nvim',
+		event = 'VeryLazy',
+		version = false,
+		build = 'make',
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+			'stevearc/dressing.nvim',
+			'nvim-lua/plenary.nvim',
+			'MunifTanjim/nui.nvim',
+			'nvim-telescope/telescope.nvim',
+		},
+		opts = {
+			provider = 'claude',
+			behavior = {
+				enable_claude_text_editor_tool_mode = true
+			},
+			mappings = {
+				diff = {
+					ours = "co",
+					theirs = "ct",
+					all_theirs = "ca",
+					both = "cb",
+					cursor = "cc",
+					next = "]x",
+					prev = "[x",
+				},
+				suggestion = {
+					accept = "<M-l>",
+					next = "<M-]>",
+					prev = "<M-[>",
+					dismiss = "<C-]>",
+				},
+				jump = {
+					next = "]]",
+					prev = "[[",
+				},
+				submit = {
+					normal = "<CR>",
+					insert = "<C-s>",
+				},
+				cancel = {
+					normal = { "<C-c>", "<Esc>", "q" },
+					insert = { "<C-c>" },
+				},
+				ask = '<leader>va',
+				edit = '<leader>ve',
+				refresh = '<leader>vr',
+				focus = '<leader>vf',
+				stop = '<leader>vS',
+				toggle = {
+					default = "<leader>vt",
+					debug = "<leader>vd",
+					hint = "<leader>vh",
+					suggestion = "<leader>vs",
+					repomap = "<leader>vR",
+				},
+				sidebar = {
+					apply_all = "A",
+					apply_cursor = "a",
+					retry_user_request = "r",
+					edit_user_request = "e",
+					switch_windows = "<Tab>",
+					reverse_switch_windows = "<S-Tab>",
+					remove_file = "d",
+					add_file = "@",
+					close = { "q" },
+					close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
+				},
+				files = {
+					add_current = "<leader>vc", -- Add current buffer to selected files
+					add_all_buffers = "<leader>vB", -- Add all buffer files to selected files
+				},
+				select_model = "<leader>v?", -- Select model command
+				select_history = "<leader>vh", -- Select history command
 			}
 		}
 	})
