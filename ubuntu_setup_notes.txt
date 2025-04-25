@@ -20,7 +20,7 @@
 - Install latest neovim from source
 	https://github.com/neovim/neovim/releases
 	https://github.com/neovim/neovim/blob/master/INSTALL.md#install-from-source
-	sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen build-essential
+	sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen build-essential libnsl-dev
 	make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local"
 	make install
 - Install latest tmux from source (min. v3.3 or git)
