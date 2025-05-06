@@ -68,6 +68,9 @@ end
 vim.api.nvim_set_keymap('', '<M-a>', ':Aider toggle<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', '<M-a>', [[<C-\><C-n>:Aider toggle<CR>]], { noremap = true, silent = true })
 
+-- Avante mapping
+vim.api.nvim_set_keymap('', '<M-v>', ':AvanteToggle<CR>', { noremap = true, silent = true })
+
 -- hooks for clipboard syncing
 vim.api.nvim_command('source ~/.userenv/clipboard/vimhooks.vim')
 
