@@ -292,6 +292,9 @@ vim
         Space a +  -  Add current file to Aider
         Space a -  -  Drop current file from Aider
         Space a r  -  Add current file to Aider read-only
+    Avante
+        Alt-v  -  Toggle Avante sidebar
+        Space a t  -  Toggle Avante sidebar
 zsh
     <Esc> Ctrl-v  -  Edit command in editor
     fzf
