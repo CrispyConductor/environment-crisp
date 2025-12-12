@@ -70,7 +70,7 @@ end
 
 function record_cmd_exit_status_for_prompt -e fish_postexec
 	set -l lstatus $status
-	if test ! -z ''(string trim "$argv")
+	if test (count $argv) -gt 0
 		set -g fish_prompt_exit_status $lstatus
 	end
 end
