@@ -253,7 +253,8 @@ if vim.fn.has('nvim-0.9.4') then
 				'--no-auto-commits',
 				'--pretty',
 				'--stream',
-				'--watch-files'
+				'--watch-files',
+				'--subtree-only'
 			}
 		}
 	})
