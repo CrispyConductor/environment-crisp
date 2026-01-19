@@ -14,6 +14,8 @@
 
 - apt install openssh-server
 - Install node
+	See nvm install
+	OLD WAY:
 	https://github.com/nodesource/distributions/blob/master/README.md
 	Follow install instructions
 	npm set prefix $HOME/.local
@@ -40,9 +42,12 @@
 	Create/edit ~/.config/fish/config-local.fish:
 		set -gx ANTHROPIC_API_KEY '...'
 
+Fisher fish package manager:
+	curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+
 NVM for fish:
-	curl -L https://get.oh-my.fish | fish
-	omf install nvm
+	fisher install jorgebucaran/nvm.fish
+	nvm install latest
 
 LLM CLI:
 	pipx install llm
