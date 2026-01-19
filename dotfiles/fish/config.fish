@@ -2,6 +2,9 @@
 set -gx EDITOR nvim
 set -gx USERENVDIR $HOME/.userenv
 
+set -g fish_cursor_insert block
+set -g fish_cursor_default block
+
 set -gx STEAM_LIBRARY $HOME/.local/share/Steam/steamapps/
 
 # (more-or-less) consistent ls colors for different versions of ls
