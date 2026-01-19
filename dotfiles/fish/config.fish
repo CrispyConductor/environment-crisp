@@ -101,15 +101,15 @@ end
 
 #fzf_key_bindings
 
-if status --is-login; or test -z "$X_ENV_FILE"
-	set -g X_ENV_FILE $HOME/.user_env_x.fish
-	if test ! -z "$DISPLAY"
-		env | grep -E '^(X|DISPLAY|I3)' | sed 's/^/set -xg /' | sed 's/=/ \'/' | sed 's/$/\'/' > $X_ENV_FILE
-		chmod 600 $X_ENV_FILE
-	else if test -z "$DISPLAY" -a -f $X_ENV_FILE
-		source $X_ENV_FILE
-	end
-end
+#if status --is-login; or test -z "$X_ENV_FILE"
+#	set -g X_ENV_FILE $HOME/.user_env_x.fish
+#	if test ! -z "$DISPLAY"
+#		env | grep -E '^(X|DISPLAY|I3)' | sed 's/^/set -xg /' | sed 's/=/ \'/' | sed 's/$/\'/' > $X_ENV_FILE
+#		chmod 600 $X_ENV_FILE
+#	else if test -z "$DISPLAY" -a -f $X_ENV_FILE
+#		source $X_ENV_FILE
+#	end
+#end
 
 fish_ssh_agent
 
