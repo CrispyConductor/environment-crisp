@@ -24,10 +24,14 @@ mydir = os.path.dirname(os.path.abspath(__file__))
 tkmain = tkinter.Tk()
 
 mac_workaround = os.name == 'mac' or platform.system() == 'Darwin'
+is_wayland = os.getenv('WAYLAND_DISPLAY') is not None
 
 def get_ui_clipboard():
     if mac_workaround:
         r = subprocess.run([ 'pbpaste' ], stdout=subprocess.PIPE)
+        return r.stdout.decode('utf-8')
+    if is_wayland:
+        r = subprocess.run([ 'wl-paste' ], stdout=subprocess.PIPE)
         return r.stdout.decode('utf-8')
     try:
         return tkmain.clipboard_get()
@@ -37,6 +41,9 @@ def get_ui_clipboard():
 def set_ui_clipboard(text):
     if mac_workaround:
         subprocess.run([ 'pbcopy' ], input=text.encode('utf-8'))
+        return
+    if is_wayland:
+        subprocess.run([ 'wl-copy' ], input=text.encode('utf-8'))
         return
     tkmain.clipboard_clear()
     tkmain.clipboard_append(text)

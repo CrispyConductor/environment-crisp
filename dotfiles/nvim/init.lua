@@ -345,7 +345,10 @@ end
 -- Initialize plugins via lazy.nvim
 require("lazy").setup({
 	spec = pluginspec,
-	checker = { enabled = true }
+	checker = {
+		enabled = true,
+		frequency = 86400
+	}
 })
 
 -- Color scheme
