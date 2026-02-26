@@ -41,10 +41,20 @@ function load_env --description "Load KEY=VALUE pairs from a file into the envir
             set val (string trim -- $val)
         end
 
-        echo "$key = $val"
-
-        # Export
-        set -gx -- $key $val
+        # Handle special _IMPORT key for recursive loading
+        if test "$key" = "_IMPORT"
+            set import_file (string trim -- $val)
+            # If a relative path, resolve it relative to the current file's directory
+            if not string match -qr '^/' -- $import_file
+                set import_file (string join '' (dirname $file) '/' $import_file)
+            end
+            echo "Loading environment from $import_file"
+            load_env $import_file
+        else
+            echo "$key = $val"
+            # Export
+            set -gx -- $key $val
+        end
     end < $file
 end
 
