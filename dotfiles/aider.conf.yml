@@ -1,4 +1,4 @@
-model: anthropic/claude-3-7-sonnet-latest
+model: anthropic/claude-sonnet-4-6
 thinking-tokens: 32k
 cache-prompts: true
 cache-keepalive-pings: 8
@@ -11,4 +11,4 @@ attribute-author: false
 attribute-committer: false
 attribute-commit-message-author: false
 attribute-commit-message-committer: false
-
+subtree-only: true
