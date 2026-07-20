@@ -14,7 +14,7 @@
 
 - apt install openssh-server
 - Install node
-	See nvm install
+	See fnm install
 	OLD WAY:
 	https://github.com/nodesource/distributions/blob/master/README.md
 	Follow install instructions
@@ -45,9 +45,11 @@
 Fisher fish package manager:
 	curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
 
-NVM for fish:
-	fisher install jorgebucaran/nvm.fish
-	nvm install latest
+FNM (Fast Node Manager) for fish:
+	curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+	Shell setup already in dotfiles/fish/config.fish: fnm env --use-on-cd --shell fish | source
+	fnm install --lts
+	fnm default lts-latest
 
 LLM CLI:
 	pipx install llm

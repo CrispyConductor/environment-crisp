@@ -24,7 +24,7 @@ end
 
 # PATH
 # todo: at some future point when fish versions have consistently caught up, maybe use fish_add_path
-set -g fish_user_paths $HOME/.local/bin $HOME/bin $HOME/.fzf/bin $HOME/.userenv/path_scripts $fish_user_paths
+set -g fish_user_paths $HOME/.local/bin $HOME/bin $HOME/.fzf/bin $HOME/.userenv/path_scripts $HOME/.local/share/fnm $fish_user_paths
 
 function clipssh
 	$USERENVDIR/clipboard/clipssh.sh $argv
@@ -128,3 +128,8 @@ end
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
+
+# fnm (node version manager)
+if type -q fnm
+	fnm env --use-on-cd --shell fish | source
+end

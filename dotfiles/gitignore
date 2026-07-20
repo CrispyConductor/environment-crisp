@@ -1,3 +1,5 @@
 # ctags tags files
 /tags
 !/tags/
+
+**/.claude/settings.local.json
