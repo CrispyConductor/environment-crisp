@@ -182,12 +182,20 @@ apt_pkg_installed() {
 	dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q 'ok installed'
 }
 
+# apt_pkg_available <pkg> - does apt have an installation candidate for it?
+apt_pkg_available() {
+	local cand
+	cand="$(apt-cache policy -- "$1" 2>/dev/null | awk -F': ' '/Candidate:/ { print $2 }')"
+	[ -n "$cand" ] && [ "$cand" != '(none)' ]
+}
+
 apt_install_packages() {
-	local -a missing=()
+	local -a missing=() unavailable=() wanted=()
 	local p
 
 	for p in ${PKG_LIST[@]+"${PKG_LIST[@]}"}; do
-		apt_pkg_installed "$p" || missing+=("$p")
+		apt_pkg_installed "$p" && continue
+		missing+=("$p")
 	done
 
 	if [ "${#missing[@]}" -eq 0 ]; then
@@ -195,9 +203,41 @@ apt_install_packages() {
 		return 0
 	fi
 
-	info "installing ${#missing[@]} apt package(s)"
-	step "${missing[*]}"
-	run $SUDO apt-get install -y "${missing[@]}"
+	# Check availability before handing the list to apt.
+	#
+	# apt-get install fails the whole transaction on a single unknown name, so
+	# on a distro release that renamed or dropped something you learn nothing
+	# except that it did not work. Splitting the list first says exactly which
+	# names are the problem, which is the point of --packages-only.
+	for p in "${missing[@]}"; do
+		if apt_pkg_available "$p"; then
+			wanted+=("$p")
+		else
+			unavailable+=("$p")
+		fi
+	done
+
+	if [ "${#unavailable[@]}" -gt 0 ]; then
+		warn "${#unavailable[@]} package(s) have no installation candidate on this release:"
+		for p in "${unavailable[@]}"; do
+			printf '  %s%s%s\n' "$C_YELLOW" "$p" "$C_RESET" >&2
+		done
+		if [ "${SKIP_UNAVAILABLE:-0}" != 1 ]; then
+			err 'refusing to continue; apt would fail on the whole set'
+			err 'rerun with --skip-unavailable to install the rest and see what works'
+			exit 1
+		fi
+		warn 'continuing without them (--skip-unavailable)'
+	fi
+
+	if [ "${#wanted[@]}" -eq 0 ]; then
+		warn 'nothing left to install'
+		return 0
+	fi
+
+	info "installing ${#wanted[@]} apt package(s)"
+	step "${wanted[*]}"
+	run $SUDO apt-get install -y "${wanted[@]}"
 }
 
 apt_update() {

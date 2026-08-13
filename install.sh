@@ -40,8 +40,10 @@ EXISTING_POLICY=ask
 DRY_RUN=0
 VERBOSE=0
 DO_PACKAGES=1
+DO_FILES=1
 DO_HOOKS=1
 DO_UNINSTALL=0
+SKIP_UNAVAILABLE=0
 BACKUP_DIR=''
 CURRENT_SRC=''
 ASK_RESULT=''
@@ -63,10 +65,27 @@ Options:
       --home DIR          install into DIR instead of $HOME (for testing)
       --no-packages       skip package installation
       --no-hooks          skip module install hooks
+      --packages-only     install only packages and apt repositories: no
+                          dotfiles, no hooks, no ~/.userenv anchor, no state
+      --skip-unavailable  install the packages that exist and report the rest
+                          instead of stopping (implies nothing else)
       --uninstall         remove the listed modules' installed files
   -l, --list              list available modules and profiles
+      --list-packages     print the resolved package list and exit
   -v, --verbose           more detail
   -h, --help              this message
+
+Bringing up a new distro release:
+
+  # what would we try to install?
+  ./install.sh --list-packages ubuntu2510-regolith
+
+  # try it on the new release and see what no longer resolves
+  ./install.sh --packages-only --skip-unavailable ubuntu2510-regolith
+
+Anything reported as unavailable is what the new release renamed or dropped.
+Copy the working set into a new modules/ubuntu<ver>-* module, using
+packages.subst for renames.
 EOF
 }
 
@@ -83,6 +102,9 @@ while [ $# -gt 0 ]; do
 		--home=*)       TARGET_HOME="${1#*=}"; shift ;;
 		--no-packages)  DO_PACKAGES=0; shift ;;
 		--no-hooks)     DO_HOOKS=0; shift ;;
+		--packages-only) DO_FILES=0; DO_HOOKS=0; DO_PACKAGES=1; shift ;;
+		--skip-unavailable) SKIP_UNAVAILABLE=1; shift ;;
+		--list-packages) LIST_PACKAGES=1; DO_FILES=0; DO_HOOKS=0; shift ;;
 		--uninstall)    DO_UNINSTALL=1; shift ;;
 		-l|--list)      LIST_ONLY=1; shift ;;
 		-v|--verbose)   VERBOSE=1; shift ;;
@@ -98,6 +120,10 @@ case "$EXISTING_POLICY" in
 	ask|overwrite|keep) ;;
 	*) die "--existing must be ask, overwrite or keep (got '$EXISTING_POLICY')" ;;
 esac
+
+if [ "$DO_FILES" = 0 ] && [ "$DO_PACKAGES" = 0 ]; then
+	die '--packages-only and --no-packages together would do nothing'
+fi
 
 TARGET_HOME="${TARGET_HOME%/}"
 [ -d "$TARGET_HOME" ] || die "target home does not exist: $TARGET_HOME"
@@ -262,10 +288,16 @@ fi
 
 # --- install --------------------------------------------------------------
 
-info "installing modules: ${RESOLVED[*]}"
-[ "$TARGET_HOME" = "$HOME" ] || warn "target home is $TARGET_HOME (not \$HOME)"
-if [ "$DRY_RUN" = 1 ]; then
-	warn 'dry run: nothing will be modified'
+# --list-packages emits a machine-readable list on stdout, so keep progress
+# chatter off it.
+if [ "${LIST_PACKAGES:-0}" = 1 ]; then
+	printf '%s==>%s resolved modules: %s\n' "$C_BLUE" "$C_RESET" "${RESOLVED[*]}" >&2
+else
+	info "installing modules: ${RESOLVED[*]}"
+	[ "$TARGET_HOME" = "$HOME" ] || warn "target home is $TARGET_HOME (not \$HOME)"
+	if [ "$DRY_RUN" = 1 ]; then
+		warn 'dry run: nothing will be modified'
+	fi
 fi
 
 # Packages first: module hooks and later steps may need the tools they bring in.
@@ -274,9 +306,27 @@ if [ "$DO_PACKAGES" = 1 ]; then
 		module_load_meta "$m"
 		pkg_collect "$MODULE_DIR"
 	done
+
+	if [ "${LIST_PACKAGES:-0}" = 1 ]; then
+		pkg_apply_subst
+		for p in ${PKG_LIST[@]+"${PKG_LIST[@]}"}; do
+			printf '%s\n' "$p"
+		done
+		exit 0
+	fi
+
 	pkg_install_all
 else
 	verbose 'skipping packages (--no-packages)'
+	if [ "${LIST_PACKAGES:-0}" = 1 ]; then
+		die '--list-packages cannot be combined with --no-packages'
+	fi
+fi
+
+if [ "$DO_FILES" = 0 ]; then
+	log ''
+	good 'packages only: no dotfiles, hooks or state were touched'
+	exit 0
 fi
 
 # The repo anchor. Every shell rc, tmux.conf and init.lua reaches back into the

@@ -34,8 +34,11 @@ Needs bash 4+ (every Linux distro; on macOS, `brew install bash` first).
 | `--home DIR` | install into `DIR` instead of `$HOME` (for testing) |
 | `--no-packages` | skip package installation |
 | `--no-hooks` | skip module setup hooks |
+| `--packages-only` | install only packages and apt repos — no dotfiles, hooks, anchor or state |
+| `--skip-unavailable` | install the packages that exist, report the rest instead of stopping |
 | `--uninstall` | remove the named modules' files |
 | `-l, --list` | list modules and profiles |
+| `--list-packages` | print the resolved package list and exit |
 
 Anything the installer replaces is backed up to
 `~/.dotfiles-backup/<timestamp>/` as a real copy.
@@ -94,6 +97,45 @@ doc/                    documentation and the tmux cheat sheet
 See [doc/modules.md](doc/modules.md) for the module format, and
 [doc/ubuntu-setup.md](doc/ubuntu-setup.md) /
 [doc/macos-setup.md](doc/macos-setup.md) for setting up a new machine.
+
+## Adding a new Ubuntu release
+
+The per-release modules exist because the apt repositories move and packages
+occasionally get renamed. To work out what a new release needs, probe it before
+writing the module:
+
+```sh
+# What would we try to install?
+./install.sh --list-packages ubuntu2510-regolith
+
+# Try it on the new release. Packages that no longer resolve are reported
+# rather than failing the whole apt transaction.
+./install.sh --packages-only --skip-unavailable ubuntu2510-regolith
+```
+
+`--packages-only` touches nothing else — no dotfiles, no hooks, no `~/.userenv`
+anchor, no install state — so it is safe to run repeatedly on a machine you are
+still figuring out.
+
+Whatever it reports as unavailable is what the release renamed or dropped. Then
+copy the nearest existing release's modules:
+
+```sh
+cp -r modules/ubuntu2510-base     modules/ubuntu2604-base
+cp -r modules/ubuntu2510-gui      modules/ubuntu2604-gui
+cp -r modules/ubuntu2510-regolith modules/ubuntu2604-regolith
+```
+
+and edit the `meta` `requires=` lines, the repo suite/URL in
+`repos/regolith.repo`, and add a `packages.subst` entry for each rename:
+
+```
+# <name in the shared list> = <name to use on this release>
+regolith-session-flashback = regolith-session-sway
+```
+
+Only put genuinely new packages in the release module's own `packages` file;
+anything shared belongs in `ubuntu-common-*` so every release gets it.
 
 ## Per-machine settings
 

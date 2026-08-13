@@ -112,6 +112,14 @@ transaction, after all `repos/` definitions have been applied. That ordering is
 what lets a shared module list `signal-desktop` while the per-release module
 supplies the repository it comes from.
 
+Before installing, each name is checked against `apt-cache policy`. `apt-get
+install` fails the entire transaction on one unknown name, which tells you
+nothing useful when a distro release has renamed something — so the installer
+splits the list first and names the packages with no installation candidate.
+By default that stops the run; `--skip-unavailable` installs the rest instead,
+which together with `--packages-only` is how a new release gets surveyed before
+its module is written.
+
 ### `packages.subst`
 
 Rewrites a name inherited from another module:
