@@ -1,0 +1,4 @@
+description="Replace the Firefox snap with the apt/PPA build (needed by the keepassxc browser plugin)"
+requires=""
+platform="linux"
+pkgmgr="apt"

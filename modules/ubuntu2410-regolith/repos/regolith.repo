@@ -1,0 +1,9 @@
+# Regolith apt repository for oracular.
+#
+# The host moved from regolith-desktop.org to archive.regolith-desktop.com at
+# 25.04, along with a different URL layout, which is why this line is the main
+# thing that varies between releases.
+key_url=https://regolith-desktop.org/regolith.key
+keyring=/usr/share/keyrings/regolith-archive-keyring.gpg
+list_path=/etc/apt/sources.list.d/regolith.list
+entry=deb [arch=amd64 signed-by={keyring}] https://regolith-desktop.org/testing-ubuntu-oracular-amd64 oracular main

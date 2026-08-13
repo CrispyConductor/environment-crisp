@@ -1,0 +1,3 @@
+description="Ubuntu questing (2510) with the Regolith desktop"
+requires="ubuntu2510-gui ubuntu-common-regolith"
+platform="linux"

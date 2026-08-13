@@ -1,0 +1,3 @@
+description="Ubuntu noble (2404) desktop packages"
+requires="ubuntu2404-base ubuntu-common-gui"
+platform="linux"

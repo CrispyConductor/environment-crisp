@@ -1,0 +1,3 @@
+description="Ubuntu questing (2510) desktop packages"
+requires="ubuntu2510-base ubuntu-common-gui"
+platform="linux"

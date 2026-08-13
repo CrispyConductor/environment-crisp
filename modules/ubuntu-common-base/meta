@@ -1,0 +1,4 @@
+description="Ubuntu console packages (shared by every ubuntu<ver>-base module)"
+requires=""
+platform="linux"
+pkgmgr="apt"

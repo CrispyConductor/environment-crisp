@@ -1,4 +1,6 @@
-dotfiles/nvim/plugin
-dotfiles/nvim/lazy-lock.json
-
+# aider chat history and tag cache
 .aider*
+
+# The old layout symlinked ~/.config/nvim as a whole directory, so lazy.nvim
+# wrote its lockfile into the repo and it had to be ignored here. Files are
+# symlinked individually now, so lazy-lock.json stays in the home directory.

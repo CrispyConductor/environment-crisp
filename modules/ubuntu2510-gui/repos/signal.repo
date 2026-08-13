@@ -1,0 +1,6 @@
+# Signal desktop, 25.04+ style: the deb822 .sources file is downloaded from
+# upstream rather than hand-written.
+key_url=https://updates.signal.org/desktop/apt/keys.asc
+keyring=/usr/share/keyrings/signal-desktop-keyring.gpg
+sources_url=https://updates.signal.org/static/desktop/apt/signal-desktop.sources
+sources_path=/etc/apt/sources.list.d/signal-desktop.sources

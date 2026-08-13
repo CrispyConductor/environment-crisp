@@ -1,0 +1,8 @@
+# Desktop applications, version-independent.
+# signal-desktop needs the signal repo, which the per-release module supplies.
+keepassxc
+nextcloud-desktop
+signal-desktop
+gdebi-core
+xclip
+python3-tk

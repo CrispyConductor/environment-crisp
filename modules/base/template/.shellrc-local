@@ -1,0 +1,7 @@
+# Local shell settings for this machine, shared by bash and zsh.
+#
+# Sourced at the end of ~/.shellrc-common, so anything here overrides the
+# committed defaults. Not tracked in the dotfiles repo and never overwritten by
+# the installer - put host-specific paths, tokens and overrides here.
+#
+# Fish reads a different file: ~/.config/fish/conf.d/90-local.fish

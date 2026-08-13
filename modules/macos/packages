@@ -1,0 +1,14 @@
+# Homebrew formulae. GUI applications (Chrome, Synergy, NextCloud, KeePassXC)
+# are installed from their own .dmg files - see doc/macos-setup.md.
+#
+# bash: macOS ships 3.2, which install.sh refuses to run on. Listed here so a
+# reinstall keeps it, though it has to be installed by hand the first time.
+bash
+fish
+gawk
+git
+tmux
+neovim
+ripgrep
+coreutils
+node

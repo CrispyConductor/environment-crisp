@@ -1,0 +1,3 @@
+description="Core dotfiles: neovim, tmux, git, ssh, bash, clipboard sync"
+requires=""
+platform="any"

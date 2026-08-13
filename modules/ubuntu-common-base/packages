@@ -1,0 +1,14 @@
+# Console tooling, version-independent.
+# realpath used to be listed here; it is part of coreutils now.
+fish
+zsh
+curl
+gawk
+tmux
+neovim
+python3-pip
+python3-pynvim
+git
+command-not-found
+ripgrep
+universal-ctags

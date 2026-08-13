@@ -1,0 +1,20 @@
+[Unit]
+# Bridges the GUI clipboard (X11 or Wayland) to the tmux clipboard that the
+# rest of the clipboard stack treats as the source of truth.
+#
+# Its counterpart, clipsyncd, is started by tmux via a session-created hook.
+# This one previously had no launcher wired up anywhere - not in the repo, not
+# in autostart, not in systemd - so GUI clipboard sync only worked if
+# start_uiclipsyncd.sh had been run by hand.
+Description=Sync the GUI clipboard with the tmux clipboard
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env python3 %h/.userenv/libexec/clipboard/uiclipsyncd.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

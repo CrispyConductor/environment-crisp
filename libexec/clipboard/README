@@ -1,0 +1,50 @@
+Overview:
+The goal of this clipboard handling stack is as follows:
+- Use tmux buffers as the "master" clipboard storage.
+- Synchronize to and from neovim registers.
+- Synchronize to and from the GUI clipboard (X11 and Wayland).
+- Synchronize across SSH sessions.
+
+This synchronization is accomplished with a series of hooks.  Syncing from the
+GUI is accomplished using a daemon that polls for changes.  Syncing across SSH
+uses a daemon that listens on a UNIX socket for clipboard updates and SSH
+tunneling of said socket.  The tunneling is set up with clipssh.sh
+
+How the pieces get started:
+- clipsyncd is started by tmux, via the session-created hook in .tmux.conf.
+- uiclipsyncd is started by the systemd user unit installed by the
+  ubuntu<ver>-gui modules (uiclipsyncd.service), or by hand with
+  start_uiclipsyncd.sh.
+
+Utilities:
+pushclip.sh - Accepts data on stdin, pushes to clipboards
+getcopybuffer.sh - Outputs the tmux copy buffer corresponding to the given numeric argument.  0 is most recent buffer, 1 is second-most-recent, etc.
+purge.sh - Purge all clipboard buffers, locally and via clipsync
+
+Scripts run as hooks:
+tmuxcopypush.sh - Run after a new tmux buffer has been copied.
+vimyanksyncpull.sh - Called by vim when notified there might be a new buffer.  Exits with nonzero status if there is no recent tmux buffer.  Otherwise outputs the buffer contents.
+vimyanksyncpush.sh - Called by vim when a yank is executed, and the contents of the yank are piped to stdin.  Loads it into a new tmux copy buffer and updates other vims.
+
+Clipsyncd (syncing clipboard across ssh sessions):
+clipssh.sh - Wrapper around 'ssh' that sets up the socket tunnels needed.
+clipsyncd_main.sh - Main daemon for clipsyncd.  This script itself runs in the foreground.
+clipsyncd_propagate.sh - When called, pushes current tmux clip buffer to all connected sessions.
+clipsyncdpush.sh - Push clipboard data to one (given) clipsyncd socket.
+start_clipsyncd.sh - Starts clipsyncd in background if not already running for this user.
+
+GUI clipboard sync:
+pushtogui.sh - Nudges the running uiclipsyncd (via SIGHUP) to publish the tmux clipboard.
+uiclipsyncd.py - Polling daemon that syncs the GUI clipboard with the tmux clipboard.  Uses Tk on X11, wl-copy/wl-paste on Wayland, and pbcopy/pbpaste on macOS.
+start_uiclipsyncd.sh - Starts uiclipsyncd in the background, first sourcing ~/.user_env_x.env so it can find the display.
+
+Misc:
+updatevims.sh - Sends SIGUSR1 to all running vims.
+purge_local.sh - Purge local clipboard buffers.
+vimhooks.vim - vimscript components
+setup.sh - One-time setup script.  Run by the base module's install hook.
+
+Note on renaming: clipsyncd_main.sh and uiclipsyncd.py are located by name in
+`ps` output for the "already running?" checks in start_clipsyncd.sh,
+start_uiclipsyncd.sh and pushtogui.sh.  Renaming either file breaks those
+checks even if every path reference is updated.

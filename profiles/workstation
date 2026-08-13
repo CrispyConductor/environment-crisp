@@ -1,0 +1,7 @@
+# Full desktop install. Bump the ubuntu<ver>-* module on a release upgrade, or
+# just name a different one on the command line:
+#     ./install.sh -p default ubuntu2504-regolith regolith34
+base
+fish
+regolith34
+ubuntu2510-regolith

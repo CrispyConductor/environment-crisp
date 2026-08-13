@@ -1,0 +1,3 @@
+description="zsh shell: zshrc, crispy theme, oh-my-zsh"
+requires="base"
+platform="any"

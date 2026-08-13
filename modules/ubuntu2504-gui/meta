@@ -1,0 +1,3 @@
+description="Ubuntu plucky (2504) desktop packages"
+requires="ubuntu2504-base ubuntu-common-gui"
+platform="linux"

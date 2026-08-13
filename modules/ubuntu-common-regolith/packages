@@ -1,0 +1,12 @@
+# Regolith, version-independent. The regolith apt repo differs per release and
+# is supplied by the per-release module.
+#
+# regolith-session-flashback is the X11/flashback session. 25.10 switched to
+# the sway session instead; see modules/ubuntu2510-regolith/packages.subst.
+regolith-desktop
+regolith-session-flashback
+regolith-look-lascaille
+i3xrocks-weather
+i3xrocks-memory
+i3xrocks-volume
+i3xrocks-battery

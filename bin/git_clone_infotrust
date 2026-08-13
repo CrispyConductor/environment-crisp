@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# Clone a repository using the InfoTrust GitHub key rather than the default one.
+#
+# Key selection happens through the `github-infotrust` host alias in
+# ~/.ssh/config, so all this does is rewrite the remote URL to use it. The
+# alias pins the key with IdentitiesOnly=yes, which is what makes the choice
+# deterministic when both keys are loaded in the agent.
+#
+# Accepts any of:
+#   git@github.com:org/repo.git
+#   https://github.com/org/repo.git
+#   org/repo
+
+set -euo pipefail
+
+ALIAS_HOST=github-infotrust
+
+usage() {
+	echo "usage: $(basename "$0") <repo-url-or-org/repo> [git-clone-args...]" >&2
+	exit 1
+}
+
+[ $# -ge 1 ] || usage
+
+url="$1"
+shift
+
+case "$url" in
+	git@github.com:*)          path="${url#git@github.com:}" ;;
+	ssh://git@github.com/*)    path="${url#ssh://git@github.com/}" ;;
+	https://github.com/*)      path="${url#https://github.com/}" ;;
+	http://github.com/*)       path="${url#http://github.com/}" ;;
+	git@"$ALIAS_HOST":*)       path="${url#git@$ALIAS_HOST:}" ;;
+	*/*)                       path="$url" ;;
+	*)                         echo "unrecognized repository URL: $url" >&2; exit 1 ;;
+esac
+
+# Normalise: no leading slash, always a .git suffix.
+path="${path#/}"
+case "$path" in
+	*.git) ;;
+	*) path="$path.git" ;;
+esac
+
+target="git@$ALIAS_HOST:$path"
+
+echo "cloning $target"
+git clone "$target" "$@"

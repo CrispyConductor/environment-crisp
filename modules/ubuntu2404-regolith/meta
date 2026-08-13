@@ -1,0 +1,3 @@
+description="Ubuntu noble (2404) with the Regolith desktop"
+requires="ubuntu2404-gui ubuntu-common-regolith"
+platform="linux"

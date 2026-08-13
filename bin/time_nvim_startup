@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# Report average neovim startup time over N runs.
+#
+# Uses nvim's own --startuptime rather than temporarily appending an autocmd to
+# the config, which is what the previous version did (against init.vim, a file
+# this repo no longer installs - so it exited immediately). Nothing in
+# ~/.config is touched.
+
+set -euo pipefail
+
+runs="${1:-20}"
+
+command -v nvim >/dev/null || { echo 'nvim not found' >&2; exit 1; }
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+total=0
+for ((i = 1; i <= runs; i++)); do
+	nvim --headless --startuptime "$tmp/t$i" +qa >/dev/null 2>&1
+	# The last line of a startuptime log ends with the total elapsed ms.
+	ms="$(awk 'END { print $1 }' "$tmp/t$i")"
+	total="$(awk -v a="$total" -v b="$ms" 'BEGIN { print a + b }')"
+	printf '\r  run %d/%d: %s ms' "$i" "$runs" "$ms"
+done
+printf '\r%*s\r' 40 ''
+
+awk -v t="$total" -v n="$runs" 'BEGIN { printf "average over %d runs: %.1f ms\n", n, t / n }'

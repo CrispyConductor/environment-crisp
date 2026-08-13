@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#
+# Point an existing repository's origin at GitHub via the InfoTrust key.
+#
+# Like git_clone_infotrust, this relies on the `github-infotrust` host alias in
+# ~/.ssh/config rather than a per-repository core.sshCommand, so the setting
+# lives in one place and survives a later `git remote set-url`.
+
+set -euo pipefail
+
+ALIAS_HOST=github-infotrust
+
+usage() {
+	echo "usage: $(basename "$0") <repo-url-or-org/repo>" >&2
+	exit 1
+}
+
+[ $# -eq 1 ] || usage
+
+git rev-parse --git-dir >/dev/null 2>&1 || {
+	echo 'not inside a git repository' >&2
+	exit 1
+}
+
+url="$1"
+
+case "$url" in
+	git@github.com:*)          path="${url#git@github.com:}" ;;
+	ssh://git@github.com/*)    path="${url#ssh://git@github.com/}" ;;
+	https://github.com/*)      path="${url#https://github.com/}" ;;
+	http://github.com/*)       path="${url#http://github.com/}" ;;
+	git@"$ALIAS_HOST":*)       path="${url#git@$ALIAS_HOST:}" ;;
+	*/*)                       path="$url" ;;
+	*)                         echo "unrecognized repository URL: $url" >&2; exit 1 ;;
+esac
+
+path="${path#/}"
+case "$path" in
+	*.git) ;;
+	*) path="$path.git" ;;
+esac
+
+target="git@$ALIAS_HOST:$path"
+
+if git remote get-url origin >/dev/null 2>&1; then
+	echo "updating origin -> $target"
+	git remote set-url origin "$target"
+else
+	echo "adding origin -> $target"
+	git remote add origin "$target"
+fi

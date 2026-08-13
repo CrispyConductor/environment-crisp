@@ -1,0 +1,7 @@
+# Signal desktop, pre-25.04 style: a hand-written one-line sources entry
+# pinned to the 'xenial' suite, which is what Signal publishes for all Debian
+# derivatives.
+key_url=https://updates.signal.org/desktop/apt/keys.asc
+keyring=/usr/share/keyrings/signal-desktop-keyring.gpg
+list_path=/etc/apt/sources.list.d/signal-xenial.list
+entry=deb [arch=amd64 signed-by={keyring}] https://updates.signal.org/desktop/apt xenial main

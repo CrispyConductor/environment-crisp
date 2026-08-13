@@ -1,0 +1,4 @@
+description="Regolith desktop packages (shared by every ubuntu<ver>-regolith module)"
+requires="ubuntu-common-gui"
+platform="linux"
+pkgmgr="apt"

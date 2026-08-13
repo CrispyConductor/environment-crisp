@@ -1,0 +1,4 @@
+description="Ubuntu desktop packages (shared by every ubuntu<ver>-gui module)"
+requires="ubuntu-common-base"
+platform="linux"
+pkgmgr="apt"

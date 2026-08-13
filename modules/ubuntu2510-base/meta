@@ -1,0 +1,3 @@
+description="Ubuntu questing (2510) console packages"
+requires="ubuntu-common-base"
+platform="linux"

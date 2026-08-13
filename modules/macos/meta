@@ -1,0 +1,4 @@
+description="macOS packages via Homebrew"
+requires="base"
+platform="macos"
+pkgmgr="brew"

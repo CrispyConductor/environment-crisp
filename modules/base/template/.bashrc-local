@@ -1,0 +1,6 @@
+# Local bash-only settings for this machine.
+#
+# Sourced from ~/.bashrc after ~/.bashrc-env, so anything here wins. Not
+# tracked in the dotfiles repo and never overwritten by the installer.
+#
+# For settings that should apply to zsh as well, use ~/.shellrc-local instead.

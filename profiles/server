@@ -1,0 +1,4 @@
+# Headless install: console packages only, no desktop.
+base
+fish
+ubuntu2510-base

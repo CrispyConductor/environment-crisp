@@ -1,0 +1,3 @@
+description="Ubuntu oracular (2410) with the Regolith desktop"
+requires="ubuntu2410-gui ubuntu-common-regolith"
+platform="linux"
