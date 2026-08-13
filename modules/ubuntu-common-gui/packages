@@ -4,5 +4,10 @@ keepassxc
 nextcloud-desktop
 signal-desktop
 gdebi-core
-xclip
 python3-tk
+# The GUI clipboard bridge talks to X11 through xclip/Tk and to Wayland through
+# wl-copy/wl-paste. Both are needed: 25.10 uses the sway (Wayland) session while
+# earlier releases use flashback (X11), and libexec/clipboard/uiclipsyncd.py
+# picks between them at runtime.
+xclip
+wl-clipboard

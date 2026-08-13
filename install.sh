@@ -44,6 +44,7 @@ DO_HOOKS=1
 DO_UNINSTALL=0
 BACKUP_DIR=''
 CURRENT_SRC=''
+ASK_RESULT=''
 APT_NEEDS_UPDATE=0
 PROFILE=''
 declare -a REQUESTED=()
@@ -204,7 +205,14 @@ resolve_module() {
 }
 
 # Work out the requested set.
-if [ "${#REQUESTED[@]}" -eq 0 ]; then
+#
+# Uninstall never falls back to the default profile: `--uninstall` with no
+# arguments would otherwise quietly remove base and fish.
+if [ "$DO_UNINSTALL" = 1 ]; then
+	if [ "${#REQUESTED[@]}" -eq 0 ] && [ -z "$PROFILE" ]; then
+		die '--uninstall needs explicit module names (or --profile)'
+	fi
+elif [ "${#REQUESTED[@]}" -eq 0 ]; then
 	[ -n "$PROFILE" ] || PROFILE=default
 fi
 
@@ -273,8 +281,14 @@ fi
 
 # The repo anchor. Every shell rc, tmux.conf and init.lua reaches back into the
 # repo through this path, so it has to exist before any config is used.
-if [ -L "$TARGET_HOME/.userenv" ] && [ "$(readlink "$TARGET_HOME/.userenv")" = "$REPO_DIR" ]; then
+if [ "$REPO_DIR" = "$TARGET_HOME/.userenv" ]; then
+	# The checkout already lives at the anchor path. Removing it here would
+	# delete the repo we are installing from.
+	verbose "repo is the anchor itself: $(tilde "$TARGET_HOME/.userenv")"
+elif [ -L "$TARGET_HOME/.userenv" ] && [ "$(readlink "$TARGET_HOME/.userenv")" = "$REPO_DIR" ]; then
 	verbose "repo anchor already correct: $(tilde "$TARGET_HOME/.userenv")"
+elif [ -e "$TARGET_HOME/.userenv" ] && [ ! -L "$TARGET_HOME/.userenv" ]; then
+	die "$(tilde "$TARGET_HOME/.userenv") exists and is not a symlink; move it aside first"
 else
 	info "linking repo anchor $(tilde "$TARGET_HOME/.userenv") -> $REPO_DIR"
 	run rm -f "$TARGET_HOME/.userenv"
@@ -289,8 +303,6 @@ for m in "${RESOLVED[@]}"; do
 	install_tree "$m" copy     "$MODULE_DIR/copy"
 	install_tree "$m" template "$MODULE_DIR/template"
 	install_tree "$m" merge    "$MODULE_DIR/merge"
-
-	state_prune_module "$m"
 done
 
 if [ "$DO_HOOKS" = 1 ]; then
@@ -307,7 +319,28 @@ else
 	verbose 'skipping module hooks (--no-hooks)'
 fi
 
-state_commit "${RESOLVED[@]}"
+# Prune only after the hooks have run.
+#
+# Hooks register files too - the base hook is what records everything under
+# ~/.local/bin - so pruning inside the install loop above would look at a
+# half-built picture of this run, delete those entries every time, and let the
+# hook re-create them.
+#
+# For the same reason, --no-hooks skips pruning altogether: with the hooks
+# skipped this run never learns about the files they own, and pruning against
+# that incomplete picture would delete them. Skipping setup steps should not
+# uninstall anything.
+if [ "$DO_HOOKS" = 1 ]; then
+	for m in "${RESOLVED[@]}"; do
+		state_prune_module "$m"
+	done
+	state_commit "${RESOLVED[@]}"
+else
+	verbose 'skipping stale-file cleanup (--no-hooks means an incomplete picture of this run)'
+	# Record what we did place, but merge instead of replacing: the rows for
+	# files the skipped hooks own are still valid and must not be dropped.
+	STATE_MERGE=1 state_commit "${RESOLVED[@]}"
+fi
 
 # --- summary --------------------------------------------------------------
 

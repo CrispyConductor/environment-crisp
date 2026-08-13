@@ -49,10 +49,18 @@ change the mode of the file inside the repo.
 
 ### `copy/`
 
-A real copy, replacing whatever is there subject to `--existing`. Use it for
-files the owning application rewrites: `keepassxc.ini` is the reason this tree
-exists, because keepassxc saves its window geometry on exit and a symlink meant
-a permanently dirty work tree.
+A real copy, replacing whatever is there subject to `--existing`. Use it for:
+
+- **Files the owning application rewrites.** `keepassxc.ini` is the reason this
+  tree exists — keepassxc saves settings on exit, and a symlink meant a
+  permanently dirty work tree.
+- **Files that need permissions git cannot store.** git records only the
+  executable bit, so a symlinked file carries whatever the clone's umask
+  produced. `copy/` runs `apply_perms`, which is how everything under `.ssh/`
+  ends up 600 regardless of umask.
+
+The tradeoff is that editing a `copy/` file in the repo needs a re-install to
+take effect, where a `link/` file is live immediately.
 
 ### `template/`
 
@@ -196,6 +204,18 @@ came before this one kept no record of what it had done.
 
 Only symlinks pointing into this repo are ever removed automatically. A real
 file is reported and left alone, because it might hold content that matters.
+
+Two rules keep this from deleting live files:
+
+- Pruning runs **after** all hooks, and asks whether *any* module in the run
+  still provides a path — not just the one that used to. Otherwise moving a
+  file between modules would have the old owner delete what the new owner just
+  installed, and hook-registered files (everything under `~/.local/bin`) would
+  be deleted and re-created on every run.
+- `--no-hooks` skips pruning entirely and records state additively. With hooks
+  skipped the run never learns about the files they own, so pruning against
+  that picture would delete them. Skipping setup steps must not uninstall
+  anything.
 
 ## Adding a module
 

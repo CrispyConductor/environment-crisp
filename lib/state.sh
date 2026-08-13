@@ -17,7 +17,14 @@
 # Sourced by install.sh.
 
 state_init() {
-	STATE_DIR="${XDG_STATE_HOME:-$TARGET_HOME/.local/state}/userenv"
+	# XDG_STATE_HOME describes the *invoking* user's home, so it is only
+	# meaningful when we are installing there. Honouring it under --home would
+	# make a test run read and then overwrite the real machine's state file.
+	if [ "$TARGET_HOME" = "$HOME" ] && [ -n "${XDG_STATE_HOME:-}" ]; then
+		STATE_DIR="$XDG_STATE_HOME/userenv"
+	else
+		STATE_DIR="$TARGET_HOME/.local/state/userenv"
+	fi
 	STATE_FILE="$STATE_DIR/installed.tsv"
 	STATE_NEW="$(mktemp)"
 	trap 'rm -f "$STATE_NEW"' EXIT
@@ -49,9 +56,13 @@ state_prune_module() {
 	local kind rel dest
 	while IFS=$'\t' read -r kind rel; do
 		[ -n "$rel" ] || continue
-		# Still provided by this module in the current run? Then keep it.
-		if awk -F'\t' -v m="$module" -v r="$rel" \
-			'$1 == m && $3 == r { found = 1 } END { exit !found }' "$STATE_NEW"; then
+		# Still provided by *any* module in this run? Then keep it.
+		#
+		# Deliberately not scoped to this module: when a file moves from one
+		# module to another, the module that lost it would otherwise delete
+		# the copy the new owner just installed.
+		if awk -F'\t' -v r="$rel" \
+			'$3 == r { found = 1 } END { exit !found }' "$STATE_NEW"; then
 			continue
 		fi
 
@@ -87,26 +98,32 @@ state_commit() {
 	tmp="$(mktemp)"
 
 	if [ -f "$STATE_FILE" ]; then
-		# Carry over entries for modules this run did not touch.
-		#
-		# awk compares field 1 exactly, which sidesteps two problems a regex
-		# had here: grep -E reads "\t" as a literal 't' rather than a tab, and
-		# module names would need escaping. Getting that wrong dropped the
-		# entries of any module whose name was a prefix of this one, while
-		# keeping the stale entries it was supposed to replace.
-		local m
-		{
-			for m in "$@"; do
-				printf '%s\n' "$m"
-			done
-		} >"$tmp.mods"
+		if [ "${STATE_MERGE:-0}" = 1 ]; then
+			# Additive: this run did not see everything (hooks were skipped),
+			# so every existing row stays and the new ones are added on top.
+			cat "$STATE_FILE" >>"$tmp"
+		else
+			# Carry over entries for modules this run did not touch.
+			#
+			# awk compares field 1 exactly, which sidesteps two problems a
+			# regex had here: grep -E reads "\t" as a literal 't' rather than a
+			# tab, and module names would need escaping. Getting that wrong
+			# dropped the rows of any module whose name was a prefix of this
+			# one, while keeping the stale rows it was meant to replace.
+			local m
+			{
+				for m in "$@"; do
+					printf '%s\n' "$m"
+				done
+			} >"$tmp.mods"
 
-		awk -F'\t' '
-			NR == FNR { touched[$0] = 1; next }
-			!($1 in touched)
-		' "$tmp.mods" "$STATE_FILE" >>"$tmp"
+			awk -F'\t' '
+				NR == FNR { touched[$0] = 1; next }
+				!($1 in touched)
+			' "$tmp.mods" "$STATE_FILE" >>"$tmp"
 
-		rm -f "$tmp.mods"
+			rm -f "$tmp.mods"
+		fi
 	fi
 
 	LC_ALL=C sort -u "$STATE_NEW" >>"$tmp"
@@ -147,10 +164,13 @@ state_uninstall() {
 			# Copies, templates and merged files may carry local edits.
 			case "$kind" in
 				copy)
-					backup_path "$dest"
-					run rm -f "$dest"
-					N_REMOVED=$((N_REMOVED + 1))
-					step "removed $(tilde "$dest") (backed up)"
+					if backup_path "$dest"; then
+						run rm -f "$dest"
+						N_REMOVED=$((N_REMOVED + 1))
+						step "removed $(tilde "$dest") (backed up)"
+					else
+						warn "leaving $(tilde "$dest") (could not back it up)"
+					fi
 					;;
 				*)
 					warn "leaving $(tilde "$dest") ($kind - may contain local content)"

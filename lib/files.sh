@@ -71,8 +71,11 @@ ensure_parent_dir() {
 		path="$path/$component"
 		if [ -L "$path" ] || { [ -e "$path" ] && [ ! -d "$path" ]; }; then
 			warn "$(tilde "$path") is not a real directory; replacing it"
-			backup_path "$path"
-			run rm -rf "$path"
+			if backup_path "$path"; then
+				run rm -rf "$path"
+			else
+				die "cannot back up $(tilde "$path"); refusing to replace it"
+			fi
 		fi
 		if [ ! -d "$path" ]; then
 			# In a dry run nothing is actually created, so without this the
@@ -88,20 +91,27 @@ ensure_parent_dir() {
 # resolve_existing <dest> - returns 0 to proceed, 1 to skip.
 # Handles backup and removal of whatever is currently at dest.
 resolve_existing() {
-	local dest="$1" decision
+	local dest="$1"
 
 	if [ ! -e "$dest" ] && [ ! -L "$dest" ]; then
 		return 0
 	fi
 
-	decision="$(ask_existing "$dest")"
-	if [ "$decision" = keep ]; then
+	# Not a command substitution: ask_existing has to be able to update
+	# EXISTING_POLICY in this shell for "overwrite all" / "keep all" to stick.
+	ASK_RESULT=''
+	ask_existing "$dest"
+	if [ "$ASK_RESULT" = keep ]; then
 		step "keeping existing $(tilde "$dest")"
 		N_SKIPPED=$((N_SKIPPED + 1))
 		return 1
 	fi
 
-	backup_path "$dest"
+	if ! backup_path "$dest"; then
+		warn "keeping $(tilde "$dest") (could not back it up)"
+		N_SKIPPED=$((N_SKIPPED + 1))
+		return 1
+	fi
 	run rm -rf "$dest"
 	return 0
 }

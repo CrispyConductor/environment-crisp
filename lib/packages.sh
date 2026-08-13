@@ -157,8 +157,8 @@ apt_repo_install() {
 			printf '  %swould write%s %s\n' "$C_DIM" "$C_RESET" "$list_path"
 		else
 			printf '%s\n' "$entry" | $SUDO tee "$list_path" >/dev/null
+			step "wrote $list_path"
 		fi
-		step "wrote $list_path"
 	fi
 
 	if [ -n "$sources_url" ] && [ -n "$sources_path" ]; then
@@ -167,11 +167,12 @@ apt_repo_install() {
 		else
 			local tmpsrc
 			tmpsrc="$(mktemp)"
-			wget -qO "$tmpsrc" "$sources_url" || die "failed to fetch $sources_url"
+			wget -qO "$tmpsrc" "$sources_url" \
+				|| { rm -f "$tmpsrc"; die "failed to fetch $sources_url"; }
 			$SUDO install -m 644 "$tmpsrc" "$sources_path"
 			rm -f "$tmpsrc"
+			step "wrote $sources_path"
 		fi
-		step "wrote $sources_path"
 	fi
 
 	APT_NEEDS_UPDATE=1

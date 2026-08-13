@@ -43,34 +43,45 @@ have_cmd() { command -v "$1" >/dev/null 2>&1; }
 # --- prompting ------------------------------------------------------------
 
 # ask_existing <dest> - decide what to do about an existing destination.
-# Echoes "overwrite" or "keep". Honours EXISTING_POLICY, and remembers
-# an all-files answer in EXISTING_POLICY so we only ask once if asked to.
+#
+# Sets ASK_RESULT to "overwrite" or "keep" rather than echoing it. That matters:
+# a command substitution would run this in a subshell, so the "[A]ll" and
+# "[K]eep all" answers - which work by assigning EXISTING_POLICY - would be
+# discarded and the user re-prompted for every single file.
+#
+# Reads and writes /dev/tty rather than stdin/stderr, because install_tree
+# drives its loop from a `find` process substitution: the loop body inherits
+# that pipe as stdin, so `[ -t 0 ]` is false even on a real terminal and a
+# `read` here would consume the file list instead of the user's answer.
 ask_existing() {
 	local dest="$1" reply
 
 	case "$EXISTING_POLICY" in
-		overwrite|keep) printf '%s\n' "$EXISTING_POLICY"; return 0 ;;
+		overwrite|keep) ASK_RESULT="$EXISTING_POLICY"; return 0 ;;
 	esac
 
-	# Non-interactive stdin cannot answer; default to the safe option.
-	if [ ! -t 0 ]; then
-		warn "not a terminal, keeping existing $dest (use --existing to choose)"
-		printf 'keep\n'
+	# No controlling terminal to ask on; keep, which is the safe default.
+	if [ ! -e /dev/tty ] || ! { : >/dev/tty; } 2>/dev/null; then
+		warn "no terminal to prompt on, keeping existing $(tilde "$dest") (use --existing to choose)"
+		ASK_RESULT=keep
 		return 0
 	fi
 
 	while true; do
-		printf '%s exists. [o]verwrite / [k]eep / [d]iff / overwrite [A]ll / keep all [K]? ' \
-			"${dest/#$TARGET_HOME/\~}" >&2
-		read -r reply || reply=k
+		printf '%s exists. [o]verwrite / [k]eep / [d]iff / overwrite [A]ll / keep all [K] / [q]uit? ' \
+			"$(tilde "$dest")" >/dev/tty
+		if ! read -r reply </dev/tty; then
+			printf '\n' >/dev/tty
+			reply=k
+		fi
 		case "$reply" in
-			o|O)  printf 'overwrite\n'; return 0 ;;
-			k)    printf 'keep\n'; return 0 ;;
-			A)    EXISTING_POLICY=overwrite; printf 'overwrite\n'; return 0 ;;
-			K)    EXISTING_POLICY=keep;      printf 'keep\n'; return 0 ;;
-			d|D)  show_diff "$dest" "$CURRENT_SRC" >&2 ;;
+			o|O)  ASK_RESULT=overwrite; return 0 ;;
+			k)    ASK_RESULT=keep; return 0 ;;
+			A)    EXISTING_POLICY=overwrite; ASK_RESULT=overwrite; return 0 ;;
+			K)    EXISTING_POLICY=keep;      ASK_RESULT=keep; return 0 ;;
+			d|D)  show_diff "$dest" "$CURRENT_SRC" >/dev/tty ;;
 			q|Q)  die 'aborted' ;;
-			*)    printf 'Please answer o, k, d, A, K or q.\n' >&2 ;;
+			*)    printf 'Please answer o, k, d, A, K or q.\n' >/dev/tty ;;
 		esac
 	done
 }
@@ -108,14 +119,20 @@ backup_path() {
 	fi
 
 	if [ "${DRY_RUN:-0}" = 1 ]; then
-		printf '  %swould back up%s %s\n' "$C_DIM" "$C_RESET" "${dest/#$TARGET_HOME/\~}"
+		printf '  %swould back up%s %s\n' "$C_DIM" "$C_RESET" "$(tilde "$dest")"
 		N_BACKED_UP=$((N_BACKED_UP + 1))
 		return 0
 	fi
 
 	mkdir -p "$(dirname "$target")"
 	# -L dereferences: we want real content in the backup, not a link.
-	cp -aL "$dest" "$target" 2>/dev/null || cp -a "$dest" "$target"
+	#
+	# If that fails the fallback would copy the link itself, which is a backup
+	# of nothing - so refuse to delete the original in that case.
+	if ! cp -aL "$dest" "$target" 2>/dev/null; then
+		warn "could not dereference $(tilde "$dest") for backup; leaving it in place"
+		return 1
+	fi
 	N_BACKED_UP=$((N_BACKED_UP + 1))
 	verbose "backed up $dest -> $target"
 }
