@@ -1,0 +1,33 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+# Styles
+set $theme /usr/share/themes/yaru-sway
+
+# theme variables
+include $theme/variables
+
+# Global variables
+include /etc/sway/variables
+
+# User variables
+include $HOME/.config/sway/variables.d/*.conf
+
+include /etc/sway/outputs/*.conf
+include /etc/sway/inputs/*.conf
+
+# include modes
+include /etc/sway/modes/*.conf
+
+# Additional configs
+include /etc/sway/config.d/*.conf
+
+# User config
+include $HOME/.config/sway/config.d/*.conf
+
+# Include nwg-displays config's (if exists)
+include ~/.config/sway/outputs
+include ~/.config/sway/workspaces

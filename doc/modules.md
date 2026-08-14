@@ -244,6 +244,7 @@ Two rules keep this from deleting live files:
 | `fish` | fish `conf.d` snippets, prompt, functions, completions, fisher |
 | `zsh` | zshrc, crispy theme, oh-my-zsh |
 | `regolith34` | Regolith 3.4 Xresources |
+| `ubuntu-sway` | Ubuntu Sway Remix desktop config: sway, waybar, mako, wofi, fuzzel, swaylock, swayidle, swayosd - packages are the same as stock Ubuntu, no `packages` file |
 | `claude-code` | Claude Code CLI (native installer) and linked `~/.claude/settings.json` |
 
 ### Packages
