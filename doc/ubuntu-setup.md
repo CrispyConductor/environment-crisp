@@ -40,24 +40,21 @@ Supported releases: 24.04, 24.10, 25.04, 25.10.
 
 ## Optional extras
 
-None of these are automated, because they are either machine-specific or
-change too often to pin.
+Node, via fnm, is automated but not installed by default:
+
+```sh
+./install.sh fnm
+```
+
+That installs fnm itself and the current Node.js LTS, and re-running it later
+keeps the LTS current. Everything below this is *not* automated, because it is
+either machine-specific or changes too often to pin.
 
 ### openssh server
 
 ```sh
 sudo apt install openssh-server
 ```
-
-### node, via fnm
-
-```sh
-curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
-fnm install --lts
-fnm default lts-latest
-```
-
-The shell hook is already in `modules/fish/link/.config/fish/conf.d/50-tools.fish`.
 
 ### Language servers
 

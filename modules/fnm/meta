@@ -1,0 +1,3 @@
+description="fnm (Fast Node Manager) and the current Node.js LTS"
+requires=""
+platform="linux"

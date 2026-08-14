@@ -268,6 +268,7 @@ The per-release modules carry nothing but their repository definitions (and, for
 |---|---|
 | `macos` | Homebrew formulae |
 | `firefox-apt` | replaces the Firefox snap with the PPA build |
+| `fnm` | installs fnm and the current Node.js LTS (Linux; macOS uses the homebrew formula instead) |
 
 ## Profiles
 
