@@ -3,5 +3,4 @@
 #     ./install.sh -p default ubuntu2504-regolith regolith34
 base
 fish
-regolith34
-ubuntu2510-regolith
+ubuntu2604-gui

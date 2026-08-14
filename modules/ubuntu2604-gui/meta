@@ -1,0 +1,3 @@
+description="Ubuntu 2604 desktop packages"
+requires="ubuntu2604-base ubuntu-common-gui"
+platform="linux"
