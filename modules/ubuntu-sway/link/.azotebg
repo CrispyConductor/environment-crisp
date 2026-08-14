@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+pkill swaybg
+swaybg -o '*' -i "$HOME/.userenv/data/wallpapers/fractured_striated_surface_micrograph_4k.png" -m fill &

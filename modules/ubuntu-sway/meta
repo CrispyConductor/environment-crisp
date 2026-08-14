@@ -1,3 +1,4 @@
 description="Ubuntu Sway Remix desktop config: sway, waybar, mako, wofi, fuzzel, swaylock, swayidle, swayosd"
 requires=""
 platform="linux"
+pkgmgr="apt"
