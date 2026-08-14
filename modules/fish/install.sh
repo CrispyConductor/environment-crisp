@@ -27,3 +27,16 @@ if have_cmd fish; then
 else
 	warn 'fish is not installed; its config was placed but nothing will read it yet'
 fi
+
+# --- fisher (fish package manager) -----------------------------------------
+
+if have_cmd fish; then
+	_fisher_fn="$TARGET_HOME/.config/fish/functions/fisher.fish"
+	if [ ! -f "$_fisher_fn" ]; then
+		info 'installing fisher'
+		run env HOME="$TARGET_HOME" fish -c \
+			'curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher' \
+			|| warn 'fisher install failed'
+	fi
+	unset _fisher_fn
+fi

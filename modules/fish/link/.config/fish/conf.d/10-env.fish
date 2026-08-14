@@ -25,4 +25,4 @@ set -gx BUN_INSTALL $HOME/.bun
 # symlinks bin/ into ~/.local/bin instead, so those commands work in every
 # shell rather than only in fish.
 fish_add_path -g $HOME/.local/bin $HOME/bin $HOME/.fzf/bin \
-	$HOME/.local/share/fnm $BUN_INSTALL/bin
+	$HOME/.local/share/fnm $HOME/.cargo/bin $BUN_INSTALL/bin

@@ -1,0 +1,3 @@
+description="Rust via rustup, plus the rust-analyzer component"
+requires=""
+platform="any"

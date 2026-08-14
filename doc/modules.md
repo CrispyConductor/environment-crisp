@@ -241,7 +241,7 @@ Two rules keep this from deleting live files:
 | Module | Contents |
 |---|---|
 | `base` | neovim, tmux, git, ssh, bash, clipboard sync, `bin/` on `$PATH` |
-| `fish` | fish `conf.d` snippets, prompt, functions, completions |
+| `fish` | fish `conf.d` snippets, prompt, functions, completions, fisher |
 | `zsh` | zshrc, crispy theme, oh-my-zsh |
 | `regolith34` | Regolith 3.4 Xresources |
 | `claude-code` | Claude Code CLI (native installer) and linked `~/.claude/settings.json` |
@@ -268,7 +268,10 @@ The per-release modules carry nothing but their repository definitions (and, for
 |---|---|
 | `macos` | Homebrew formulae |
 | `firefox-apt` | replaces the Firefox snap with the PPA build |
-| `fnm` | installs fnm and the current Node.js LTS (Linux; macOS uses the homebrew formula instead) |
+| `fnm` | installs fnm, the current Node.js LTS and points npm's global prefix at `~/.local` (Linux; macOS uses the homebrew formula instead) |
+| `devtools` | language servers via npm: pyright, tsserver, vue - needs npm from `fnm` or `macos` already on `$PATH` |
+| `ai-tools` | installs aider and llm via pipx; depends on `claude-code` |
+| `rust` | installs rust via rustup, plus the rust-analyzer component |
 
 ## Profiles
 

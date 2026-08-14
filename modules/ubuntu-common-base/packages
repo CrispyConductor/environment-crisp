@@ -8,6 +8,7 @@ tmux
 neovim
 python3-pip
 python3-pynvim
+pipx
 git
 command-not-found
 ripgrep

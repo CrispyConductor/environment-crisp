@@ -1,0 +1,10 @@
+# Development tooling on top of the base dotfiles. Cross-platform - combine
+# with a release-specific module for apt packages on Ubuntu, e.g.:
+#     ./install.sh -p dev ubuntu2604-base
+base
+fish
+fnm
+devtools
+claude-code
+ai-tools
+rust

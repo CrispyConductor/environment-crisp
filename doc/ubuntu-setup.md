@@ -40,41 +40,32 @@ Supported releases: 24.04, 24.10, 25.04, 25.10.
 
 ## Optional extras
 
-Node, via fnm, is automated but not installed by default:
+These are automated but not installed by default - add them individually, or
+via the `dev` profile:
 
 ```sh
-./install.sh fnm
+./install.sh fnm devtools ai-tools rust    # node, LSPs, aider + llm, rust
+./install.sh -p dev ubuntu2604-base
 ```
 
-That installs fnm itself and the current Node.js LTS, and re-running it later
-keeps the LTS current. Everything below this is *not* automated, because it is
-either machine-specific or changes too often to pin.
+`fnm` also installs the current Node.js LTS, `rust` also installs
+rust-analyzer, and re-running any of these later keeps them current.
+`devtools` installs the language servers `init.lua` wires up (pyright,
+typescript-language-server, the vue language server) via whatever npm it
+finds - list it after `fnm` so npm exists by the time it runs. `ai-tools`
+installs aider and llm and depends on `claude-code`, so naming it pulls that
+in too - the neovim side of these AI plugins is disabled by default, though,
+see the AI plugin table in the README. Put API keys in
+`~/.config/fish/conf.d/90-local.fish`:
 
-### openssh server
-
-```sh
-sudo apt install openssh-server
+```fish
+set -gx ANTHROPIC_API_KEY 'sk-ant-...'
 ```
 
-### Language servers
-
-```sh
-npm install -g pyright                                  # Python
-npm install -g typescript typescript-language-server    # JS/TS
-npm install -g @vue/language-server @vue/typescript-plugin
-```
-
-`@vue/language-server` and `@vue/typescript-plugin` must be the same version.
-`init.lua` looks for the plugin under `~/.local/lib/node_modules`, so keep npm's
-global prefix at `~/.local`:
-
-```sh
-npm set prefix $HOME/.local
-```
-
-```sh
-rustup component add rust-analyzer                      # Rust
-```
+See [doc/modules.md](modules.md) for what each module does. Everything below
+this is *not* automated - building neovim or tmux from source needs a git ref
+or version pinned by hand and takes minutes to rebuild, which does not suit a
+module meant to be safe and quick to re-run.
 
 ### Newer neovim than the distro ships
 
@@ -92,28 +83,4 @@ sudo apt install libevent-dev libncurses-dev bison
 sh autogen.sh                       # only when building from git
 ./configure --prefix="$HOME/.local"
 make && make install
-```
-
-### AI CLIs
-
-The neovim side of these is disabled by default - see the AI plugin table in
-the README.
-
-```sh
-sudo apt install pipx
-pipx install aider-install && aider-install
-pipx install llm && llm keys set openai
-```
-
-Put API keys in `~/.config/fish/conf.d/90-local.fish`:
-
-```fish
-set -gx ANTHROPIC_API_KEY 'sk-ant-...'
-```
-
-### fisher (fish package manager)
-
-```sh
-curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
-    | source && fisher install jorgebucaran/fisher
 ```

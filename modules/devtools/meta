@@ -1,0 +1,3 @@
+description="Language servers via npm: pyright, tsserver, vue"
+requires=""
+platform="any"
