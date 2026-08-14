@@ -268,6 +268,7 @@ The per-release modules carry nothing but their repository definitions (and, for
 |---|---|
 | `macos` | Homebrew formulae |
 | `firefox-apt` | replaces the Firefox snap with the PPA build |
+| `slack` | Slack desktop, via Slack's own apt repository |
 | `fnm` | installs fnm, the current Node.js LTS and points npm's global prefix at `~/.local` (Linux; macOS uses the homebrew formula instead) |
 | `devtools` | language servers via npm: pyright, tsserver, vue - needs npm from `fnm` or `macos` already on `$PATH` |
 | `ai-tools` | installs aider and llm via pipx; depends on `claude-code` |

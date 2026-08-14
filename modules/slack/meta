@@ -1,0 +1,4 @@
+description="Slack desktop, via Slack's own apt repository"
+requires=""
+platform="linux"
+pkgmgr="apt"

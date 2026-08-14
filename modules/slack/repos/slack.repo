@@ -1,0 +1,9 @@
+# Slack desktop's apt repo, hosted on packagecloud. Packagecloud's own docs
+# say to use "ubuntu trusty" for the distro/suite, but that path 404s -
+# "debian jessie" is the one feed packagecloud actually publishes, used for
+# every Debian/Ubuntu release regardless of the real codename (verified
+# 2026-08-13).
+key_url=https://packagecloud.io/slacktechnologies/slack/gpgkey
+keyring=/usr/share/keyrings/slack-desktop-keyring.gpg
+list_path=/etc/apt/sources.list.d/slack.list
+entry=deb [arch=amd64 signed-by={keyring}] https://packagecloud.io/slacktechnologies/slack/debian jessie main
