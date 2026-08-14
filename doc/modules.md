@@ -244,6 +244,7 @@ Two rules keep this from deleting live files:
 | `fish` | fish `conf.d` snippets, prompt, functions, completions |
 | `zsh` | zshrc, crispy theme, oh-my-zsh |
 | `regolith34` | Regolith 3.4 Xresources |
+| `claude-code` | Claude Code CLI (native installer) and linked `~/.claude/settings.json` |
 
 ### Packages
 
