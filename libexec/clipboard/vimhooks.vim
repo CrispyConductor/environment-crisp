@@ -20,6 +20,10 @@ function! YankSyncShiftRegs(newcontents)
 	else
 		call setreg(0, a:newcontents, 'cu')
 	endif
+	" Mirror onto the unnamed register too, so a plain `p` picks up a synced
+	" clipboard update the same way it would a local yank - without this,
+	" only "0p sees it.
+	call setreg('"', getreg(0, 1, getregtype(0) ==# 'V'), getregtype(0))
 endfunction
 
 function! YankSyncPurgeRegs(newcontents)

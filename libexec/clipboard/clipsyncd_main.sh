@@ -4,6 +4,18 @@
 pcount=`ps ux | grep -v grep | grep clipsyncd_main.sh | wc -l`
 if [ $pcount -gt 2 ]; then exit; fi
 
+# This daemon can be bootstrapped by any tmux session that fires the
+# session-created hook - including the private, throwaway server the base
+# module's install hook uses to install tmux plugins (tmux -L userenv-install
+# -f ~/.tmux.conf ...), which loads the real .tmux.conf and so triggers the
+# same hook. Since this is a long-lived background process, it would
+# otherwise inherit that server's $TMUX forever, even after that server is
+# killed - silently sending every `tmux load-buffer` (and every `tmux`
+# command run by scripts this daemon calls, like getcopybuffer.sh) to a dead
+# socket instead of the user's real session. Unsetting it here makes every
+# tmux command below resolve the actual default socket instead.
+unset TMUX
+
 BASEDIR="$HOME/.clipsync"
 mkdir -p "$BASEDIR"
 MYDIR="$(realpath "$(dirname "$0")")"
