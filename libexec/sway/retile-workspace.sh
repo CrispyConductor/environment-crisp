@@ -14,30 +14,49 @@
 # leaves. Moving every *view* off the workspace therefore dissolves the whole
 # container tree, and moving the views back lands them as flat siblings.
 #
-# Criteria selection is what makes this a two-liner: [workspace="N"] matches
-# views only, never the containers holding them, so one command relocates every
-# window and takes the scaffolding with it.
+# Criteria selection is what makes the park a one-liner: [workspace=__focused__]
+# matches views only, never the containers holding them, so one command
+# relocates every window and takes the scaffolding with it.
 #
 # The scratch workspace is numbered absurdly high and is never focused, so it
 # does not appear in waybar or disturb what is on screen; sway destroys it when
 # the last window leaves.
+#
+# Workspaces are addressed by number throughout - see the comment on $ws below
+# for why names are unusable here.
 
 set -eu
 
 MODE="${1:-flatten}"
 SCRATCH=99999
 
-ws=$(swaymsg -t get_workspaces --raw | jq -r '.[] | select(.focused) | .name')
-if [ -z "$ws" ] || [ "$ws" = "null" ]; then
-	notify-send "Retile" "Could not determine the focused workspace"
+# Everything here addresses workspaces by NUMBER, never by name.
+#
+# Ubuntu Sway Remix autostarts /usr/share/sway/scripts/autoname-workspaces.py,
+# which rewrites every workspace's name on each window event to carry per-app
+# icons - workspace 8 is actually named "8:   ". Emptying it rewrites the
+# name again, and sway destroys an unfocused empty workspace outright. Capture
+# the name up front and "move back to <name>" then matches nothing, so sway
+# CREATES a second workspace with that literal string, parsing 8 out of the
+# leading digits. The result is two workspaces both showing as 8 in waybar with
+# the windows split between them.
+#
+# autoname-workspaces.py's own header says to address workspaces as
+# "workspace number N" for precisely this reason. Numbers are stable across its
+# renaming; names are not.
+ws=$(swaymsg -t get_workspaces --raw | jq -r '.[] | select(.focused) | .num')
+if [ -z "$ws" ] || [ "$ws" = "null" ] || [ "$ws" -lt 0 ] 2>/dev/null; then
+	notify-send "Retile" "Focused workspace has no number; this script addresses workspaces by number only"
 	exit 1
 fi
 
-# Collect the views before moving anything: after the move they are on another
+# Collect the views before moving anything: afterwards they are on the scratch
 # workspace and the original selection is no longer expressible.
-ids=$(swaymsg -t get_tree --raw | jq -r --arg ws "$ws" '
+#
+# Selecting by .num rather than .name, for the same reason as above.
+ids=$(swaymsg -t get_tree --raw | jq -r --argjson ws "$ws" '
 	[ recurse(.nodes[]?, .floating_nodes[]?)
-	  | select(.type == "workspace" and .name == $ws) ]
+	  | select(.type == "workspace" and .num == $ws) ]
 	| first
 	| [ recurse(.nodes[]?, .floating_nodes[]?)
 	    | select(.pid != null) | .id ]
@@ -53,12 +72,22 @@ focused=$(swaymsg -t get_tree --raw | jq -r '
 	  | select(.focused == true and .pid != null) ] | first | .id // empty')
 
 # Park everything. This dissolves every container on the workspace.
-swaymsg -q "[workspace=\"$ws\"] move container to workspace $SCRATCH"
+#
+# [workspace=__focused__] matches every window on the currently focused
+# workspace without naming it, which sidesteps the renaming entirely on this
+# side. The scratch workspace gets renamed by autoname too, which is why the
+# windows come back by con_id rather than by matching on it.
+swaymsg -q "[workspace=__focused__] move container to workspace number $SCRATCH"
 
 case "$MODE" in
 flatten)
-	# Straight back, in one go: they arrive as flat siblings.
-	swaymsg -q "[workspace=\"$SCRATCH\"] move container to workspace $ws"
+	# Back by con_id, in the order they were collected, so they arrive as flat
+	# siblings. Not one bulk [workspace=...] match: autoname-workspaces.py has
+	# by now renamed the scratch workspace to carry icons too, so matching it by
+	# name would miss. The ids were captured before any of this started.
+	for id in $ids; do
+		swaymsg -q "[con_id=$id] move container to workspace number $ws"
+	done
 	# If autotiling covers this workspace it re-wraps the focused window the
 	# moment focus is restored below, so the result is flat except for one
 	# single-child container. Say so rather than looking broken.
@@ -94,8 +123,8 @@ retile)
 	# ends up double-wrapped. Focusing first makes both events resolve to the
 	# window being moved, which is what happens when a window opens normally.
 	for id in $ids; do
-		swaymsg -q "[con_id=$id] focus; [con_id=$id] move container to workspace $ws"
-		swaymsg -q "workspace $ws"
+		swaymsg -q "[con_id=$id] focus; [con_id=$id] move container to workspace number $ws"
+		swaymsg -q "workspace number $ws"
 
 		# Parent's layout plus this window's rect, now that it has been placed.
 		set -- $(swaymsg -t get_tree --raw | jq -r --argjson id "$id" '
@@ -124,5 +153,5 @@ retile)
 	;;
 esac
 
-swaymsg -q "workspace $ws"
+swaymsg -q "workspace number $ws"
 [ -n "$focused" ] && swaymsg -q "[con_id=$focused] focus" || true
