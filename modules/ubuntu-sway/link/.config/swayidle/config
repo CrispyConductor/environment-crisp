@@ -22,15 +22,15 @@ timeout 240 'on_ac_power; if [ "$?" = 1 ]; then brightnessctl -c backlight -s &&
 # the outputs are disabled. The commands are separated with ";" rather than
 # "&&" because kbd-backlight.sh exits 1 on a machine with no *kbd_backlight
 # device, and that failure would otherwise swallow the rest of the line.
-timeout 300 'on_ac_power; if [ "$?" = 1 ]; then /usr/share/sway/scripts/lock.sh; /usr/share/sway/scripts/kbd-backlight.sh off; swaymsg "output * power off"; fi' resume '/usr/share/sway/scripts/kbd-backlight.sh on; swaymsg "output * power on"'
+timeout 300 'on_ac_power; if [ "$?" = 1 ]; then $HOME/.userenv/libexec/sway/lock.sh; /usr/share/sway/scripts/kbd-backlight.sh off; swaymsg "output * power off"; fi' resume '/usr/share/sway/scripts/kbd-backlight.sh on; swaymsg "output * power on"'
 
 # AC: the same, at 15m. The resume lines on both rules are unconditional so the
 # screens always come back, whichever rule actually fired.
-timeout 900 'on_ac_power; if [ "$?" != 1 ]; then /usr/share/sway/scripts/lock.sh; /usr/share/sway/scripts/kbd-backlight.sh off; swaymsg "output * power off"; fi' resume '/usr/share/sway/scripts/kbd-backlight.sh on; swaymsg "output * power on"'
+timeout 900 'on_ac_power; if [ "$?" != 1 ]; then $HOME/.userenv/libexec/sway/lock.sh; /usr/share/sway/scripts/kbd-backlight.sh off; swaymsg "output * power off"; fi' resume '/usr/share/sway/scripts/kbd-backlight.sh on; swaymsg "output * power on"'
 
 # Suspend after an hour on battery only; on AC this line does nothing.
 timeout 3600 'on_ac_power; if [ "$?" = 1 ]; then systemctl suspend; fi'
 
 before-sleep 'playerctl pause'
-before-sleep '/usr/share/sway/scripts/lock.sh && sleep 2'
+before-sleep '$HOME/.userenv/libexec/sway/lock.sh && sleep 2'
 after-resume '/usr/share/sway/scripts/kbd-backlight.sh on; swaymsg "output * power on"; brightnessctl -c backlight -r'
