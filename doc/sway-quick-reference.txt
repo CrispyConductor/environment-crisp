@@ -161,8 +161,29 @@ Keybinds - sway
         $mod+a to focus the parent, then $mod+e / $mod+s / $mod+w, restructures the whole group at once.
         Focusing a container lights up the focus border on every window inside it at once - that is the
         only cue.  With a lone single-child container there is no cue at all: the two states render
-        identically, so check `swaymsg -t get_tree` when a command acts on more than you expected.
+        identically, so check the tree ($mod+Shift+i) when a command acts on more than you expected.
+    Three rules that explain most "why did it do that"
+        1. Moving toward a view swaps with it.  Moving toward a container moves you INSIDE it.
+           So a window can never be moved *between* two containers at the same level - it will be
+           absorbed into the near one, then the far one, then escape past both.  Dissolve the
+           containers first ($mod+Shift+\), then a single move does what you meant.
+        2. A container holding one window is invisible - same borders, same geometry, and focusing it
+           looks identical to focusing the window.  It still changes what every move does.
+        3. Nothing collapses a single-child container automatically, not even closing its last sibling.
+           $mod+Shift+\ is the only thing that removes one.  They accumulate from $mod+b / $mod+v and,
+           historically, from autotiling.
+        When a move surprises you, read the tree before pressing more keys - repeated directional moves
+        on a tree you have misread land somewhere worse.  $mod+Shift+i, or:
+            swaymsg -t get_workspaces | jq -r '.[] | "\(.num): \(.representation)"'
+        V[...] is stacked, H[...] is side by side, and nested brackets are containers.  A bracket with
+        one thing in it is the anomaly.  If the number of top-level entries does not match the number
+        of windows you can see, there is hidden structure and moves will not behave as expected.
+        Escalation, cheapest first:  $mod+Shift+\ (one stray container)  ->  $mod+a then move (move the
+        whole group)  ->  $mod+Shift+f (flatten and rebuild)  ->  marks, for placement directions cannot
+        express:  swaymsg '[con_id=N] mark tmp'  then  swaymsg 'move container to mark tmp'
     Layout scripts  (this repo; sway has no built-in equivalent)
+        $mod+Shift+i  -  Show the focused workspace's container tree in a floating window,
+                         flagging the single-child containers that make moves misbehave
         $mod+Shift+a  -  Toggle autotiling for the focused workspace (restarts it with a new -w list)
         $mod+Shift+f  -  Flatten: every window becomes a direct child of the workspace
         $mod+Shift+t  -  Retile: flatten, then rebuild the autotiling spiral over the existing windows.
