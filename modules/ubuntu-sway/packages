@@ -1,1 +1,6 @@
 swayimg
+# Provides on_ac_power, which link/.config/swayidle/config uses to pick the
+# battery vs AC idle behaviour. Usually present already (anacron pulls it in),
+# but without it swayidle silently treats every machine as AC-powered and a
+# laptop would never suspend on battery.
+powermgmt-base
