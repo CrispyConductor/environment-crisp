@@ -1,4 +1,5 @@
 {
+  "tui": "default",
   "theme": "dark",
-  "tui": "default"
+  "agentPushNotifEnabled": true
 }
