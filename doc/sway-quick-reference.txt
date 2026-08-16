@@ -1,0 +1,297 @@
+Ubuntu Sway Remix quick reference.  In vim: zo opens a fold, zc closes it, zR opens all, zM closes all.
+Notes on scope
+    $mod is the Super/Windows key (Mod4, set in /etc/sway/variables).
+    Direction keys are vim-style: h = left, j = down, k = up, l = right.  Arrow keys work everywhere hjkl do.
+    "stock" below means it ships with Ubuntu Sway Remix; "this repo" means it comes from modules/ubuntu-sway.
+    Config load order (~/.config/sway/config):
+        /usr/share/themes/yaru-sway/variables  -  colors, fonts, borders, gaps
+        /etc/sway/variables  -  $mod, $term, $menu, and every other stock variable
+        /etc/sway/inputs/*.conf, /etc/sway/outputs/*.conf
+        /etc/sway/modes/*.conf  -  the bulk of the stock keybinds
+        /etc/sway/config.d/*.conf  -  window rules, autostart
+        ~/.config/sway/config.d/*.conf  -  this repo's overrides (10-gaps, 20-keybinds, 30-screenshot-area)
+        ~/.config/sway/outputs, ~/.config/sway/workspaces  -  written by nwg-displays
+    /etc/sway/config is the upstream sway sample and is NOT loaded; ignore it when tracing a binding.
+Components
+    Compositor and session
+        sway  -  Wayland compositor.  Started by greetd at login; control at runtime with swaymsg.
+        greetd + tuigreet  -  Login greeter on the VT.  systemctl status greetd; config /etc/greetd/config.toml.
+        sway-systemd  -  Puts sway under systemd; brings up sway-session.target and per-app cgroups.
+        xdg-desktop-portal-wlr / -gtk  -  Screen share and file dialogs.  No UI; apps call it.
+        xfce-polkit  -  Polkit agent ("authenticate to continue" dialogs).  Autostarted, floats by window rule.
+        swaykbdd  -  Remembers keyboard layout per window.  Autostarted daemon, no UI.
+        swayidle  -  Idle timeouts.  systemctl --user status swayidle; config ~/.config/swayidle/config (this repo).
+        gtklock  -  Screen locker actually in use.  Invoke: Ctrl+Escape, or libexec/sway/lock.sh.
+        swaylock  -  Fallback locker if gtklock is missing.  Config ~/.config/swaylock/config (this repo).
+        swaybg  -  Wallpaper.  Set through azote; current image recorded in ~/.azotebg.
+        wlsunset  -  Night light.  Toggle from the waybar sun/moon icon.
+    Bar and notifications
+        waybar  -  Status bar (bottom).  Config ~/.config/waybar/config.jsonc (this repo).
+                   Restart: systemctl --user restart waybar.  See "waybar module clicks" below.
+        mako  -  Notification daemon.  Config ~/.config/mako/config (this repo).  Control with makoctl.
+        swayosd  -  On-screen volume / brightness / caps-lock popups.  Driven by the media keys; no direct UI.
+        nwg-wrapper  -  Draws the on-desktop keybind cheat sheet overlay.  Toggle: $mod+? or the waybar "?" icon.
+        poweralertd  -  Low-battery notifications.  Daemon, no UI.
+    Launchers and window management
+        wofi  -  Main launcher (drun mode).  Invoke: $mod+d.  Config ~/.config/wofi/ (this repo).
+        nwg-drawer  -  Full-screen app grid, runs as a daemon for instant open.  Invoke: waybar grid icon (far left).
+        nwg-bar  -  Lock / logout / suspend / hibernate / reboot / shutdown bar.
+                    Invoke: $mod+Shift+e, or the waybar power icon (far right).
+        swayr  -  LRU window switcher.  Invoke: $mod+p (list), Alt+Tab (jump to last used).
+                  Daemon: systemctl --user status swayrd.
+        autotiling  -  Alternates split direction by window shape.  Autostarted on workspaces 1,3,5,7,9 only.
+        switch-top-level.py  -  Backs the $mod+[ and $mod+] container cycling.  Autostarted.
+        autoname-workspaces.py  -  Puts app icons in the waybar workspace labels.  Autostarted.
+    Settings GUIs
+        nwg-displays  -  Monitor layout, resolution, scale.  Writes ~/.config/sway/outputs + workspaces.
+                         Invoke: launcher, or `nwg-displays`.
+        nwg-look  -  GTK theme, icons, cursor, fonts.  Invoke: launcher, or `nwg-look`.
+        qt6ct  -  Qt theming so Qt apps match GTK.  Invoke: launcher, or `qt6ct`.
+        sway-input-config  -  Keyboard, touchpad, pointer and tablet settings GUI.  Invoke: launcher.
+                              Writes ~/.config/sway/{keyboard,pointer,touchpad,tablet} and appends bare
+                              `include keyboard`-style lines to ~/.config/sway/config, which this repo owns.
+        azote  -  Wallpaper manager and color picker.  Invoke: launcher, or `azote`.
+        ubuntu-sway-welcome  -  First-run welcome / setup app.  Invoke: launcher, or `ubuntu-sway-welcome`.
+    Hardware and system
+        bluetuith  -  Bluetooth manager (TUI).  Invoke: waybar bluetooth icon.  Has its own in-app key help.
+        nmtui  -  Network connections.  Invoke: waybar network icon (left click connect, right click edit).
+        pavucontrol / pulsemixer  -  Audio mixer, GUI and TUI.  Invoke: waybar volume icon
+                                     (left click pulsemixer, right click pavucontrol).
+        power-profiles-daemon  -  Power profile.  Shown in waybar; change with `powerprofilesctl set <profile>`.
+        brightnessctl  -  Backlight.  Driven by the brightness keys via swayosd.
+        playerctl  -  Media key / MPRIS handling.  Driven by media keys and the waybar player icon.
+        htop  -  Invoke: waybar CPU or memory icon.
+        calcurse  -  Calendar / todo TUI.  Invoke: waybar clock.  Also runs as a daemon for reminders.
+        fastfetch, inxi, drm-info, wev, wayland-utils  -  System info / debugging.  CLI only.
+    Clipboard, screenshots, capture
+        cliphist + wl-clipboard  -  Clipboard history backend.  Autostarted watcher.
+        nwg-clipman  -  Clipboard history GUI.  Invoke: waybar clipboard icon
+                        (middle click that icon clears the history).
+        grimshot  -  Screenshots.  Invoke: Print, which opens screenshot mode.
+        slurp  -  Region selection, used by grimshot's area/window targets.
+        swappy  -  Screenshot annotation; every screenshot is piped into it.
+        wf-recorder  -  Screen recording.  Invoke: $mod+Shift+r; stop with $mod+Escape.
+        wl-mirror  -  Mirror one output into a window.  CLI: `wl-mirror <output>`.
+    Default applications
+        foot  -  Terminal.  Invoke: $mod+Return (opens in the focused window's cwd), $mod+Shift+Return (plain).
+                 A footclient instance with app_id "floating_shell" is what waybar pops TUIs into.
+        thunar  -  File manager, runs as a daemon.  Invoke: launcher.
+        ranger  -  File manager TUI.
+        firefox  -  Browser.  Invoke: $mod+Ctrl+Return (this repo), or launcher.
+        swayimg / imv / ristretto  -  Image viewers.  swayimg is the default; press F1 in it for its own key list.
+        zathura  -  PDF / DjVu / CBZ reader.
+        mpv  -  Video player.
+        musikcube  -  Music player TUI.
+        pluma / neovim  -  Text editors, GUI and TUI.
+        mate-calc  -  Calculator.
+        xarchiver  -  Archive manager.
+        libreoffice  -  Office suite.
+        transmission-gtk  -  Torrents.
+        gnome-software  -  Graphical package manager.
+        usb-creator-gtk / simple-scan / system-config-printer  -  USB writer, scanner, printers.
+    Theming and branding packages
+        ubuntu-sway-default-settings  -  Ships the stock /etc/sway, /etc/xdg/waybar, /etc/skel configs.
+        ubuntu-sway-artwork, -themes, -wallpapers, -grub-theme, plymouth-theme-ubuntu-sway-*  -  Look and feel.
+Keybinds - sway
+    Launching
+        $mod+Return  -  Terminal (foot) in the focused window's working directory
+        $mod+Shift+Return  -  Terminal (foot) in $HOME
+        $mod+Ctrl+Return  -  Firefox  (this repo; Super+Shift+Return was already taken)
+        $mod+d  -  Launcher (wofi)
+        $mod+Shift+d  -  Switch to the first empty workspace, then open the launcher there
+        XF86Search  -  Launcher
+        $mod+Shift+p  -  Clipboard history picker (nwg-clipman)  -  needs this repo's $clipboard fix
+        Alt+Shift+e  -  Emoji picker (wofi-emoji); types the emoji and copies it  -  rebound by this repo
+        $mod+?  -  Toggle the on-desktop keybind help overlay  (Super+Shift+/ on a US layout)
+    Session
+        $mod+Shift+q  -  Close focused window
+        $mod+Shift+c  -  Reload sway config
+        $mod+Shift+e  -  Session menu (nwg-bar: lock / logout / suspend / hibernate / reboot / shutdown)
+        Ctrl+Escape  -  Lock the screen  (this repo; same helper swayidle uses, so manual and idle locks match)
+        XF86PowerOff  -  systemctl poweroff
+        $mod+Control_R  -  Toggle keyboard shortcut inhibition for the focused window
+                           (lets a VM or remote-desktop window grab every key; press again to get sway back)
+    Focus
+        $mod+h / j / k / l  -  Move focus left / down / up / right
+        $mod+<Arrow>  -  Same
+        $mod+a  -  Focus the parent container
+        $mod+space  -  Toggle focus between the tiling and floating layers
+        $mod+p  -  List all windows in most-recently-used order and pick one (swayr)
+        Alt+Tab  -  Jump to the urgent window, else the last used one (swayr)
+        $mod+[ / $mod+]  -  Cycle previous / next top-level container in the workspace
+        $mod+Tab  -  Switch to the previously used workspace
+    Moving windows
+        $mod+Shift+h / j / k / l  -  Move focused window left / down / up / right
+        $mod+Shift+<Arrow>  -  Same
+        $mod+Shift+1..9, $mod+Shift+0  -  Move focused window to workspace 1-10
+        $mod+Shift+n  -  Move focused window to the first empty workspace (stay here)
+        $mod+Shift+m  -  Move focused window to the first empty workspace and follow it
+        $mod + left-drag  -  Drag a window with the mouse (works on tiled windows too)
+        $mod + right-drag  -  Resize a window with the mouse
+    Workspaces
+        $mod+1..9, $mod+0  -  Go to workspace 1-10
+        $mod+n  -  Go to the first empty workspace
+        $mod+Tab  -  Back-and-forth to the previous workspace
+        Set `set $focus_after_move true` in ~/.config/sway/variables.d/*.conf to follow windows you move
+        Only workspaces 1,3,5,7,9 get autotiling; the rest keep whatever split you set manually
+    Layout and arrangement
+        $mod+b  -  Next window opens to the right (split horizontally)
+        $mod+v  -  Next window opens below (split vertically)
+        $mod+e  -  Toggle the current container between split-h and split-v
+        $mod+s  -  Stacking layout (titles listed vertically)
+        $mod+w  -  Tabbed layout (titles listed horizontally)
+        $mod+f  -  Toggle fullscreen
+        $mod+Shift+space  -  Toggle the focused window between tiling and floating
+        A container is what $mod+b / $mod+v act on: split first, then launch, and the new window lands there.
+        $mod+a to focus the parent, then $mod+e / $mod+s / $mod+w, restructures the whole group at once.
+    Resize mode  -  enter with $mod+r
+        h / j / k / l  -  Shrink width / grow height / shrink height / grow width, 10px a step
+        <Arrow>  -  Same
+        +  -  Increase inner gaps on this workspace by 5px
+        -  -  Decrease inner gaps on this workspace by 5px
+        Return or Escape  -  Back to default mode
+    Scratchpad  -  a hidden holding area for windows
+        $mod+Shift+minus  -  Send the focused window to the scratchpad
+        $mod+minus  -  Show the next scratchpad window (press again to cycle, again to hide)
+    Screenshot mode  -  enter with Print
+        p  -  Pick: click a window to capture it (click only, no drag)
+        r  -  Region: click-drag a free-form area  (this repo; the stock mode has no drag option)
+        o  -  Output: the whole current screen
+        a  -  Active: the focused window
+        Escape  -  Cancel
+        Every capture opens in swappy to annotate; save or copy there, and a notification confirms the copy.
+    Recording mode  -  enter with $mod+Shift+r
+        r  -  Start recording the screen
+        Shift+r  -  Start recording with audio
+        Escape  -  Cancel
+        $mod+Escape  -  Stop the running recording (also shown in the waybar recording indicator)
+    Touchpad gestures  (from /etc/sway/inputs/touchpad-gestures.conf)
+        Three-finger swipe right  -  Previous workspace
+        Three-finger swipe left  -  Next workspace
+        Three-finger swipe down  -  Toggle floating on the focused window
+    Media and hardware keys  (all work while the screen is locked)
+        XF86AudioRaiseVolume / LowerVolume / Mute  -  Volume, in 5% steps, with a swayosd popup
+        XF86AudioPlay / Next / Prev  -  Media control via playerctl
+        XF86MonBrightnessUp / Down  -  Backlight, in 10% steps, with a swayosd popup
+        XF86TouchpadToggle  -  Enable/disable the touchpad
+    Upstream bindings that were broken, and how this repo repairs them
+        All three are packaging bugs in ubuntu-sway-default-settings: bindings in
+        /etc/sway/modes/default.conf that outlived the tools they call.  An undefined sway variable
+        is not an error - sway keeps the "$name" text, exec hands it to sh, sh expands it to nothing -
+        so they failed silently rather than showing up in the config log.
+        $mod+Shift+p  -  Clipboard history picker.  $clipboard was dropped from /etc/sway/variables
+                         in 24.10.2 when the distro moved to nwg-clipman.
+                         Repaired by variables.d/10-missing-defaults.conf.
+        Alt+Shift+e  -  Emoji picker.  Calls fuzzel-emoji, but the distro moved from Fuzzel to Wofi in
+                        25.04 and dropped fuzzel; the working replacement, /usr/bin/wofi-emoji, ships
+                        in the same package as the stale binding.
+                        Repaired by config.d/20-keybinds.conf.
+        XF86ScreenSaver  -  Hardware lock key.  $lock is defined nowhere.
+                            Repaired by variables.d/10-missing-defaults.conf, pointed at the same
+                            lock.sh that Ctrl+Escape and swayidle use.  No machine here has the key,
+                            but the config is shared across machines.
+Keybinds - applications
+    waybar module clicks  (left to right along the bar)
+        Grid icon (far left)  -  Open nwg-drawer
+        Workspace buttons  -  Click to switch; scrolling is disabled on purpose
+        Recording indicator (center)  -  Click to stop recording
+        Sun/moon  -  Toggle wlsunset night colour
+        Play/pause  -  Left click play-pause, right click next track, scroll to seek +/-10s
+        "?"  -  Toggle the keybind help overlay
+        Coffee cup / crossed cup  -  Idle inhibitor.  Activated = no dim, no lock, no suspend.
+                                     Starts deactivated deliberately; click it to keep the screen awake.
+        Bell / crossed bell  -  Toggle mako do-not-disturb
+        Keyboard  -  Click to cycle keyboard layout
+        Clipboard  -  Left click opens nwg-clipman, middle click wipes the history
+        CPU or memory  -  Open htop in a floating terminal
+        Battery / power profile  -  Status only
+        Network  -  Left click nmtui connect, right click nmtui edit
+        Bluetooth  -  Left click bluetuith, right click toggles the radio with rfkill
+        Volume  -  Left click pulsemixer, right click pavucontrol, middle click mute, scroll to change volume
+        Clock  -  Open calcurse
+        Power (far right)  -  Open nwg-bar
+    mako notifications  -  no keybinds; everything is makoctl or the waybar bell icon
+        Click a notification  -  Invoke its default action and dismiss it
+        Right click  -  Dismiss without acting
+        makoctl dismiss  -  Dismiss the most recent notification
+        makoctl dismiss -a  -  Dismiss all
+        makoctl restore  -  Bring back the most recently expired notification
+        makoctl list / makoctl history  -  Show current / past notifications
+        makoctl mode -t do-not-disturb  -  Toggle DND (this is what the waybar bell icon runs)
+        makoctl reload  -  Re-read ~/.config/mako/config
+        Default timeout here is 15s; the DND mode is configured as fully invisible, not just silent.
+    wofi  (the $mod+d launcher)
+        Type to filter, Return to launch, Escape to cancel
+        Up / Down  -  Move through results
+        Tab / Shift+Tab  -  Move forward / backward through results
+        Page_Up / Page_Down  -  Page through results
+        Ctrl+c  -  Copy the selected entry
+        This repo's config sets no_actions, so desktop-file actions (e.g. "New Private Window") are hidden
+    nwg-drawer  (the waybar grid icon)
+        Type to filter apps; typing also searches files under $HOME
+        Escape  -  Close
+        Right click an app  -  Pin/unpin it to the top row
+    nwg-clipman  (the waybar clipboard icon)
+        Type to filter history, Enter to copy the selection back to the clipboard
+        Escape  -  Close
+        Run `nwg-clipman -n` to show item numbers
+    swayr window switcher  ($mod+p)
+        Presented as a wofi menu: type to filter, Enter to switch
+        Entries can be acted on by typing a different verb when swayr offers one; plain Enter just focuses
+    gtklock / swaylock  (the lock screen)
+        Type the password and press Enter; Escape or Backspace clears the field
+        The screens blank ~2s after locking and come back on the first keypress or mouse move
+        Caps-lock state, failed attempts and keyboard layout are all shown on the indicator ring
+    nwg-bar  ($mod+Shift+e)
+        Arrow keys or Tab to move, Enter to activate, Escape to cancel
+        Buttons: Lock, Logout, Suspend, Hibernate, Reboot, Shutdown
+    swappy  (opens after every screenshot)
+        b / t / r / o / a / d  -  Brush, Text, Rectangle, ellipse (O), Arrow, blur (Droplet)
+        Shift+R / Shift+G / Shift+B / Shift+C  -  Red / green / blue / custom colour
+        - / + / =  -  Reduce / increase / reset stroke size
+        f  -  Toggle shape filling;  k  -  Clear all paints (not undoable)
+        Ctrl (held while drawing)  -  Centre a rectangle or ellipse on the start point
+        Ctrl+z / Ctrl+Shift+z  -  Undo / redo
+        Ctrl+c  -  Copy to clipboard
+        Ctrl+s  -  Save to file
+        Ctrl+b  -  Toggle the paint panel
+        Escape or q or Ctrl+w  -  Quit
+    foot  (the terminal; stock config from /etc/skel, not managed by this repo)
+        Ctrl+Shift+c / Ctrl+Shift+v  -  Copy / paste
+        Shift+Insert  -  Paste the primary selection
+        Ctrl+Shift+n  -  New foot window in the same working directory
+        Ctrl+Shift+r  -  Search the scrollback  (then Ctrl+r / Ctrl+s for previous / next match, Enter to exit)
+        Shift+PageUp / Shift+PageDown  -  Scroll the scrollback (2000 lines here)
+        Ctrl+Shift+o  -  URL mode: every visible URL gets a jump label; type the label to open it
+        Ctrl+Shift+u  -  Unicode input: type a hex codepoint then Enter (no visual feedback, by design)
+        Ctrl+Shift+z / Ctrl+Shift+x  -  Jump to previous / next shell prompt (needs shell integration)
+        Ctrl+= / Ctrl+-  -  Font size up / down;  Ctrl+0 resets
+    swayimg  (default image viewer)
+        F1  -  Show the full key list in-app; the rest of these are the ones worth memorising
+        Space or Page Down / Page Up  -  Next / previous image
+        Return  -  Switch to gallery mode
+        z / Shift+z / 0 / w  -  Zoom fit / fill / 1:1 / to width
+        [ / ]  -  Rotate left / right;  m / Shift+m  -  Flip vertical / horizontal
+        f  -  Fullscreen;  s  -  Slideshow;  i  -  Toggle the info overlay
+        q or Escape  -  Quit
+    zathura  (PDF reader)
+        j / k  -  Scroll down / up;  Ctrl+d / Ctrl+u  -  Half page;  Ctrl+f / Ctrl+b  -  Full page
+        J / K  -  Next / previous page;  H / L  -  Top / bottom of the current page
+        gg / G  -  First / last page;  <n>G  -  Go to page n;  P  -  Snap to the current page
+        / then Return  -  Search;  n / N  -  Next / previous match
+        Tab  -  Show the index and switch to index mode (Tab again to leave)
+        a / s  -  Adjust to best fit / page width
+        + / - / =  -  Zoom in / out / reset  (or zI / zO / z0);  <n>=  -  Zoom to n%
+        r  -  Rotate 90 degrees;  Ctrl+r  -  Recolor (grayscale-invert night mode)
+        d  -  Toggle dual-page view;  D  -  Cycle which column opens first
+        f  -  Follow links: every link gets a number, type it to jump
+        F11  -  Fullscreen;  Ctrl+m / Ctrl+n  -  Toggle the input bar / status bar
+        q  -  Quit
+    ranger  (file manager TUI)
+        h / j / k / l  -  Up a directory / down / up / enter directory or open file
+        gg / G  -  Top / bottom;  Space  -  Select;  v  -  Invert selection
+        yy / dd / pp  -  Copy / cut / paste
+        /  -  Search;  zh  -  Toggle hidden files
+        i  -  Preview file;  r  -  Open with...;  S  -  Drop to a shell here
+        :  -  Command mode;  ?  -  Full in-app help
+        q  -  Quit
