@@ -152,7 +152,9 @@ Keybinds - sway
     Layout scripts  (this repo; sway has no built-in equivalent)
         $mod+Shift+a  -  Toggle autotiling for the focused workspace (restarts it with a new -w list)
         $mod+Shift+f  -  Flatten: every window becomes a direct child of the workspace
-        $mod+Shift+t  -  Retile: flatten, then feed the windows back so autotiling rebuilds its spiral
+        $mod+Shift+t  -  Retile: flatten, then rebuild the autotiling spiral over the existing windows.
+                         Applies autotiling's rule itself, so it works whether or not autotiling is
+                         enabled here, and does not change whether it is.
         $mod+Shift+\  -  Dissolve the container around the focused window, if it is the only one in it
         Flatten and retile work by moving every window to an unfocused scratch workspace and back.
         Sway garbage-collects a container once its last child leaves, and [workspace="N"] criteria match

@@ -69,25 +69,53 @@ flatten)
 	fi
 	;;
 retile)
-	# One at a time, so autotiling sees a settled geometry per window and splits
-	# against it. A bulk move does not work: autotiling keys off the *focused*
-	# container, and one move event carrying every window only ever presents it
-	# with whatever happened to be focused.
+	# One at a time, applying the split rule to each window as it lands so the
+	# next one nests inside it. A bulk move cannot work: the rule depends on the
+	# geometry each window has at the moment it arrives.
 	#
-	# The focus and the move have to be a single swaymsg command, in that order.
-	# autotiling subscribes to WINDOW events, move included, and each handler run
-	# re-reads find_focused(). Move first and the move event is handled while the
-	# *previous* window is still focused - a window whose geometry just changed
-	# because a sibling left - so autotiling splits that one too and every view
-	# ends up double-wrapped in redundant single-child containers. Focusing the
-	# window being moved first means both events resolve to it, which is exactly
-	# what happens when a window is opened normally.
+	# The split is computed here rather than left to autotiling. Relying on the
+	# daemon would make this binding do nothing whenever autotiling is disabled
+	# for the workspace - which, since this repo ships it off by default, is the
+	# normal case - and retile would silently degrade to a slow flatten.
+	#
+	# The rule is autotiling's own, from its main.py:
+	#
+	#     new_layout = "splitv" if con.rect.height > con.rect.width else "splith"
+	#     if new_layout != con.parent.layout: <issue it>
+	#
+	# Applying it identically means a *running* autotiling agrees with what we
+	# just did and its own check short-circuits, so the two do not fight and no
+	# redundant single-child containers appear.
+	#
+	# The focus and the move are a single swaymsg command, in that order. A
+	# running autotiling handles the move event by re-reading find_focused();
+	# move first and that resolves to the *previous* window, whose geometry just
+	# changed because a sibling left, so it splits that one too and every view
+	# ends up double-wrapped. Focusing first makes both events resolve to the
+	# window being moved, which is what happens when a window opens normally.
 	for id in $ids; do
 		swaymsg -q "[con_id=$id] focus; [con_id=$id] move container to workspace $ws"
 		swaymsg -q "workspace $ws"
-		# Let autotiling issue its split before the next window changes the
-		# geometry out from under it.
-		sleep 0.35
+
+		# Parent's layout plus this window's rect, now that it has been placed.
+		set -- $(swaymsg -t get_tree --raw | jq -r --argjson id "$id" '
+			[ recurse(.nodes[]?, .floating_nodes[]?)
+			  | select( [ (.nodes[]?, .floating_nodes[]?) | .id ] | index($id) ) ]
+			| first
+			| .layout as $l
+			| [ (.nodes[]?, .floating_nodes[]?) | select(.id == $id) ]
+			| first | .rect
+			| "\($l) \(.width) \(.height)"')
+		parent_layout=${1:-}
+		width=${2:-0}
+		height=${3:-0}
+
+		if [ "$height" -gt "$width" ]; then
+			want=splitv
+		else
+			want=splith
+		fi
+		[ "$want" = "$parent_layout" ] || swaymsg -q "$want"
 	done
 	;;
 *)
