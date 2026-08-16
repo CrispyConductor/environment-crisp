@@ -117,7 +117,11 @@ Keybinds - sway
     Focus
         $mod+h / j / k / l  -  Move focus left / down / up / right
         $mod+<Arrow>  -  Same
-        $mod+a  -  Focus the parent container
+        $mod+a  -  Focus the parent container (press again to keep walking up, ending at the workspace)
+        $mod+c  -  Focus back down into the container's last-focused child  (this repo)
+                   Nothing else gets you out of container focus from the keyboard: the direction keys
+                   do nothing (the container has no sibling to move to) and leaving the workspace and
+                   coming back keeps the container focused.  Otherwise you have to click a window.
         $mod+space  -  Toggle focus between the tiling and floating layers
         $mod+p  -  List all windows in most-recently-used order and pick one (swayr)
         Alt+Tab  -  Jump to the urgent window, else the last used one (swayr)
@@ -162,6 +166,17 @@ Keybinds - sway
         Focusing a container lights up the focus border on every window inside it at once - that is the
         only cue.  With a lone single-child container there is no cue at all: the two states render
         identically, so check the tree ($mod+Shift+i) when a command acts on more than you expected.
+    Layout commands act on the PARENT of what is focused, which is not where you would guess
+        $mod+e / $mod+s / $mod+w set a layout, and the target is always one level above the focus:
+            a view focused       ->  its container is retargeted   - this is the one you want
+            a container focused  ->  a level higher; if that is the workspace, sway inserts a new
+                                     wrapper container to carry the layout instead of changing the
+                                     workspace, so nothing visibly happens and the tree gains a level
+            the workspace focused (two $mod+a presses)  ->  the workspace itself toggles
+        So $mod+a then $mod+e does NOT flip the container you just selected - it silently adds
+        nesting.  To change a container's layout, focus any window directly inside it and press
+        $mod+e.  $mod+a is for acting on a group: move it, kill it, fullscreen it - not for layout.
+        If you hit this, $mod+a then $mod+Shift+\ removes the wrapper it left behind.
     Three rules that explain most "why did it do that"
         1. Moving toward a view swaps with it.  Moving toward a container moves you INSIDE it.
            So a window can never be moved *between* two containers at the same level - it will be
