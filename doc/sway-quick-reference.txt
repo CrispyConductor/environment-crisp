@@ -127,15 +127,24 @@ Keybinds - sway
         $mod+Shift+h / j / k / l  -  Move focused window left / down / up / right
         $mod+Shift+<Arrow>  -  Same
         $mod+Shift+1..9, $mod+Shift+0  -  Move focused window to workspace 1-10
+        $mod+Ctrl+Shift+1..9, +0  -  Move focused window to workspace 11-20  (this repo)
+        $mod+Shift+g  -  Send the focused window to a workspace picked from a list  (this repo)
         $mod+Shift+n  -  Move focused window to the first empty workspace (stay here)
         $mod+Shift+m  -  Move focused window to the first empty workspace and follow it
         $mod + left-drag  -  Drag a window with the mouse (works on tiled windows too)
         $mod + right-drag  -  Resize a window with the mouse
     Workspaces
-        $mod+1..9, $mod+0  -  Go to workspace 1-10
+        $mod+1..9, $mod+0  -  Go to workspace 1-10   (0 is 10)
+        $mod+Ctrl+1..9, $mod+Ctrl+0  -  Go to workspace 11-20  (0 is 20)  (this repo)
+        $mod+g  -  Pick a workspace from a list (swayr), showing what is open on each  (this repo)
+        $mod+Ctrl+Left / Right  -  Previous / next workspace on this output  (this repo)
         $mod+n  -  Go to the first empty workspace
         $mod+Tab  -  Back-and-forth to the previous workspace
         Set `set $focus_after_move true` in ~/.config/sway/variables.d/*.conf to follow windows you move
+        Past ten workspaces the picker beats the digits; swayrd is already running for $mod+p.
+        Workspace bindings must say `workspace number N`, never `workspace N`.  autoname-workspaces.py
+        renames workspaces to carry app icons ("11:   "), so a name-based binding stops matching as
+        soon as a window opens there and sway creates a second workspace with the same number.
     Layout and arrangement
         $mod+b  -  Next window opens to the right (split horizontally)
         $mod+v  -  Next window opens below (split vertically)
