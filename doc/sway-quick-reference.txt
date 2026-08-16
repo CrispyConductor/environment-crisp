@@ -100,6 +100,10 @@ Keybinds - sway
         $mod+Return  -  Terminal (foot) in the focused window's working directory
         $mod+Shift+Return  -  Terminal (foot) in $HOME
         $mod+Ctrl+Return  -  Firefox  (this repo; Super+Shift+Return was already taken)
+        $mod+Ctrl+k  -  KeePassXC: focus the existing window, launch only if there is none  (this repo)
+                        A plain launch would not do: KeePassXC is single-instance, so a second launch
+                        signals the running process and exits without taking focus - the key would look
+                        dead whenever it is already open.
         $mod+d  -  Launcher (wofi)
         $mod+Shift+d  -  Switch to the first empty workspace, then open the launcher there
         XF86Search  -  Launcher
