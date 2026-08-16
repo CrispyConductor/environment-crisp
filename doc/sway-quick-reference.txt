@@ -158,29 +158,53 @@ Keybinds - sway
         renames workspaces to carry app icons ("11:   "), so a name-based binding stops matching as
         soon as a window opens there and sway creates a second workspace with the same number.
     Layout and arrangement
-        $mod+b  -  Next window opens to the right (split horizontally)
-        $mod+v  -  Next window opens below (split vertically)
-        $mod+e  -  Toggle the current container between split-h and split-v
-        $mod+s  -  Stacking layout (titles listed vertically)
-        $mod+w  -  Tabbed layout (titles listed horizontally)
+        $mod+b  -  Put the focused window in a new container; the next window opens to its RIGHT
+        $mod+v  -  Put the focused window in a new container; the next window opens BELOW it
+        $mod+e  -  Flip the row/column the focused window is in between horizontal and vertical
+        $mod+s  -  Make that row/column stacking (titles listed vertically)
+        $mod+w  -  Make that row/column tabbed (titles listed horizontally)
         $mod+f  -  Toggle fullscreen
         $mod+Shift+space  -  Toggle the focused window between tiling and floating
-        A container is what $mod+b / $mod+v act on: split first, then launch, and the new window lands there.
-        $mod+a to focus the parent, then $mod+e / $mod+s / $mod+w, restructures the whole group at once.
         Focusing a container lights up the focus border on every window inside it at once - that is the
         only cue.  With a lone single-child container there is no cue at all: the two states render
         identically, so check the tree ($mod+Shift+i) when a command acts on more than you expected.
-    Layout commands act on the PARENT of what is focused, which is not where you would guess
-        $mod+e / $mod+s / $mod+w set a layout, and the target is always one level above the focus:
-            a view focused       ->  its container is retargeted   - this is the one you want
-            a container focused  ->  a level higher; if that is the workspace, sway inserts a new
-                                     wrapper container to carry the layout instead of changing the
-                                     workspace, so nothing visibly happens and the tree gains a level
+    split vs layout - two different commands that share the same words
+        This is the single most confusing thing in sway's command set.  "splith" and "layout splith"
+        are unrelated commands, and the stock bindings use one of each:
+            $mod+b / $mod+v      are `splith` / `splitv`, i.e. `split horizontal` / `split vertical`
+                                 CREATE a new container, wrapping whatever is focused.  They never
+                                 change an existing container.  A wrapper appearing is the point.
+            $mod+e / $mod+s / $mod+w   are `layout ...`, which CHANGES an existing container.
+        So "$mod+b did not make my column horizontal, it just wrapped one window" is $mod+b working
+        as designed.  $mod+e is the one that changes an existing arrangement.
+        Read them as different questions:
+            split   -  "where should the NEXT window go relative to this one?"
+            layout  -  "how should THIS window and its siblings be arranged?"
+    layout always targets the container HOLDING the thing you name, never that thing itself
+        There is no command meaning "set the layout of this container".  layout is inherently about
+        the level a node lives in, so you always address it from inside.  Verified with criteria, so
+        this is not an artefact of how focus resolves:
+            [con_id=8] layout splitv    8 is a view   ->  the container holding 8 became splitv
+            [con_id=7] layout splitv    7 is a CONTAINER  ->  7 was untouched; ITS PARENT became splitv
+        Targeting table:
+            a view focused       ->  the container holding it changes   - this is the useful case
+            a container focused  ->  one level higher.  If that is the workspace, sway materialises a
+                                     new wrapper container to carry the arrangement rather than
+                                     changing the workspace, so nothing visibly happens and the tree
+                                     silently gains a level
             the workspace focused (two $mod+a presses)  ->  the workspace itself toggles
-        So $mod+a then $mod+e does NOT flip the container you just selected - it silently adds
-        nesting.  To change a container's layout, focus any window directly inside it and press
-        $mod+e.  $mod+a is for acting on a group: move it, kill it, fullscreen it - not for layout.
-        If you hit this, $mod+a then $mod+Shift+\ removes the wrapper it left behind.
+        Therefore, to set container X's layout, target any CHILD of X:
+            X has a view in it        ->  focus that window, press $mod+e
+            X holds only containers   ->  $mod+c to descend into one, then $mod+e
+            without moving focus      ->  swaymsg '[con_id=<a child of X>] layout splith'
+        And do NOT press $mod+a first - that is the classic mistake.  $mod+a is for acting on a group
+        (move it, kill it, fullscreen it), not for layout; with the container focused, $mod+e adds
+        nesting instead of flipping anything.  If you hit it, $mod+a then $mod+Shift+\ removes the
+        wrapper it left behind.
+        Worked example - seven stacked terminals, H[V[foot x7]], make them a row:
+            focus any one of them, press $mod+e.  One key.  All seven share that one parent container,
+            so flipping it flips all of them together.
+        $mod+e toggles; `layout splith` / `layout splitv` set an absolute direction but are unbound.
     Three rules that explain most "why did it do that"
         1. Moving toward a view swaps with it.  Moving toward a container moves you INSIDE it.
            So a window can never be moved *between* two containers at the same level - it will be
