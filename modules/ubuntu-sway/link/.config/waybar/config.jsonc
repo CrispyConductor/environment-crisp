@@ -70,10 +70,14 @@
             "activated": "",
             "deactivated": ""
         },
-        "start-activated": true,
+        // Must stay false: waybar holds this inhibitor on a layer-shell
+        // surface, which sway treats as permanently active, so starting it
+        // activated silences every swayidle timeout (dim, lock, screen off,
+        // suspend) until the icon is clicked. Click it to inhibit on demand.
+        "start-activated": false,
         "tooltip": true,
-        "tooltip-format-activated": "power-saving disabled",
-        "tooltip-format-deactivated": "power-saving enabled"
+        "tooltip-format-activated": "Idle timeouts OFF - screen will not dim, lock or suspend. Click to re-enable.",
+        "tooltip-format-deactivated": "Idle timeouts ON - screen dims, locks and suspends normally. Click to keep the screen awake."
     },
 
     "pulseaudio": {
