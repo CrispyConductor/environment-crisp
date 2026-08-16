@@ -140,7 +140,11 @@ Keybinds - sway
         $mod+Ctrl+Left / Right  -  Previous / next workspace on this output  (this repo)
         $mod+n  -  Go to the first empty workspace
         $mod+Tab  -  Back-and-forth to the previous workspace
-        Set `set $focus_after_move true` in ~/.config/sway/variables.d/*.conf to follow windows you move
+        Set `set $focus_after_move true` in ~/.config/sway/variables.d/*.conf to follow windows you move.
+        Stock, that switch does nothing: $focus_ws in /etc/sway/modes/default.conf tests it with a bash
+        ==, sway execs through dash, and dash's [ has no == - so every move-to-workspace exits 2 with
+        "[: unexpected operator" instead of following.  config.d/25-workspaces.conf rebinds all twenty
+        move keys with the POSIX = so the switch actually works.
         Past ten workspaces the picker beats the digits; swayrd is already running for $mod+p.
         Workspace bindings must say `workspace number N`, never `workspace N`.  autoname-workspaces.py
         renames workspaces to carry app icons ("11:   "), so a name-based binding stops matching as
