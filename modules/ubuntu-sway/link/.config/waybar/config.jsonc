@@ -26,7 +26,12 @@
     
     "sway/workspaces": {
          "disable-scroll": true,
-         "all-outputs": true
+         // Each bar lists only the workspaces on its own output. Waybar creates
+         // one bar surface per output, so this filters per monitor with no extra
+         // config. false is waybar's own default; the stock Ubuntu Sway Remix
+         // config opts into true, which repeats every workspace on all four
+         // displays.
+         "all-outputs": false
     },
     
     "sway/language": {
