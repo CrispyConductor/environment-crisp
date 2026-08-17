@@ -9,5 +9,17 @@ border-color=#317b79
 background-color=#2f2f2f
 default-timeout=15000
 
+# Middle click clears every notification at once. mako binds left click to
+# invoke-default-action and right click to dismiss by default, but leaves middle
+# click as "none", and there is no dismiss-all gesture or key otherwise - only
+# `makoctl dismiss -a` from a shell.
+on-button-middle=dismiss-all
+
+# `makoctl history` keeps only 5 entries by default, which is few enough that
+# whatever you went looking for has usually already aged out. Memory-only either
+# way: the buffer survives `makoctl reload` but not a restart of mako, so this
+# buys a longer session-local scrollback, not a log.
+max-history=100
+
 [mode=do-not-disturb]
 invisible=1

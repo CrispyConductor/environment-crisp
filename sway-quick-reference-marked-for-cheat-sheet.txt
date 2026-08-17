@@ -306,31 +306,16 @@ Keybinds - applications
         Volume  -  Left click pulsemixer, right click pavucontrol, middle click mute, scroll to change volume
         Clock  -  Open calcurse
         Power (far right)  -  Open nwg-bar
-    mako notifications  -  no keybinds; it is mouse gestures, makoctl, or the waybar bell icon
-        Mouse, on a notification itself.  These are mako's own built-in bindings, not sway's, so they
-        work without anything in the sway config - and they are the fastest way to deal with a popup.
-            Left click  -  Invoke its default action and dismiss it (opens the Slack message etc.)
-            Right click  -  Dismiss it without acting
-            Middle click  -  Dismiss ALL notifications  (this repo; mako leaves middle click unbound)
+    mako notifications  -  no keybinds; everything is makoctl or the waybar bell icon
+        Click a notification  -  Invoke its default action and dismiss it
+        Right click  -  Dismiss without acting
         makoctl dismiss  -  Dismiss the most recent notification
-        makoctl dismiss -a  -  Dismiss all (same as middle click)
-        makoctl dismiss -g  -  Dismiss the last notification's whole group
+        makoctl dismiss -a  -  Dismiss all
         makoctl restore  -  Bring back the most recently expired notification
-        makoctl list  -  Show currently displayed notifications, including any the "(N more)"
-                         overflow placeholder is covering (max-visible defaults to 5)
-        makoctl history  -  Show expired ones, with app name, urgency and available actions.
-                            Holds 100 here (this repo); mako's own default is 5, which ages things
-                            out before you can go looking.  Memory-only either way: the buffer
-                            survives `makoctl reload` but not a restart of mako, so it is a
-                            session-local scrollback rather than a log.  There is no on-disk log.
-        makoctl invoke [-n id] [action]  -  Fire an action without clicking
+        makoctl list / makoctl history  -  Show current / past notifications
         makoctl mode -t do-not-disturb  -  Toggle DND (this is what the waybar bell icon runs)
         makoctl reload  -  Re-read ~/.config/mako/config
         Default timeout here is 15s; the DND mode is configured as fully invisible, not just silent.
-        mako is NOT grouping anything here: group-by defaults to none and this repo does not set it.
-        So an "N notifications from ..." popup is the application's own digest message - Slack and
-        Signal both do this - not several notifications mako collapsed, and there is nothing to
-        expand.  mako's own overflow indicator is the separate "(N more)" placeholder.
     wofi  (the $mod+d launcher)
         Type to filter, Return to launch, Escape to cancel
         Up / Down  -  Move through results
