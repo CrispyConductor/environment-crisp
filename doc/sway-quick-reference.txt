@@ -232,6 +232,10 @@ Keybinds - sway
         $mod+Shift+t  -  Retile: flatten, then rebuild the autotiling spiral over the existing windows.
                          Applies autotiling's rule itself, so it works whether or not autotiling is
                          enabled here, and does not change whether it is.
+        $mod+Shift+u  -  Even out the row/column the focused window is in, so its windows share the
+                         space equally.  Sway has no balance/equalize command; this sweeps
+                         `resize set ... ppt`, which only ever trades space with the next sibling, so
+                         it takes a few passes and settles about 1% off - even to the eye, not exact.
         $mod+Shift+\  -  Dissolve the container around the focused window, if it is the only one in it
         Flatten and retile work by moving every window to an unfocused scratch workspace and back.
         Sway garbage-collects a container once its last child leaves, and [workspace="N"] criteria match
