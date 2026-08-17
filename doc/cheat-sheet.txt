@@ -371,6 +371,8 @@ taskwarrior
         task 12 denotate all  -  Delete all annotations.
         task 12 modify /Checked/Confirmed/  -  Replace text in the annotations.
         task list /client requirements/  -  Search for text in annotations.
+foot
+    Ctrl+Shift+o  -  Open URLs
 sway  (Ubuntu Sway Remix; full details in doc/sway-quick-reference.txt)
     $mod: Super/Win key
     Launching
