@@ -371,5 +371,55 @@ taskwarrior
         task 12 denotate all  -  Delete all annotations.
         task 12 modify /Checked/Confirmed/  -  Replace text in the annotations.
         task list /client requirements/  -  Search for text in annotations.
+sway  (Ubuntu Sway Remix; full details in doc/sway-quick-reference.txt)
+    $mod: Super/Win key
+    Launching
+        $mod+Return  -  Terminal in the focused window's directory
+        $mod+Shift+Return  -  Terminal in $HOME
+        $mod+Ctrl+Return  -  Firefox
+        $mod+Ctrl+k  -  KeePassXC (focus it, or launch if not running)
+        $mod+d  -  Launcher
+        Alt+Shift+e  -  Emoji picker
+    Session
+        $mod+Shift+q  -  Close focused window
+        Ctrl+Escape  -  Lock screen
+    Focus
+        $mod+a  -  Focus parent container (repeat to keep walking up)
+        $mod+c  -  Focus back down into the container
+        $mod+space  -  Toggle focus between tiling and floating
+        $mod+p  -  Pick a window from a most-recently-used list
+        Alt+Tab  -  Urgent window, else last used
+    Moving Windows
+        $mod+Shift+<ArrowKey> or hjkl  -  Move window left/down/up/right
+        $mod+Shift+<n>  -  Move window to workspace n for n<11 (0 is 10)
+        $mod+Shift+g  -  Move window to a workspace picked from a list
+        $mod + left-drag  -  Drag window (works on tiled windows too)
+        $mod + right-drag  -  Resize window
+    Workspaces
+        $mod+<n>  -  Go to workspace n for n<11 (0 is 10)
+        $mod+Ctrl+<n>  -  Go to workspace n+10 for n<11 (0 is 20)
+        $mod+Ctrl+<ArrowKey>  -  Prev/next workspace on this output
+    Layout
+        $mod+b  -  New container; next window opens to the right
+        $mod+v  -  New container; next window opens below
+        $mod+e  -  Flip row/column between horizontal and vertical
+        $mod+s  -  Stacking layout
+        $mod+w  -  Tabbed layout
+        $mod+f  -  Toggle fullscreen
+        $mod+Shift+space  -  Toggle window between tiling and floating
+    Layout Tools
+        $mod+Shift+i  -  Show the workspace's container tree
+        $mod+Shift+u  -  Even out the row/column the window is in
+        $mod+Shift+\  -  Dissolve the container if this is its only window
+        $mod+Shift+f  -  Flatten workspace (all windows to the top level)
+        $mod+Shift+t  -  Retile workspace (rebuild the autotiling spiral)
+    Modes
+        $mod+r  -  Resize mode
+        Print  -  Screenshot mode
+        $mod+Shift+r  -  Recording mode
+            r  -  Start recording the screen
+            Shift+r  -  Start recording with audio
+            Escape  -  Cancel
+        $mod+Escape  -  Stop the running recording
 
 
