@@ -1,0 +1,9 @@
+Octagon Desktop Build 2025:
+
+- Install nvidia proprietary driver: ubuntu-drivers install
+- Blacklist amdgpu driver module; the existence of this module causes Sway to assume nvidia isn't in use.
+Create /etc/modprobe.d/blacklist-amdgpu.conf contents:
+	# Blacklist amdgpu module; load proprietary nvidia driver instead
+	blacklist amdgpu
+
+
