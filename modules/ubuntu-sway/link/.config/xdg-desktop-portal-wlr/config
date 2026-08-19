@@ -1,0 +1,91 @@
+# Screen sharing config for xdg-desktop-portal-wlr, the wlroots backend that
+# brokers screen capture between apps (Firefox/Meet, Discord) and sway.
+#
+# THE DIFF FROM THE DISTRO DEFAULT: its chooser_cmd is dropped in favour of
+# upstream's. /etc/xdg/xdg-desktop-portal-wlr/config, from
+# ubuntu-sway-default-settings, ships:
+#
+#     [screencast]
+#     chooser_type=dmenu
+#     chooser_cmd=swaymsg -t get_outputs | jq '.[] | .name' | sed 's/"//g' | wofi -d
+#
+# With that, picking any display fails - the app reports a permission error and
+# journalctl --user -t xdg-desktop-portal-wlr shows:
+#
+#     [ERROR] - wlroots: chooser ... | wofi -d selected unknown target: DP-1
+#     [ERROR] - wlroots: no output found
+#
+# WHY. xdpw does not match on the output NAME, it matches on a LABEL that it
+# generates itself, and the format depends on chooser_type. From
+# src/screencast/chooser.c in 0.8.1:
+#
+#     static char *get_output_label(output, chooser_type) {
+#         if (chooser_type == XDPW_CHOOSER_DMENU)
+#             return format_str("Monitor: %s %s", output->name, output->description);
+#         else
+#             return format_str("Monitor: %s", output->name);
+#     }
+#
+# So the string it wants back is "Monitor: DP-1 Dell Inc. DELL P2415Q ... (DP-1)"
+# under dmenu, or "Monitor: DP-1" otherwise - never a bare "DP-1". The distro's
+# command throws away the list xdpw pipes in, substitutes bare names from
+# swaymsg, and hands back "DP-1", which matches no label and so resolves to
+# nothing.
+#
+# The reason a bare name works under chooser_type=simple is a backwards
+# compatibility path that exists ONLY for simple:
+#
+#     found = strcmp(selected_label, label) == 0;
+#     if (!found && chooser->type == XDPW_CHOOSER_SIMPLE) {
+#         // Compatibility with xdg-desktop-portal-wlr < v0.8.0
+#         found = strcmp(selected_label, out->name) == 0;
+#     }
+#
+# dmenu has no such fallback, hence the failure. Relying on that fallback would
+# be fragile, since it is explicitly legacy and could be dropped.
+#
+# So the fix is to stop customising and use upstream's dmenu chooser, which just
+# displays whatever xdpw pipes in and returns one line of it verbatim. That way
+# nothing here hardcodes the label format: xdpw both generates and matches the
+# strings. Verified: chooser_type=dmenu with `head -1` as the chooser (echoes a
+# piped label back) resolves correctly, which shows the dmenu path itself was
+# never broken - only the distro's command was.
+#
+# Bonus for this machine: the dmenu labels carry make, model AND serial, which
+# is the only way to tell the two identical P2415Qs and two identical U2713HMs
+# apart in a text list:
+#
+#     Monitor: DP-1 Dell Inc. DELL P2415Q G3D7F9611JNB (DP-1)
+#     Monitor: DP-2 Dell Inc. DELL P2415Q G3D7F97417LB (DP-2)
+#     Monitor: DP-3 Dell Inc. DELL U2713HM 7JNY53BF364S (DP-3)
+#     Monitor: DP-4 Dell Inc. DELL U2713HM 7JNY53BF457S (DP-4)
+#
+# NOTE: a user config REPLACES /etc/xdg's rather than merging with it, so the
+# whole [screencast] section has to be spelled out here.
+#
+# Applies to every Ubuntu Sway Remix machine, not just this one. Expected to
+# stay needed until the distro drops its chooser_cmd customisation.
+[screencast]
+chooser_type=dmenu
+chooser_cmd=wofi -d -n --prompt='Select a source to share:'
+
+# Alternative: click the physical monitor instead of picking from a list. slurp
+# paints an overlay across the displays (-o -r make whole outputs the selectable
+# units) and prints the one clicked; it is the same tool grimshot uses for
+# region screenshots. Upstream's own default for chooser_type=simple.
+# Pro: spatial, so no need to know which name is which physical panel.
+# Con: pointer only, no keyboard selection, and the "Monitor: " prefix is
+# hardcoded here, so it breaks if upstream ever changes the label format.
+#chooser_type=simple
+#chooser_cmd=slurp -f 'Monitor: %o' -or
+
+# Alternative: no picker at all, always share one display.
+#chooser_type=none
+#output_name=DP-1
+
+# Sharing a single WINDOW is impossible here regardless of this file: sway 1.11
+# is built against wlroots 0.19, which implements only
+# ext_output_image_capture_source_manager_v1. wlroots 0.20 added the foreign
+# toplevel equivalent and sway master already wires it up, but sway master needs
+# wlroots >= 0.21, so window sharing arrives with a future sway/wlroots package.
+# Until then: put the app alone on a workspace and share that display.

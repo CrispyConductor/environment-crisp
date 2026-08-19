@@ -5,5 +5,16 @@ Octagon Desktop Build 2025:
 Create /etc/modprobe.d/blacklist-amdgpu.conf contents:
 	# Blacklist amdgpu module; load proprietary nvidia driver instead
 	blacklist amdgpu
+- PrusaSlicer (flatpak) file picker cannot see the 3dprinter dirs, and opens at an empty location.
+Those dirs (and Downloads, Documents, projects) are symlinks in ~ pointing into /data, which is a
+separate partition and is NOT in the flatpak's sandbox (filesystems=home;/media;/run/media;xdg-run/gvfs).
+Inside the sandbox the symlinks dangle, so the picker skips them, and the remembered
+skein_directory=~/Downloads resolves to nothing. PrusaSlicer is wxWidgets and opens its own in-process
+GtkFileChooserDialog rather than going through xdg-desktop-portal, so the dialog only ever sees what
+the sandbox sees. Grant it the data dir:
+	flatpak override --user --filesystem=/data/cbreneman com.prusa3d.PrusaSlicer
+	# undo: flatpak override --user --reset com.prusa3d.PrusaSlicer
+	# check: flatpak override --user --show com.prusa3d.PrusaSlicer
+Not tracked by this repo: overrides live in ~/.local/share/flatpak/overrides/.
 
 
