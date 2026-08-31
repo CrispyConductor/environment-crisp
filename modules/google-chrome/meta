@@ -1,0 +1,4 @@
+description="Google Chrome stable, via Google's own apt repository"
+requires=""
+platform="linux"
+pkgmgr="apt"
